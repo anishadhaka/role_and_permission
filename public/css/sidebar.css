@@ -1,0 +1,132 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Nunito', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 250px;
+    background: linear-gradient(135deg, #2d3436, #636e72);
+    color: white;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    height: 100vh;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    /* transition: all 0.3s ease-in-out; */
+}
+
+.sidebar ul li a i {
+    margin-right: 15px;
+    font-size: 22px;
+}
+
+.sidebar ul li a:hover {
+    color: #74b9ff;
+    text-decoration: none;
+    /* transform: translateX(5px); */
+}
+
+.sidebar ul li a:active {
+    color: #00cec9;
+}
+
+.sidebar ul li a:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    /* padding: 5px 10px; */
+    border-radius: 8px;
+}
+.sidebar {
+    width: 250px;
+    background: #343a40;
+    color: #fff;
+    padding-top: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+}
+
+.sidebar-link {
+    color: #fff;
+    display: block;
+    /* padding: 10px 20px; */
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.sidebar-link:hover,
+.sidebar-dropdown-item:hover {
+    background: #495057;
+    color: #ffc107;
+}
+
+/* Dropdown Menu */
+.sidebar-dropdown {
+    background: #23272b;
+    border: none;
+    box-shadow: none;
+    margin-left: 10px;
+    padding: 0;
+}
+
+.sidebar-dropdown-item {
+    color: #adb5bd;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.3s ease;
+}
+
+.sidebar-dropdown-item i {
+    margin-right: 8px;
+}
+
+.sidebar-dropdown-item:hover {
+    background: #495057;
+    color: #ffc107;
+}
+ 
