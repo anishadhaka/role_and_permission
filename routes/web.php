@@ -25,14 +25,10 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
    
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    
- 
     Route::resource('module', ModuleController::class);
-
-    
-   
     Route::post('/module/save-permissions', [ModuleController::class, 'savePermissions'])->name('modulesave');
     Route::get('/module/permissions/{id}', [ModuleController::class, 'getPermissions'])->name('module.permissions');
+    Route::delete('/module/permissions/{id}', [ModuleController::class, 'destroyPermission'])->name('permission.destroy');
    
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);

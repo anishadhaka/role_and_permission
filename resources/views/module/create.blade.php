@@ -32,38 +32,14 @@
                 <input type="text" name="Title" placeholder="Title" class="form-control">
             </div>
         </div>
-        <!-- <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="form-group">
-        <strong>Title:</strong>
-        <select name="Title" class="form-control">    
-            @foreach ($categories as $key => $dataGroup)
-                <optgroup label="{{ ucfirst($key) }}">
-                    @foreach ($dataGroup as $id => $title)
-                        <option value="{{ $title }}">
-                            {{ $title }}
-                        </option>
-                    @endforeach
-                </optgroup>
-            @endforeach
-         </select>
-        </div>
-     </div> -->
-        <!-- <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Parent:</strong>
-                <input type="text" name="parent_id" placeholder="parent_id" class="form-control">
-            </div>
-        </div> -->
+
         <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <strong>Parent:</strong>
-        <select name="parent_id" class="form-control">
-            <option value="0">Select Parent</option> 
+        <select name="parent_name" class="form-control">
+            <option value="0">Select Parent</option>
             @foreach ($categories as $key => $dataGroup)
-                @php
-                    $firstId = collect($dataGroup)->keys()->first(); 
-                @endphp
-                <option value="{{ $firstId }}">{{ ucfirst($key) }}</option>
+                <option value="{{ $key }}">{{ $key }}</option>
             @endforeach
         </select>
     </div>

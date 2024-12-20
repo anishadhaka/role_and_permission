@@ -76,17 +76,29 @@
             <aside class="sidebar">
                 <ul>
                 <h4> 
-                <!-- <i class="fa-solid fa-plane-departure"></i> -->
+                
                 <img src="https://www.absglobaltravel.com/public/images/footer-abs-logo.webp" height="60" >
              </h4>
                     <li><a href="{{ route('home') }}"><i class="fa-solid fa-bars"></i> Dashboard</a></li>
+                    <!-- <li><a href="{{ route('users.index') }}"><i class="fa-solid fa-user-tie"></i> Manage Users</a></li> -->
+                    <!-- <li>
+                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                       <i class="fa-solid fa-gear"></i> Setting  </i>
+                       </a>
+                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
+                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li>
+                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
+                       </ul>
+                   </li> -->
+                   
+                   
+
                   
                     @if(auth()->user()->hasRole(['user team','Admin']))
                     <li><a href="{{ route('users.index') }}"><i class="fa-solid fa-user-tie"></i> Manage Users</a></li>
-                    <!-- <li><a href="{{ route('roles.index') }}"><i class="fa-brands fa-elementor"></i> Manage Roles</a></li> -->
                     @endrole
 
-                    @if(auth()->user()->hasRole(['user team','Admin']))
+                    @if(auth()->user()->hasRole(['product team','Admin']))
                     <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                        <i class="fa-solid fa-gear"></i> Setting  </i>
@@ -98,17 +110,28 @@
                    </li>
                     @endrole
 
-                    @if(auth()->user()->hasRole(['product team','Admin']))
-                    <!-- <li><a href="{{ route('products.index') }}"> <i class="fa-brands fa-square-pinterest"></i> Manage Products</a></li> -->
+                    @if(auth()->user()->hasRole(['user role team']))
+                    <li><a href="{{ route('roles.index') }}"> <i class="fa-brands fa-square-pinterest"></i> Manage Roles</a></li>
+                    <li>
+                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                       <i class="fa-solid fa-gear"></i> Setting  </i>
+                       </a>
+                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
+                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li>
+                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
+                       </ul>
+                   </li>
+                   
                     @endrole
-                    @if(auth()->user()->hasRole(['blog team','Admin']))
+
+                    @if(auth()->user()->hasRole(['module team','Admin']))
                     <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li>
-<!-- 
-                    <li><a href="{{ route('blog.index') }}"> <i class="fa-brands fa-blogger-b"></i> Blog</a></li>
-                    <li><a href="{{ route('blogCategory.index') }}"> <i class="fa-solid fa-layer-group"></i> Blog Category</a></li> -->
                     @endrole
+                  
                     
+
                     @if(auth()->user()->hasRole(['blog team','Admin']))
+                    
                    <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                            <i class="fa-brands fa-blogger-b"></i> Blog Management </i>
@@ -119,6 +142,8 @@
                        </ul>
                    </li>
                    @endif
+
+
                     @if(auth()->user()->hasRole(['news team','Admin']))
                     <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -126,13 +151,14 @@
                        </a>
                        <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
                            <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('news.index') }}"><i class="fa fa-blog"></i> News</a></li>
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('news.index') }}"><i class="fa fa-layer-group"></i> News Category</a></li>
+                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('newsCategory.index') }}"><i class="fa fa-layer-group"></i> News Category</a></li>
                        </ul>
                    </li>
                     @endrole
+
+
                     @if(auth()->user()->hasRole(['page team','Admin']))
                     <li><a href="{{ route('pages.index') }}"> <i class="fa-solid fa-layer-group"></i> Pages </a></li>
-                    
                     @endrole
 
                 </ul>

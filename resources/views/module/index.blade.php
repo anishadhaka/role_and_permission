@@ -76,19 +76,12 @@
                     @csrf
                     <input type="hidden" name="module_id" id="module_id">
                     
-                    <!-- <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group">
-                            <strong>Permission Title:</strong>
-                            <input type="text" name="permissions[]" placeholder="Title" class="form-control">
-                        </div>
-                    </div> -->
 
                  
                 </form>
                 <div class="form-group mt-3">
                         <button type="button" id="add-more" class="btn btn-info" onclick="add()">Add More</button>
                         <button type="button" id="save-permission" class="btn btn-success" onclick="save()">Save</button>
-                        <!-- <button type="button" id="delete-permission" class="btn btn-danger" onclick="deleted()">Delete</button> -->
                     </div>
             </div>
         </div>
@@ -106,20 +99,21 @@ function openPermissionModal(moduleId) {
         success: function(response) {
             if (response.permissions && response.permissions.length > 0) {
                 response.permissions.forEach(function(permission) {
-                 
+                    const uniqueId = 'permission-' + permission.id; 
+
                     $('#permissionForm').append(`
-                   
-                        <div class="permission-wrapper mt-3">
+                        <div class="permission-wrapper mt-3" id="${uniqueId}">
                             <input type="hidden" name="module_id[]" value="${moduleId}">
                             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                                 <div class="form-group">
                                     <strong>Permission Title:</strong>
                                     <input type="text" name="name[]" value="${permission.name}" placeholder="Title" class="form-control">
                                 </div>
-
+                                <button type="button" class="btn btn-danger mt-2" onclick="deletePermission('${uniqueId}', ${permission.id})">
+                                    Delete
+                                </button>
                             </div>
                         </div>
-                        
                     `);
                 });
             }
@@ -129,6 +123,7 @@ function openPermissionModal(moduleId) {
         }
     });
 }
+
     
 
 function add() {
@@ -146,7 +141,7 @@ function add() {
                    
                     <input type="text" name="name[]"  placeholder="Title" class="form-control">
                 </div>
-                <button type="button" class="btn btn-danger" onclick="deleted('${uniqueId}')">Delete</button>
+                <button type="button" class="btn btn-danger" onclick="deletePermission('${uniqueId}')">Delete</button>
             </div>
         </div>
             <!-- Other form fields -->
@@ -173,10 +168,30 @@ function save() {
     });
 }
     
-function deleted(uniqueId)
-{
-   $('#' + uniqueId).remove();
+
+
+
+function deletePermission(uniqueId, permissionId) {
+  
+    $(`#${uniqueId}`).remove();
+
+    if (permissionId) {
+        $.ajax({
+            url: `/module/permissions/${permissionId}`, 
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+            },
+            success: function(response) {
+                alert(response.message || 'Permission deleted successfully!');
+            },
+            error: function(xhr, status, error) {
+                alert('Error deleting permission. Please try again.');
+            }
+        });
+    }
 }
+
 </script>
 
 @endsection

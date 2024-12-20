@@ -38,18 +38,50 @@ public function create(): View
     return view('module.create', compact('categories', 'permissions'));
 }
 
-public function store(Request $request): RedirectResponse
+public function store(Request $request)
 {
-    $data = [
-        'Title' => $request->Title,
-        'parent_id' => $request->parent_id ?? 0,
-        'create_date' => $request->created_at ?? now(),
-        'update_date' => $request->updated_at ?? now(),
-    ];
-    Module::create($data);
-    return redirect()->route('module.index')
-        ->with('success', 'Module created successfully.');
+    $request->validate([
+        'parent_name' => 'required|string',
+        'Title' => 'required|string',
+    ]);
+
+   
+    $parentName = $request->input('parent_name');
+
+   
+    $parentId = null;
+
+    switch ($parentName) {
+        case 'Blog':
+            $parentId = module::pluck('id')->first(); 
+            break;
+
+        case 'News':
+            $parentId = module::pluck('id')->first(); 
+            break;
+
+        case 'Pages':
+            $parentId = module::pluck('id')->first(); 
+            break;
+
+        default:
+            $parentId = null; 
+            break;
+    }
+
+ 
+    $parentId = $parentId ?? 0;
+
+  
+    Module::create([
+        'Title' => $request->input('Title'),
+        'parent_id' => $parentId,
+    ]);
+
+    return redirect()->route('module.index')->with('success', 'Module created successfully.');
 }
+
+
 
 public function show($id): View
 {
@@ -81,23 +113,38 @@ public function destroy($id): RedirectResponse
 //
 public function savePermissions(Request $request)
 {
-    // dd($request);
     foreach ($request->module_id as $key => $moduleId) {
         if (!empty($request->name[$key])) {
-            Permission::create([
-                'module_id' => $moduleId,
-                'name' => $request->name[$key],
-            ]);
+         
+            Permission::updateOrCreate(
+                ['module_id' => $moduleId, 'name' => $request->name[$key]], 
+                ['name' => $request->name[$key]] 
+            );
         }
     }
 
-    return response()->json(['message' => 'Permissions saved successfully!']);
+    return response()->json(['message' => 'Permissions saved or updated successfully!']);
 }
+
 
 public function getPermissions($id)
 {
     $permissions = Permission::where('module_id', $id)->get(); 
     return response()->json(['permissions' => $permissions]);
 }
+
+public function destroyPermission($id)
+{
+    try {
+      
+        $permission = Permission::findOrFail($id);
+        $permission->delete();
+
+        return response()->json(['message' => 'Permission deleted successfully.']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error deleting permission.'], 500);
+    }
+}
+
 
 }
