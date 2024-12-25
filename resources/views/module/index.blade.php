@@ -20,7 +20,7 @@
         {{ $value }}
     </div>
 @endsession
-
+{{$formattedDate}}
 <table class="table table-bordered">
     <tr>
         <th>id</th>
@@ -90,7 +90,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 function openPermissionModal(moduleId) {
-    $('#module_id').val(moduleId); 
+    $('#module_id').val(moduleId);
     $('#permissionForm').find('.permission-wrapper').remove(); 
 
     $.ajax({
@@ -98,94 +98,99 @@ function openPermissionModal(moduleId) {
         method: 'GET',
         success: function(response) {
             if (response.permissions && response.permissions.length > 0) {
-                response.permissions.forEach(function(permission) {
-                    const uniqueId = 'permission-' + permission.id; 
-
-                    $('#permissionForm').append(`
-                        <div class="permission-wrapper mt-3" id="${uniqueId}">
-                            <input type="hidden" name="module_id[]" value="${moduleId}">
-                            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
-                                <div class="form-group">
-                                    <strong>Permission Title:</strong>
-                                    <input type="text" name="name[]" value="${permission.name}" placeholder="Title" class="form-control">
-                                </div>
-                                <button type="button" class="btn btn-danger mt-2" onclick="deletePermission('${uniqueId}', ${permission.id})">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    `);
+                response.permissions.forEach(function (permission) {
+                    const uniqueId = 'permission-' + permission.id;
+                    $('#permissionForm').append(createPermissionField(uniqueId, moduleId, permission.name, permission.id));
                 });
+            } else {
+                addDefaultPermissionField(moduleId);
             }
         },
-        error: function(xhr, status, error) {
+        error: function () {
             alert('Error fetching permissions. Please try again.');
+            addDefaultPermissionField(moduleId); 
         }
     });
 }
 
-    
-
-function add() {
-    var uniqueId = 'permission-' + Date.now();
-    var moduleId = $('#module_id').val();
-    console.log(moduleId);
-
-    $('#permissionForm').append(`
-   
+function createPermissionField(uniqueId, moduleId, permissionName = '', permissionId = null) {
+    return `
         <div class="permission-wrapper mt-3" id="${uniqueId}">
             <input type="hidden" name="module_id[]" value="${moduleId}">
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
-                    <strong>Permission :</strong>
-                   
-                    <input type="text" name="name[]"  placeholder="Title" class="form-control">
+                    <strong>Permission:</strong>
+                    <input type="text" name="name[]" value="${permissionName}" placeholder="Title" class="form-control">
                 </div>
-                <button type="button" class="btn btn-danger" onclick="deletePermission('${uniqueId}')">Delete</button>
+                <button type="button" class="btn btn-danger mt-2" onclick="deletePermission('${uniqueId}', ${permissionId})">Delete</button>
             </div>
         </div>
-            <!-- Other form fields -->
-
-    `);
+    `;
 }
+
+function addDefaultPermissionField(moduleId) {
+    const uniqueId = 'permission-' + Date.now();
+    $('#permissionForm').append(createPermissionField(uniqueId, moduleId));
+}
+
+function add() {
+    const uniqueId = 'permission-' + Date.now();
+    const moduleId = $('#module_id').val();
+    $('#permissionForm').append(createPermissionField(uniqueId, moduleId));
+}
+
 function save() {
-    var formData = $('#permissionForm').serialize(); 
+    let isValid = true;
+    $('#permissionForm input[name="name[]"]').each(function () {
+        if (!$(this).val().trim()) {
+            isValid = false;
+            $(this).css('border', '2px solid red'); 
+            return false;
+        } else {
+            $(this).css('border', ''); 
+        }
+        
+    });
+    if (!isValid) return;
+
+    const formData = $('#permissionForm').serialize();
     $.ajax({
-        url: '{{ route('modulesave') }}', 
+        url: '{{ route('modulesave') }}',
         method: 'POST',
         data: formData,
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        success: function(response) {
-            alert(response.message); 
-            $('#permissionModal').modal('hide'); 
-            location.reload(); 
+        success: function (response) {
+            alert(response.message);
+            $('#permissionModal').modal('hide');
+            location.reload();
         },
-        error: function(xhr) {
-            alert('Error saving permissions. Please check your input.');
+        error: function () {
+            alert('Error saving permissions. Please try again.');
         }
     });
 }
-    
 
-
-
-function deletePermission(uniqueId, permissionId) {
-  
+function deletePermission(uniqueId, permissionId = null) {
     $(`#${uniqueId}`).remove();
+
+    if ($('.permission-wrapper').length === 0) {
+        const moduleId = $('#module_id').val();
+        addDefaultPermissionField(moduleId);
+    }
 
     if (permissionId) {
         $.ajax({
-            url: `/module/permissions/${permissionId}`, 
+            url: `/module/permissions/${permissionId}`,
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function(response) {
+            success: function (response) {
                 alert(response.message || 'Permission deleted successfully!');
             },
-            error: function(xhr, status, error) {
+            error: function () {
                 alert('Error deleting permission. Please try again.');
             }
         });

@@ -8,6 +8,8 @@ use App\Models\Module;
 use App\Models\Blog;
 use App\Models\Pages;
 use App\Models\News;
+use App\Models\User;
+
 // use App\Models\Permission;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +24,9 @@ class ModuleController extends Controller
     
 public function index(Request $request): View
 {
+    $formattedDate = format_date('2024-12-24');
     $data = Module::latest()->paginate(5);
-    return view('module.index', compact('data'))
+    return view('module.index', compact('data','formattedDate'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
 
@@ -33,6 +36,8 @@ public function create(): View
         'Blog' => Blog::pluck('name', 'id')->all(),
         'News' => News::pluck('name', 'id')->all(),
         'Pages' => Pages::pluck('title', 'id')->all(),
+        'User' => User::pluck('name', 'id')->all(),
+
     ];
     $permissions = Permission::all();
     return view('module.create', compact('categories', 'permissions'));
@@ -53,16 +58,22 @@ public function store(Request $request)
 
     switch ($parentName) {
         case 'Blog':
-            $parentId = module::pluck('id')->first(); 
+            $parentId = module::where('Title', 'Blog')->pluck('id')->first();
+
             break;
 
         case 'News':
-            $parentId = module::pluck('id')->first(); 
+            $parentId = module::where('Title', 'News')->pluck('id')->first();
             break;
 
         case 'Pages':
-            $parentId = module::pluck('id')->first(); 
+            $parentId = module::where('Title', 'Pages')->pluck('id')->first();
+
             break;
+            case 'User':
+                $parentId = module::where('Title', 'Pages')->pluck('id')->first();
+    
+                break;
 
         default:
             $parentId = null; 

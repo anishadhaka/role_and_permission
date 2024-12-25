@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use App\Http\Middleware\RolePermissionMiddleware;
+use App\Http\Middleware\ValidUser;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -20,9 +24,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
-
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','role:Admin,product team,module team,page team,news team,user role team'])->group(function () {
    
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('module', ModuleController::class);
@@ -39,6 +41,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('newsCategory', NewsCategoryController::class);
     Route::resource('pages', PagesController::class);
     Route::resource('module', ModuleController::class);  
-
-
 });
