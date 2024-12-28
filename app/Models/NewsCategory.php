@@ -10,4 +10,8 @@ class NewsCategory extends Model
     protected $fillable = [
         'id', 'title','meta_description','meta_keyword','seo_robat',
     ];
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
 }

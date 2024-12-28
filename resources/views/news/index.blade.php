@@ -21,7 +21,7 @@
    <tr>
        <th>Id</th>
        <th>Name</th>
-       <th>Description</th>
+       <th>Title</th>
        <th>Image</th>
        <th width="280px">Action</th>
    </tr>
@@ -29,10 +29,10 @@
     <tr>
         <td>{{ ++$i }}</td>
         <td>{{ $news->name }}</td>
-        <td>{{ $news->description }}</td>
+        <td>{{ $news->categories->title }}</td>
         <td>
            @if ($news->image)
-               <img src="{{ asset($news->image) }}" alt="Image" width="100">
+           <img src="{{ asset('images/' . $news->image) }}" class="card-img-top"  height="40px">
            @else
                No image
            @endif

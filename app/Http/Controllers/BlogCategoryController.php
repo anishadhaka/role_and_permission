@@ -15,11 +15,22 @@ use Illuminate\Support\Str;
     
 class BlogCategoryController extends Controller
 {
- 
+    function __construct()
+    {
+         $this->middleware('permission:blogcategory-list|blogcategory-create|blogcategory-edit|blogcategory-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:blogcategory-create', ['only' => ['create','store']]);
+         $this->middleware('permission:blogcategory-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:blogcategory-delete', ['only' => ['destroy']]);
+    }
 public function index(Request $request): View
 {
-    $data = BlogCategory::latest()->paginate(5);
- //   dd($data['items']);
+    $query = BlogCategory::query();
+    // dd($query);
+    if ($request->search) {
+        $query->whereLike('title',  '%' . $request->search . '%');
+     }
+    $data = $query->latest()->paginate(5);
+
     return view('blogCategory.index',compact('data'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }

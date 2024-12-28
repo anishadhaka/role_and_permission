@@ -9,6 +9,8 @@ use App\Models\Blog;
 use App\Models\Pages;
 use App\Models\News;
 use App\Models\User;
+use App\Models\Product;
+
 
 // use App\Models\Permission;
 use Spatie\Permission\Models\Permission;
@@ -21,9 +23,16 @@ use Illuminate\Contracts\View\View;
 
 class ModuleController extends Controller
 {
-    
+    // function __construct()
+    // {
+    //      $this->middleware('permission:module-list|module-create|module-edit|module-delete', ['only' => ['index','store']]);
+    //      $this->middleware('permission:module-create', ['only' => ['create','store']]);
+    //      $this->middleware('permission:module-edit', ['only' => ['edit','update']]);
+    //      $this->middleware('permission:module-delete', ['only' => ['destroy']]);
+    // }
 public function index(Request $request): View
 {
+    // dd("fgtf");
     $formattedDate = format_date('2024-12-24');
     $data = Module::latest()->paginate(5);
     return view('module.index', compact('data','formattedDate'))
@@ -37,10 +46,27 @@ public function create(): View
         'News' => News::pluck('name', 'id')->all(),
         'Pages' => Pages::pluck('title', 'id')->all(),
         'User' => User::pluck('name', 'id')->all(),
+        'Product' => Product::pluck('name', 'id')->all(),
+
 
     ];
     $permissions = Permission::all();
     return view('module.create', compact('categories', 'permissions'));
+}
+public function showAccess()
+{
+    
+    $modules = module::with(['permission',
+    'childmodule' => function ($query){
+        $query->whereHas('permission');
+    }
+    ])->where('parent_id',0)->get();
+    
+
+    // dd("$modules");
+
+    // print_r($modules); die;
+    return view('module.Access',compact('modules'));
 }
 
 public function store(Request $request)
@@ -50,16 +76,12 @@ public function store(Request $request)
         'Title' => 'required|string',
     ]);
 
-   
     $parentName = $request->input('parent_name');
-
-   
     $parentId = null;
 
     switch ($parentName) {
         case 'Blog':
             $parentId = module::where('Title', 'Blog')->pluck('id')->first();
-
             break;
 
         case 'News':
@@ -68,12 +90,15 @@ public function store(Request $request)
 
         case 'Pages':
             $parentId = module::where('Title', 'Pages')->pluck('id')->first();
-
             break;
-            case 'User':
-                $parentId = module::where('Title', 'Pages')->pluck('id')->first();
-    
+
+        case 'User':
+                $parentId = module::where('Title', 'User')->pluck('id')->first();
                 break;
+
+        case 'Product':
+                    $parentId = module::where('Title', 'Product')->pluck('id')->first();
+                    break;
 
         default:
             $parentId = null; 
@@ -91,7 +116,6 @@ public function store(Request $request)
 
     return redirect()->route('module.index')->with('success', 'Module created successfully.');
 }
-
 
 
 public function show($id): View

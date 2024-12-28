@@ -18,14 +18,31 @@ use Illuminate\Support\Facades\Auth;
     
 class BlogController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('permission:blog-list|blog-create|blog-edit|blog-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:blog-create', ['only' => ['create','store']]);
+         $this->middleware('permission:blog-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:blog-delete', ['only' => ['destroy']]);
+    }
  
-public function index(Request $request): View
-{
-    $data = Blog::where('user_id',auth()->user()->id)->latest()->paginate(5);
- //   dd($data['items']);
-    return view('blog.index',compact('data'))
-        ->with('i', ($request->input('page', 1) - 1) * 5);
-}
+    public function index(Request $request): View
+    {
+        $blogs = Blog::with('blogcategories');
+        // print_r(auth()->user()->hasRole('Admin'));die;
+        if(!auth()->user()->hasRole('Admin')){
+            $blogs->where('user_id', auth()->user()->id);
+        }
+        if ($request->search) {
+            $blogs->where('name', 'like', '%' . $request->search . '%');
+        }
+    
+        $blogs = $blogs->latest()->paginate(5);
+    
+        return view('blog.index', compact('blogs'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
+    }
+    
     
    
 public function create(): View
@@ -55,12 +72,13 @@ public function store(Request $request): RedirectResponse
     ];
 
     
+    $data = $request->all();
     if ($request->hasFile('image')) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $imageName);
-        $data['image'] = 'images/' . $imageName;  
-    } else {
-        $data['image'] = 'images/default-image.jpg'; 
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $imagePath = 'images/' . $imageName;
+        $image->move(public_path('images'), $imageName);
+        $blog->image = $imagePath;
     }
  
     $slug = Str::slug($request->name);
@@ -81,13 +99,19 @@ public function store(Request $request): RedirectResponse
   
 public function show($id): View
 {
-    $user = Blog::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail();
+    $user = Blog::where('id',$id)->firstOrFail();
+    if(!auth()->user()->hasRole('Admin')){
+        $user->where('user_id', auth()->user()->id);
+    }
     return view('blog.show',compact('user'));
 }
   
 public function edit($id): View
 {
-    $blog = Blog::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail();
+    $blog = Blog::where('id',$id)->firstOrFail();
+    if(!auth()->user()->hasRole('Admin')){
+        $user->where('user_id', auth()->user()->id);
+    }
     $categories = BlogCategory::pluck('title', 'id');
     // dd($categories);
 
@@ -103,14 +127,14 @@ public function update(Request $request, $id): RedirectResponse
     ]);
 
     $data = $request->all();
-
     if ($request->hasFile('image')) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $imageName);
-        $data['image'] = 'images/' . $imageName;
-    } else {
-        $data['image'] = 'images/default-image.jpg';
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $imagePath = 'images/' . $imageName;
+        $image->move(public_path('images'), $imageName);
+        $blog->image = $imagePath;
     }
+
 
     $slug = Str::slug($request->name);
     $existingSlugCount = Blog::where('slug', $slug)->count();
@@ -132,7 +156,10 @@ public function update(Request $request, $id): RedirectResponse
     
 public function destroy($id): RedirectResponse
 {
-    Blog::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail()->delete();
+    Blog::where('id',$id)->firstOrFail()->delete();
+    if(!auth()->user()->hasRole('Admin')){
+        $user->where('user_id', auth()->user()->id);
+    }
     return redirect()->route('blog.index')
                     ->with('success','User deleted successfully');
 }

@@ -11,5 +11,8 @@ class BlogCategory extends Model
     protected $fillable = [
         'id', 'title','meta_description','meta_keyword','seo_robat',
     ];
-  
+    public function blog()
+    {
+        return $this->hasMany(Blog::class);
+    }
 }

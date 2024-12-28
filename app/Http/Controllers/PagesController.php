@@ -15,10 +15,19 @@ use Illuminate\Support\Str;
     
 class PagesController extends Controller
 {
- 
+    function __construct()
+    {
+         $this->middleware('permission:pages-list|pages-create|pages-edit|pages-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:pages-create', ['only' => ['create','store']]);
+         $this->middleware('permission:pages-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:pages-delete', ['only' => ['destroy']]);
+    }
 public function index(Request $request): View
 {
-    $data = Pages::where('user_id',auth()->user()->id)->latest()->paginate(5);
+    $data = Pages::latest()->paginate(5);
+    if (!auth()->user()->hasRole('Admin')) {
+        $data->where('user_id', auth()->user()->id);
+    }
  //   dd($data['items']);
     return view('pages.index',compact('data'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
@@ -74,7 +83,10 @@ public function show($id): View
   
 public function edit($id): View
 {
-    $pages = Pages::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail();
+    $pages = Pages::where('id',$id)->firstOrFail();
+    if (!auth()->user()->hasRole('Admin')) {
+        $pages->where('user_id', auth()->user()->id);
+    }
     // $userRole = $user->roles->pluck('name','name')->all();
 
     return view('pages.edit',compact('pages'));
@@ -112,7 +124,10 @@ public function update(Request $request, $id): RedirectResponse
     
 public function destroy($id): RedirectResponse
 {
-    Pages::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail()->delete();
+    Pages::where('id',$id)->firstOrFail()->delete();
+    if (!auth()->user()->hasRole('Admin')) {
+        $pages->where('user_id', auth()->user()->id);
+    }
     return redirect()->route('pages.index')
                     ->with('success','User deleted successfully');
 }

@@ -14,5 +14,13 @@ class module extends Model
     protected $fillable = [
         'id','Title','parent_id',
     ];
+    public function permission()
+    {
+        return $this->hasMany(Permission::class);
+    }
+    public function childmodule()
+    {
+        return $this->hasMany(Module::class,'parent_id');
+    }
  
 }

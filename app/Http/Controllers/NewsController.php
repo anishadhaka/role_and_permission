@@ -17,13 +17,30 @@ use Illuminate\Support\Str;
 class NewsController extends Controller
 {
  
+    function __construct()
+    {
+         $this->middleware('permission:news-list|news-create|news-edit|news-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:news-create', ['only' => ['create','store']]);
+         $this->middleware('permission:news-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:news-delete', ['only' => ['destroy']]);
+    }
+
 public function index(Request $request): View
 {
-    $data = News::where('user_id',auth()->user()->id)->latest()->paginate(5);
- //   dd($data['items']);
-    return view('news.index',compact('data'))
+    // $query = News::query();
+    $query = News::with('categories');
+
+
+    if (!auth()->user()->hasRole('Admin')) {
+        $query->where('user_id', auth()->user()->id);
+    }
+
+    $data = $query->latest()->paginate(5);
+
+    return view('news.index', compact('data'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
+    
     
    
 public function create(): View
@@ -79,13 +96,19 @@ public function store(Request $request): RedirectResponse
   
 public function show($id): View
 {
-    $news = News::where('user_id',auth()->user()->id)->find($id);
+    $news = News::find($id);
+    if (!auth()->user()->hasRole('Admin')) {
+        $news->where('user_id', auth()->user()->id);
+    }
     return view('news.show',compact('news'));
 }
   
 public function edit($id): View
 {
-    $News = News::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail();
+    $News = News::where('id',$id)->firstOrFail();
+    if (!auth()->user()->hasRole('Admin')) {
+        $News->where('user_id', auth()->user()->id);
+    }
     $categories = NewsCategory::pluck('title', 'id');
 
     return view('news.edit',compact('News','categories'));
@@ -107,11 +130,11 @@ public function update(Request $request, $id): RedirectResponse
 
  
     if ($request->hasFile('image')) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $imageName);
-        $data['image'] = 'images/' . $imageName;  
-    } else {
-        $data['image'] = 'images/default-image.jpg'; 
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $imagePath = 'images/' . $imageName;
+        $image->move(public_path('images'), $imageName);
+        $blog->image = $imagePath;
     }
 
     
@@ -133,7 +156,10 @@ public function update(Request $request, $id): RedirectResponse
     
 public function destroy($id): RedirectResponse
 {
-    News::where('user_id',auth()->user()->id)->where('id',$id)->firstOrFail()->delete();
+    News::where('id',$id)->firstOrFail()->delete();
+    if (!auth()->user()->hasRole('Admin')) {
+        $query->where('user_id', auth()->user()->id);
+    }
     return redirect()->route('news.index')
                     ->with('success','User deleted successfully');
 }

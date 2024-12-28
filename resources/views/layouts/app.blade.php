@@ -26,8 +26,9 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    User Roles and Permissions Tutorial
+                  Our Project
                 </a>
+                <a href="{{ route('blogsite') }}"> <i class="fa-solid fa-arrow-right"></i> Front</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -103,39 +104,41 @@
                     <li><a href="{{ route('users.index') }}"><i class="fa-solid fa-user-tie"></i> Manage Users</a></li>
                     @endrole
 
-                    @if(auth()->user()->hasRole(['product team','Admin']))
+                    @if(auth()->user()->hasRole(['product team','Admin','module']))
                     <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                        <i class="fa-solid fa-gear"></i> Setting  </i>
                        </a>
                        <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li>
+                       <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li>    
+                       <!-- <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li> -->
                            <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
                        </ul>
                    </li>
                     @endrole
 
-                    @if(auth()->user()->hasRole(['user role team']))
+                    @if(auth()->user()->hasRole(['user role team','module']))
                     <li><a href="{{ route('roles.index') }}"> <i class="fa-brands fa-square-pinterest"></i> Manage Roles</a></li>
                     <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                        <i class="fa-solid fa-gear"></i> Setting  </i>
                        </a>
                        <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li>
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
+                       <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li>
+                        <!-- <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li> -->
+                        <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
                        </ul>
                    </li>
                    
                     @endrole
 
-                    @if(auth()->user()->hasRole(['module team','Admin']))
-                    <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li>
+                    @if(auth()->user()->hasRole(['module','Admin']))
+                    <!-- <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li> -->
                     @endrole
                   
                     
 
-                    @if(auth()->user()->hasRole(['blog team','Admin']))
+                    @if(auth()->user()->hasRole(['blog','Admin']))
                     
                    <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -149,20 +152,22 @@
                    @endif
 
 
-                    @if(auth()->user()->hasRole(['news team','Admin']))
+                    @if(auth()->user()->hasRole(['news','Admin','newscategory']))
                     <li>
                        <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                           <i class="fa-brands fa-blogger-b"></i> News Management </i>
+                       <i class="fa-solid fa-newspaper"></i> News Management </i>
                        </a>
                        <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('news.index') }}"><i class="fa fa-blog"></i> News</a></li>
+                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('news.index') }}"><i class="fa-solid fa-newspaper"></i> News</a></li>
+                           @if(auth()->user()->hasRole(['Admin','newscategory']))
                            <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('newsCategory.index') }}"><i class="fa fa-layer-group"></i> News Category</a></li>
-                       </ul>
+                           @endrole
+                        </ul>
                    </li>
                     @endrole
 
 
-                    @if(auth()->user()->hasRole(['page team','Admin']))
+                    @if(auth()->user()->hasRole(['pages','Admin']))
                     <li><a href="{{ route('pages.index') }}"> <i class="fa-solid fa-layer-group"></i> Pages </a></li>
                     @endrole
 

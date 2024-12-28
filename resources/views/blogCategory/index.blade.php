@@ -1,5 +1,36 @@
 @extends('layouts.app')
 @section('content')
+<style>
+    .searchbar .search-container button {
+  /* float: right;
+  padding: 6px 10px; */
+  /* margin-top: 8px; */
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+  }
+  .searchbar .search-container {
+    float: right;
+  }
+  @media screen and (max-width: 600px) {
+    .searchbar .search-container {
+      float: none;
+    }
+    .searchbar input[type=text], .searchbar .search-container button {
+      /* float: none; */
+      /* display: block; */
+      /* text-align: left; */
+      /* width: 100%; */
+      /* margin: 0; */
+      /* padding: 14px; */
+    }
+    .searchbar input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
+</style>
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -7,6 +38,14 @@
         </div>
         <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('blogCategory.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
+            <div class="searchbar">
+          <div class="search-container">
+            <form action="">
+              <input type="text" placeholder="Search.." name="search">
+              <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+           </div>
+           </div>
         </div>
     </div>
 </div>

@@ -28,7 +28,9 @@
         <th>Parent</th>
         <th>Create date</th>
         <th>Update date</th>
-        <th>Add Permission</th>
+        <!-- <th>Add Permission</th> -->
+        <th>Access </th>
+
         <th width="280px">Action</th>
     </tr>
     @foreach ($data as $key => $user)
@@ -38,16 +40,21 @@
         <td>{{ $user->parent_id }}</td>
         <td>{{ $user->created_at }}</td>
         <td>{{ $user->updated_at }}</td>
-        <td>
+        <!-- <td>
             <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#permissionModal" onclick="openPermissionModal({{ $user->id }})">
                 Add Permission
             </button>
-        </td>
+        </td> -->
         @if(!empty($user->getRoleNames()))
             @foreach($user->getRoleNames() as $v)
                 <label class="badge bg-success">{{ $v }}</label>
             @endforeach
         @endif
+        </td>
+        <td>
+        <a class="btn btn-dark btn-sm" href="{{ route('access', $user->id) }}">Access</a>
+
+
         </td>
         <td>
             <a class="btn btn-info btn-sm" href="{{ route('module.show', $user->id) }}"><i class="fa-solid fa-list"></i> Show</a>

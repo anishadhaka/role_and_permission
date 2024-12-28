@@ -14,6 +14,10 @@ class Blog extends Model
     protected $fillable = [
         'id','name','content','image','slug','user_id','category_id',
     ];
- 
+    public function blogcategories()
+    {
+        return $this->belongsTo(BlogCategory::class,'category_id');
+        
+    }
     
 }
