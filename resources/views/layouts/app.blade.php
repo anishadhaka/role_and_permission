@@ -190,4 +190,14 @@
         </div>
     </div>
 </body>
+<script>
+document.querySelectorAll('.sidebar a.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        parent.classList.toggle('active');
+    });
+});
+</script>
+
 </html>

@@ -18,16 +18,20 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BlogSite;
+use App\Http\Controllers\ActionUserController;
+
 
 
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::post('/action-user-store',[ActionUserController::class , 'store']);
 
 Auth::routes();
 Route::middleware(['auth'])->group(function () {
    
+
 
 Route::get('/blogsite', [BlogSite::class, 'index'])->name('blogsite');
 Route::get('/contactus', [BlogSite::class, 'contactUs'])->name('contactus');
@@ -59,4 +63,7 @@ Route::get('/newscategoriasite', [BlogSite::class, 'newsCategorySite'])->name('n
     Route::resource('newsCategory', NewsCategoryController::class)->middleware(['role:newscategory|Admin','permission:newscategory-list| newscategory-create| newscategory-edit| newscategory-delete']);
     Route::resource('pages', PagesController::class)->middleware(['role:pages|Admin','permission:pages-list| pages-create| pages-edit| pages-delete']);
     Route::resource('module', ModuleController::class)->middleware(['role:module|Admin']);  
+    // Route::resource('action-user', ActionUserController::class);
+   
+
 });

@@ -6,15 +6,41 @@
     <h1 style="margin-bottom:20px;">Blog templates that set you up for success</h1>
     <div class="review-grid">
         @foreach($blog as $blog)
-            <div class="review-card">
-            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top">
+      
+            <div class="review-card"  >
+
+            <div style="display:flex;">        
+            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top" >
+            <i class="fa-regular fa-heart favorite-btn action" 
+              data-id="{{ $blog->id }}" 
+              data-type="blog" 
+              data-action="favorite" 
+
+              style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
+             </i>
+           </div>
+
                 <div class="date">{{ $blog->create_at }}</div>
                 <h1>{{ $blog->name }}</h1>
+            
                 <a href="{{ url('/Blogs/' . $blog->slug) }}"  class="read-more">Read More</a>
-            </div>
+                <i class="fa-regular fa-thumbs-up like-btn action" 
+                   data-id="{{ $blog->id }}" 
+                   data-type="blog" 
+                   data-action="like" 
+
+                  style="margin:10px; font-size:24px; cursor: pointer;"></i>
+
+                 <i class="fa-regular fa-thumbs-down dislike-btn action" 
+                  data-id="{{ $blog->id }}" 
+                  data-type="blog" 
+                  data-action="dislike" 
+
+                 style="margin:10px; font-size:24px; cursor: pointer;"></i>
+             </div>
         @endforeach
     </div>
-    <!-- <button id="loadMore" class="load-more-btn">Load More</button> -->
+   
 </section>
 
 <section class="featured-reviews">
@@ -22,19 +48,42 @@
     <h1 style="margin-bottom:20px;">THE TIMES OF INDIA</h1>
     <div class="review-grid">
         @foreach($news as $news)
+   
             <div class="review-card2">
-            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top">
+            <div style="display:flex;">        
+            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top" >
+            <i class="fa-regular fa-heart favorite-btn action" 
+              data-id="{{ $news->id }}" 
+              data-type="news"
+              data-action= "favorite"
+              style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
+             </i>
+           </div>
                 <h1>{{ $news->name }}</h1>
                 <a href="{{ url('/News/' . $news->slug) }}"  class="read-more">Read More</a>
+
+                <i class="fa-regular fa-thumbs-up like-btn action" 
+                  data-id="{{ $news->id }}" 
+                 data-type="news"
+                  data-action= "like"
+                  style="margin:10px; font-size:24px; cursor: pointer;"></i>
+
+                <i class="fa-regular fa-thumbs-down dislike-btn action" 
+                 data-id="{{ $news->id }}" 
+                data-type="news"
+                data-action= "dislike"
+                 style="margin:10px; font-size:24px; cursor: pointer;"></i>
+
             </div>
         @endforeach
     </div>
-    <!-- <button id="loadMore2" class="load-more-btn">Load More</button> -->
+   
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
+      
+      $(document).ready(function() {
         $(".review-card").slice(3).hide(); 
         $("#loadMore").on("click", function(e) {
             e.preventDefault();
@@ -53,5 +102,46 @@
             }
         });
     });
+    $(document).ready(function() {
+    $(".action").on("click", function() {
+        const $this = $(this);
+        const actionData = {
+            id: $this.data("id"),
+            type: $this.data("type"),
+            action: $this.data("action"),
+        };
+
+        if ($this.hasClass("fa-regular")) {
+            $this.removeClass("fa-regular").addClass("fa-solid");
+        } else {
+            $this.removeClass("fa-solid").addClass("fa-regular");
+        }
+
+        // AJAX call to backend
+        $.ajax({
+            url: "/action-user-store", 
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}", 
+                id: actionData.id,
+                type: actionData.type,
+                action: actionData.action,
+            },
+            success: function(response) {
+                console.log("Action recorded:", response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error recording action:", xhr.responseText);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    });
+});
+
+
+      
+   
+
+
 </script>
 @endsection

@@ -7,10 +7,15 @@
     <div class="review-grid">
         @foreach($blog as $blog)
             <div class="review-card">
-            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top">
+            <div style="display:flex;">        
+            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top" >
+            <i class="fa-regular fa-heart" style="margin-left:-30px; margin-top:10px; font-size:24px;" ></i>
+           </div>
                 <div class="date">{{ $blog->create_at }}</div>
                 <h1>{{ $blog->name }}</h1>
                 <a href="{{ url('/Blogs/' . $blog->slug) }}"  class="read-more">Read More</a>
+                <i class="fa-regular fa-thumbs-up" style="margin:10px;"></i>
+                <i class="fa-regular fa-thumbs-down"></i>
             </div>
         @endforeach
     </div>

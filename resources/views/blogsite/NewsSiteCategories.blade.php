@@ -7,10 +7,15 @@
     <div class="review-grid">
         @foreach($news as $news)
             <div class="review-card2">
-            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top">
+            <div style="display:flex;">        
+            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top" >
+            <i class="fa-regular fa-heart" style="margin-left:-30px; margin-top:10px; font-size:24px;" ></i>
+           </div>
 
                 <h1>{{ $news->name }}</h1>
                 <a href="{{ url('/News/' . $news->slug) }}"  class="read-more">Read More</a>
+                <i class="fa-regular fa-thumbs-up" style="margin:10px;"></i>
+                <i class="fa-regular fa-thumbs-down"></i>
             </div>
         @endforeach
     </div>
