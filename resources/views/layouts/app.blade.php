@@ -12,17 +12,57 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+   
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sidebar.css') }}">
+
+    <script src="<?php echo asset('js/jquery.js');?>"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+<script src="<?php echo asset('bootstrap-iconpicker\js\jquery-menu-editor.js');?>"></script>
+<script src="<?php echo asset('bootstrap-iconpicker\js\jquery-menu-editor.min.js');?>"></script>
+ 
+    {{-- <link rel="stylesheet" href="{{ asset('css/blog.css') }}"> --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script src="<?php echo asset('js/jquery.js');?>"></script>
+    <script src="<?php echo asset('bootstrap-iconpicker\js\jquery-menu-editor.js');?>"></script>
+    <script src="<?php echo asset('bootstrap-iconpicker\js\jquery-menu-editor.min.js');?>"></script>
+    <script src="<?php echo asset('js/bootstrap.js');?>"></script>
+    <script src="<?php echo asset('js/menu.js');?>"></script>
+    <script src="<?php echo asset('js/popper.js');?>"></script>
+    <script src="<?php echo asset('js/perfect-scrollbar.js');?>"></script>
+    <script src="<?php echo asset('js/apexcharts.js');?>"></script>
+    <script src="<?php echo asset('js/perfect-scrollbar.js');?>"></script>
+    <script src="<?php echo asset('js/config.js');?>"></script>
+    <script src="<?php echo asset('js/menu.js');?>"></script>
+    <script src="<?php echo asset('js/dashboards-analytics.js');?>"></script>
+    <script src="<?php echo asset('js/helpers.js');?>"></script>
+    <script src="<?php echo asset('js/main.js');?>"></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <script src="<?php echo asset('bootstrap-iconpicker/js/iconset/fontawesome5-3-1.min.js'); ?>"></script>
+    <script src="<?php echo asset('bootstrap-iconpicker/js/bootstrap-iconpicker.min.js');?>"></script>
+    <script src="<?php echo asset('bootstrap-iconpicker/js/jquery-menu-editor.min.js');?>"></script>
+    <script src="http://127.0.0.1:8000/bootstrap-iconpicker/js/iconset/fontawesome5-3-1.min.js"></script>
+    <script src="http://127.0.0.1:8000/bootstrap-iconpicker/js/bootstrap-iconpicker.min.js"></script>
+    <script src="http://127.0.0.1:8000/bootstrap-iconpicker/js/jquery-menu-editor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </head>
 <body>
     <div id="app">
-    
+   
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -78,103 +118,45 @@
         </nav>
 
         <div class="main-container">
-        @auth
+      
             <aside class="sidebar">
-                <ul>
-                <h4> 
-                
-                <img src="https://www.absglobaltravel.com/public/images/footer-abs-logo.webp" height="60" >
-             </h4>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-bars"></i> Dashboard</a></li>
-                    <!-- <li><a href="{{ route('users.index') }}"><i class="fa-solid fa-user-tie"></i> Manage Users</a></li> -->
-                    <!-- <li>
-                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                       <i class="fa-solid fa-gear"></i> Setting  </i>
-                       </a>
-                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li>
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
-                       </ul>
-                   </li> -->
-                   
-                   
+            <ul class="menu">
+            <h1>
+            <img src="https://www.absglobaltravel.com/public/images/footer-abs-logo.webp" width="200px" height="70px;">
+        </h1>
+    @php
+        // Check if $menu is null or if json_output exists
 
-                  
-                    @if(auth()->user()->hasRole(['user team','Admin']))
-                    <li><a href="{{ route('users.index') }}"><i class="fa-solid fa-user-tie"></i> Manage Users</a></li>
-                    @endrole
-
-                    @if(auth()->user()->hasRole(['product team','Admin','module']))
-                    <li>
-                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                       <i class="fa-solid fa-gear"></i> Setting  </i>
-                       </a>
-                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                       <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li>    
-                       <!-- <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li> -->
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
-                       </ul>
-                   </li>
-                    @endrole
-
-                    @if(auth()->user()->hasRole(['user role team','module']))
-                    <li><a href="{{ route('roles.index') }}"> <i class="fa-brands fa-square-pinterest"></i> Manage Roles</a></li>
-                    <li>
-                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                       <i class="fa-solid fa-gear"></i> Setting  </i>
-                       </a>
-                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                       <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li>
-                        <!-- <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('products.index') }}"><i class="fa-brands fa-product-hunt"></i> Manage Products</a></li> -->
-                        <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('roles.index') }}"><i class="fa fa-layer-group"></i> Manage Roles</a></li>
-                       </ul>
-                   </li>
-                   
-                    @endrole
-
-                    @if(auth()->user()->hasRole(['module','Admin']))
-                    <!-- <li><a href="{{ route('module.index') }}"> <i class="fa-solid fa-hexagon-nodes"></i> Module </a></li> -->
-                    @endrole
-                  
-                    
-
-                    @if(auth()->user()->hasRole(['blog','Admin']))
-                    
-                   <li>
-                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                           <i class="fa-brands fa-blogger-b"></i> Blog Management </i>
-                       </a>
-                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('blog.index') }}"><i class="fa fa-blog"></i> Blog</a></li>
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('blogCategory.index') }}"><i class="fa fa-layer-group"></i> Blog Category</a></li>
-                       </ul>
-                   </li>
-                   @endif
-
-
-                    @if(auth()->user()->hasRole(['news','Admin','newscategory']))
-                    <li>
-                       <a href="#" class="dropdown-toggle sidebar-link" id="blogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                       <i class="fa-solid fa-newspaper"></i> News Management </i>
-                       </a>
-                       <ul class="dropdown-menu sidebar-dropdown" aria-labelledby="blogDropdown">
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('news.index') }}"><i class="fa-solid fa-newspaper"></i> News</a></li>
-                           @if(auth()->user()->hasRole(['Admin','newscategory']))
-                           <li><a class="dropdown-item sidebar-dropdown-item" href="{{ route('newsCategory.index') }}"><i class="fa fa-layer-group"></i> News Category</a></li>
-                           @endrole
-                        </ul>
-                   </li>
-                    @endrole
-
-
-                    @if(auth()->user()->hasRole(['pages','Admin']))
-                    <li><a href="{{ route('pages.index') }}"> <i class="fa-solid fa-layer-group"></i> Pages </a></li>
-                    @endrole
-
+        //dd($menu_nav);
+        $menuItems = !is_null($menu_nav) && isset($menu_nav->json_output) 
+            ? (is_string($menu_nav->json_output) ? json_decode($menu_nav->json_output, true) : $menu_nav->json_output) 
+            : [];
+    @endphp
+    
+    @foreach($menuItems as $item)
+        <li class="menu-item {{ request()->routeIs($item['href']) || (isset($item['children']) && collect($item['children'])->pluck('href')->contains(request()->route()->getName())) ? 'show active' : '' }}">
+            <a href="{{ $item['href'] ? route($item['href']) : 'javascript:void(0);' }}" class="menu-link menu-toggle">
+                <i class="menu-icon {{ $item['icon'] ?? 'fas fa-circle' }}"></i>
+                <div data-i18n="{{ $item['title'] ?? '' }}">{{ $item['text'] }}</div>
+            </a>
+            @if(!empty($item['children']))
+                <ul class="sidebar-dropdown">
+                    @foreach($item['children'] as $child)
+                        <li class="sidebar-dropdown-item {{ request()->routeIs($child['href']) ? 'active' : '' }}">
+                            <a href="{{ $child['href'] ? route($child['href']) : 'javascript:void(0);' }}">
+                                <i class="menu-icon {{ $child['icon'] ?? 'fas fa-circle' }}"></i>
+                                <div data-i18n="{{ $child['title'] ?? '' }}">{{ $child['text'] }}</div>
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
-            </aside>
-       @endauth
-            <main class="content">
+            @endif
+        </li>
+    @endforeach
+</ul>
+
+ </aside>
+    <main class="content">
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-md-12">
@@ -189,15 +171,16 @@
             </main>
         </div>
     </div>
-</body>
-<script>
-document.querySelectorAll('.sidebar a.dropdown-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        const parent = this.parentElement;
-        parent.classList.toggle('active');
+    <script>
+
+document.querySelectorAll('.menu-toggle').forEach(item => {
+    item.addEventListener('click', function(event) {
+        const parentLi = this.parentElement;
+        parentLi.classList.toggle('show'); 
+        event.preventDefault(); 
     });
 });
-</script>
 
+</script>
+</body>
 </html>

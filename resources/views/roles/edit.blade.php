@@ -9,8 +9,28 @@
         <div class="pull-right">
             <a class="btn btn-primary btn-sm mb-2" href="{{ route('roles.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
+    </div>    
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <form action="{{ route('roles.edit', $role->id) }}" method="GET" style="text-align:right; margin-top:10px;">
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                <select name="module_title" class="form-control" style="width: 300px; display: inline-block;">
+                    <option value="">-- Select Module --</option>
+                    @foreach($modules as $module)
+                        <option value="{{ $module->Title }}" 
+                                {{ request()->input('module_title') == $module->Title ? 'selected' : '' }}>
+                            {{ $module->Title }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> Search</button>
+            </div>
+        </form>
     </div>
 </div>
+
 
 @if (count($errors) > 0)
     <div class="alert alert-danger">
@@ -35,17 +55,9 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <!-- <div class="form-group">
-                <strong>Permission:</strong>
-                <br/>
-                @foreach($permission as $value)
-                    <label><input type="checkbox" name="permission[{{$value->id}}]" value="{{$value->id}}" class="name" {{ in_array($value->id, $rolePermissions) ? 'checked' : ''}}>
-                    {{ $value->name }}</label>
-                <br/>
-                @endforeach
-            </div> -->
+         
               <div class="row">
-          @foreach($modules as $module )
+    @foreach($modules as $module )
         <div class="col-lg-12">
             <div class="form-group   mb-3">
             <div style=" padding-left:5px;">
@@ -55,10 +67,10 @@
                 </label>
 
                 <div class="ml-4" style="padding-left:10px;border-left:1px solid gray;margin-left:8px;">
-                    <div>
+                    <!-- <div>
                         <input type="checkbox" class="menu-checkbox" data-category="{{ $module->Title }}" value="show menu"> Show Menu
-                    </div>
-                    <div class="form-group  p-2" style="margin-left:8px;border-left:1px solid gray;">
+                    </div> -->
+                    <!-- <div class="form-group  p-2" style="margin-left:8px;">
                         @foreach($module->permission as $permission)
                         <div>
                             <label>
@@ -67,31 +79,31 @@
                             </label>
                         </div>
                         @endforeach
-                    </div>
-                    <div class="form-group  p-2" style="margin-left:8px;border-left:1px solid gray;">
-                        @foreach($module->childmodule as $childmod)
-                        <div>
+                    </div> -->
+                <div class="form-group  p-2" >
+                 @foreach($module->childmodule as $childmod)
+                    <div>
                         <label>
                             <input type="checkbox" class="category-checkbox" data-category="{{ $childmod->Title }}">
                             <strong>{{ $childmod->Title }}</strong>
                             <!-- {{$childmod->permission}} -->
                         </label>
-                        <div class="form-group  p-2" style="margin-left:8px;border-left:1px solid gray;">
-                        @foreach($childmod->permission as $permission)
-                        <div>
-                            <label>
-                                <input type="checkbox" class="permission-checkbox" data-category="{{ $childmod->Title }}" value="{{ $permission->id }}"  name="permission[{{$permission->id}}]" class="name" {{ in_array($permission->id, $rolePermissions) ? 'checked' : ''}}>
-                                {{ $permission->name }}
-                            </label>
+                            <div class="form-group  p-2" style="margin-left:8px;border-left:1px solid gray;">
+                            @foreach($childmod->permission as $permission)
+                            <div>
+                                <label>
+                                    <input type="checkbox" class="permission-checkbox" data-category="{{ $childmod->Title }}" value="{{ $permission->id }}"  name="permission[{{$permission->id}}]" class="name" {{ in_array($permission->id, $rolePermissions) ? 'checked' : ''}}>
+                                    {{ $permission->name }}
+                                </label>
+                            </div>
+                            @endforeach
+                         </div>
                         </div>
-                        @endforeach
-                    </div>
-                        </div>
-                        @endforeach
-                    </div>
+                  @endforeach
+                </div>
                 </div>
             </div>
-        </div>
+         </div>
         @endforeach
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -129,6 +141,23 @@
             });
         });
     });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.querySelector('input[name="search"]');
+    const modules = document.querySelectorAll('.form-group');
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+
+        modules.forEach(module => {
+            const title = module.querySelector('strong').textContent.toLowerCase();
+            const matches = title.includes(query);
+
+            module.style.display = matches ? '' : 'none';
+        });
+    });
+});
+
 </script>
 @endsection
 

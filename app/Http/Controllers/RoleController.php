@@ -26,6 +26,7 @@ function __construct()
 public function index(Request $request): View
 {
     $roles = Role::orderBy('id','DESC')->paginate(5);
+   
     return view('roles.index',compact('roles'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
@@ -62,8 +63,9 @@ public function show($id): View
 
     return view('roles.show',compact('role','rolePermissions'));
 }
-public function edit($id): View
+public function edit(Request $request,$id): View
 {
+    $query = $request->input('search');
     $role = Role::find($id);
     $permission = Permission::get();
     $modules = module::with(['permission',
@@ -74,6 +76,8 @@ public function edit($id): View
     $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
         ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
         ->all();
+
+        
 
     return view('roles.edit',compact('role','permission','rolePermissions','modules'));
 }

@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\News;
+use App\Models\ActionUser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
+use App\Models\Menu;
+use App\Models\module;
 
 class BlogSite extends Controller
 {
@@ -14,7 +22,21 @@ class BlogSite extends Controller
     //  dd("jbj");
     $blog = Blog::all(); 
     $news = News::all(); 
-    return view('blogsite.blogsite', compact('blog', 'news'));
+    $action= ActionUser::all();
+    $blogs = Blog::all()->map(function ($blog) {
+        $blog->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+        $blog->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+        $blog->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+        return $blog;
+    });
+
+    $news = News::all()->map(function ($newsItem) {
+        $newsItem->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+        $newsItem->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+        $newsItem->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+        return $newsItem;
+    });
+    return view('blogsite.blogsite', compact('blog', 'news','blogs','news'));
 }
 
 public function blogsitecateg($categoryTitle)
@@ -85,12 +107,26 @@ public function newsbyslug($slug)
 public function blogCategorySite()
 {
     $blog = Blog::all(); 
-    return view('blogsite.blogcategories', compact('blog'));
+    $blogs = Blog::all()->map(function ($blog) {
+        $blog->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+        $blog->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+        $blog->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+        return $blog;
+    });
+
+   
+    return view('blogsite.blogcategories', compact('blog','blogs'));
 }
 public function newsCategorySite()
 {
     $news = News::all(); 
-    return view('blogsite.NewsSitecategories', compact('news'));
+    $newss = News::all()->map(function ($newsItem) {
+        $newsItem->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+        $newsItem->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+        $newsItem->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+        return $newsItem;
+    });
+    return view('blogsite.NewsSitecategories', compact('news','newss'));
 }
 
 }

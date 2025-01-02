@@ -19,6 +19,8 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BlogSite;
 use App\Http\Controllers\ActionUserController;
+use App\Http\Controllers\MenuController;
+
 
 
 
@@ -27,6 +29,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/action-user-store',[ActionUserController::class , 'store']);
+// Route to display the menu editor page
+Route::get('menu/{id}', [MenuController::class, 'showMenu'])->name('menu');
+
+// Route to update the JSON data
+Route::post('/updatejsondata', [MenuController::class, 'updateJsonData'])->name('updatejsondata');
+
+
 
 Auth::routes();
 Route::middleware(['auth'])->group(function () {
@@ -63,7 +72,9 @@ Route::get('/newscategoriasite', [BlogSite::class, 'newsCategorySite'])->name('n
     Route::resource('newsCategory', NewsCategoryController::class)->middleware(['role:newscategory|Admin','permission:newscategory-list| newscategory-create| newscategory-edit| newscategory-delete']);
     Route::resource('pages', PagesController::class)->middleware(['role:pages|Admin','permission:pages-list| pages-create| pages-edit| pages-delete']);
     Route::resource('module', ModuleController::class)->middleware(['role:module|Admin']);  
-    // Route::resource('action-user', ActionUserController::class);
+    Route::resource('menu', MenuController::class);  
+
+  
    
 
 });

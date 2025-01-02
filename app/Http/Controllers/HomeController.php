@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use App\Models\Menu;
+use App\Models\module;
 
 class HomeController extends Controller
 {
@@ -23,7 +25,11 @@ class HomeController extends Controller
     public function index()
     { 
     $formattedDate = format_date('2024-12-24');
+    $menuData = Menu::first();
+    $module = Module::get();
+
+    
           
-        return view('home',compact('formattedDate'));
+        return view('home',compact('formattedDate','menuData','module'));
     }
 }

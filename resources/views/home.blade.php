@@ -2,6 +2,7 @@
 
 @section('content')
 {{$formattedDate}}
+
 <div class="container">
 <!-- <div>
     <a href="{{ route('blogsite') }}">
