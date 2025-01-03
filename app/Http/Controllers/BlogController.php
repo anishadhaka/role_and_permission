@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\Domain;
+use App\Models\Language;
 use Spatie\Permission\Models\Role;
 // use Spatie\Permission\Models\BlogCategory;
 use App\Models\BlogCategory;
@@ -28,7 +30,8 @@ class BlogController extends Controller
  
     public function index(Request $request): View
     {
-        $blogs = Blog::with('blogcategories');
+        $blogs = Blog::with(['blogcategories','languages','domains']);
+        // dd($blogs);
         // print_r(auth()->user()->hasRole('Admin'));die;
         if(!auth()->user()->hasRole('Admin')){
             $blogs->where('user_id', auth()->user()->id);
@@ -36,10 +39,10 @@ class BlogController extends Controller
         if ($request->search) {
             $blogs->where('name', 'like', '%' . $request->search . '%');
         }
-    
+    $languages= Language::pluck('language_name','id');
         $blogs = $blogs->latest()->paginate(5);
     
-        return view('blog.index', compact('blogs'))
+        return view('blog.index', compact('blogs','languages'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -49,7 +52,10 @@ public function create(): View
 {
    
     $categories = BlogCategory::pluck('title', 'id')->all();
-    return view('blog.create',compact('categories'));
+    $domains= Domain::pluck('domain_name','id');
+    $languages= Language::pluck('language_name','id');
+
+    return view('blog.create',compact('categories','domains','languages'));
 }
     
   
@@ -67,6 +73,8 @@ public function store(Request $request): RedirectResponse
         'content' => $request->content,
         'category_id'=>$request->category_id,
         'user_id' => auth()->user()->id,
+        'domain' => $request->domain,
+        'language' => $request->language,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];
@@ -109,13 +117,15 @@ public function show($id): View
 public function edit($id): View
 {
     $blog = Blog::where('id',$id)->firstOrFail();
+    $domains= Domain::pluck('domain_name','id');
+    $languages= Language::pluck('language_name','id');
     if(!auth()->user()->hasRole('Admin')){
         $user->where('user_id', auth()->user()->id);
     }
     $categories = BlogCategory::pluck('title', 'id');
     // dd($categories);
 
-    return view('blog.edit', compact('blog', 'categories'));
+    return view('blog.edit', compact('blog', 'categories','domains','languages'));
 }
     
   

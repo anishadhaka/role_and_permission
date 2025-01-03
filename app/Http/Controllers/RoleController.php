@@ -63,24 +63,38 @@ public function show($id): View
 
     return view('roles.show',compact('role','rolePermissions'));
 }
-public function edit(Request $request,$id): View
+public function edit(Request $request, $id): View|JsonResponse
 {
-    $query = $request->input('search');
     $role = Role::find($id);
     $permission = Permission::get();
-    $modules = module::with(['permission',
-    'childmodule' => function ($query){
-        $query->whereHas('permission');
+    $modulesQuery = module::with([
+        'permission',
+        'childmodule' => function ($query) {
+            $query->whereHas('permission');
+        }
+    ])->where('parent_id', 0);
+
+    // Filter modules based on the AJAX request
+    if ($request->ajax()) {
+        if ($request->has('module_title') && !empty($request->module_title)) {
+            $modulesQuery->where('Title', 'like', '%' . $request->module_title . '%');
+        }
+        $filteredModules = $modulesQuery->get();
+        return response()->json([
+            'success' => true,
+            'modules' => $filteredModules,
+        ]);
     }
-    ])->where('parent_id',0)->get();
-    $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
-        ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+
+    $modules = $modulesQuery->get();
+    $rolePermissions = DB::table("role_has_permissions")
+        ->where("role_has_permissions.role_id", $id)
+        ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
         ->all();
 
-        
-
-    return view('roles.edit',compact('role','permission','rolePermissions','modules'));
+    return view('roles.edit', compact('role', 'permission', 'rolePermissions', 'modules'));
 }
+
 public function update(Request $request, $id): RedirectResponse
 {
     $this->validate($request, [

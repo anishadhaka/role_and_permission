@@ -53,6 +53,38 @@
                 <input type="text" name="content" placeholder="content" class="form-control"  value="{{ $blog->content }}">
             </div>
         </div>
+        
+    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Domain:</strong>
+        <select name="domain" class="form-control">
+            @foreach ($domains as $id => $domain_name) 
+                <option value="{{ $id }}">
+                    {{ $domain_name }}
+                </option>
+            @endforeach
+        </select>
+        @error('domain')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Language:</strong>
+        <select name="language" class="form-control">
+            @foreach ($languages as $id => $language_name) 
+                <option value="{{$id }}">
+                    {{ $language_name }}
+                </option>
+            @endforeach
+        </select>
+        @error('language')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Image:</strong>

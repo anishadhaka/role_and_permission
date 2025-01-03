@@ -25,7 +25,6 @@ public function index(Request $request):view
         $data = Menu::latest()->paginate(5);
   
         return view('menu.index',compact('data'));
-            // ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 }
 

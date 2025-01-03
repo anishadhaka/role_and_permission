@@ -37,8 +37,21 @@
         <div class="pull-left">
             <h2>Blog Management</h2>
         </div>
+
         <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('blog.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
+            <div class="language-picker  mb-1" >
+         <form action="" class="language-picker__form" style="display:flex;margin-left:700px;margin-top:-50px;">
+        <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;" >Language  </label>
+        <select name="language" class="form-control"style="width:120px;height:40px;">
+        @foreach ($languages as $key=>$language)
+                    <option value="{{ $language }}"  <i class="fa-solid fa-caret-down"></i>> 
+                        {{ $language }}
+                    </option>
+                @endforeach
+        </select>
+    </form>
+</div>
           <div class="searchbar">
           <div class="search-container">
             <form action="">
@@ -47,7 +60,6 @@
             </form>
            </div>
            </div>
-
         </div>
     </div>
 </div>
@@ -63,6 +75,8 @@
        <th>Id</th>
        <th>Name</th>
        <th>Title</th>
+       <th>Language </th>
+       <th>Domain</th>
        <th>Image</th>
        <th width="280px">Action</th>
    </tr>
@@ -71,8 +85,10 @@
     <tr>
         <td>{{ ++$i }}</td>
         <td>{{ $blog->name }}</td>
-        <td>{{ $blog->blogcategories->title }}
-        </td>
+        <td>{{ $blog->blogcategories->title }}</td>
+        <td>{{ $blog->languages?->language_name ?? 'no language'}}</td>
+        <td>{{ $blog->domains?->domain_name ?? 'No domain' }}</td>
+
         <td>
            @if ($blog->image)
            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top"  height="50px"  style="width:100px;">

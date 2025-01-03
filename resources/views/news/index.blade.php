@@ -5,11 +5,27 @@
         <div class="pull-left">
             <h2>News Management</h2>
         </div>
+      
+ 
         <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('news.create') }}"><i class="fa fa-plus"></i> Create New News</a>
         </div>
     </div>
+</div> 
+<div class="language-picker  mb-1" >
+    <form action="" class="language-picker__form" style="display:flex;margin-left:700px;">
+        <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;" >Language  </label>
+        <select name="language" class="form-control"style="width:120px;height:40px;">
+        @foreach ($languages as $key=>$language)
+                    <option value="{{ $language }}"  <i class="fa-solid fa-caret-down"></i>> 
+                        {{ $language }}
+                    </option>
+                @endforeach
+        </select>
+    </form>
 </div>
+
+       
 
 @session('success')
     <div class="alert alert-success" role="alert"> 
@@ -22,14 +38,18 @@
        <th>Id</th>
        <th>Name</th>
        <th>Title</th>
+       <th>Language</th>
+       <th>Domain</th>
        <th>Image</th>
        <th width="280px">Action</th>
    </tr>
-   @foreach ($data as $key => $news)
+   @foreach ($newss as $key => $news)
     <tr>
         <td>{{ ++$i }}</td>
         <td>{{ $news->name }}</td>
         <td>{{ $news->categories->title }}</td>
+        <td>{{$news->languages?->language_name ?? 'no language'}}</td>
+        <td>{{$news->domains?->domain_name ?? 'no domain'}} </td>
         <td>
            @if ($news->image)
            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top"  height="40px">
@@ -53,7 +73,7 @@
  @endforeach
 </table>
 
-{!! $data->links('pagination::bootstrap-5') !!}
+{!! $newss->links('pagination::bootstrap-5') !!}
 
 
 @endsection

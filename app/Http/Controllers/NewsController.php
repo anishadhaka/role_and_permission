@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Models\Domain;
+use App\Models\Language;
+
 use Spatie\Permission\Models\Role;
 use App\Models\NewsCategory;
 use DB;
@@ -27,17 +30,14 @@ class NewsController extends Controller
 
 public function index(Request $request): View
 {
-    // $query = News::query();
-    $query = News::with('categories');
-
-
+    $query = News::with(['categories','languages','domains']);
     if (!auth()->user()->hasRole('Admin')) {
         $query->where('user_id', auth()->user()->id);
     }
+  $languages=Language::pluck('language_name','id');
+    $newss = $query->latest()->paginate(5);
 
-    $data = $query->latest()->paginate(5);
-
-    return view('news.index', compact('data'))
+    return view('news.index', compact('newss','languages'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
     
@@ -47,7 +47,9 @@ public function create(): View
 {
     // $roles = Role::pluck('name','name')->all();
     $categories = NewsCategory::pluck('title', 'id')->all();
-    return view('news.create',compact('categories'));
+    $domains= Domain::pluck('domain_name','id');
+    $languages= Language::pluck('language_name','id');
+    return view('news.create',compact('categories','domains','languages'));
 }
     
   
@@ -66,6 +68,8 @@ public function store(Request $request): RedirectResponse
         'user_id' => auth()->user()->id,
         'name' => $request->name,
         'description' => $request->description,
+        'domain' => $request->domain,
+        'language' => $request->language,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];
@@ -110,8 +114,10 @@ public function edit($id): View
         $News->where('user_id', auth()->user()->id);
     }
     $categories = NewsCategory::pluck('title', 'id');
-
-    return view('news.edit',compact('News','categories'));
+    $domains =Domain::pluck('domain_name','id');
+    $languages=Language::pluck('language_name','id');
+// dd($domains);
+    return view('news.edit',compact('News','categories','domains','languages'));
 }
     
   

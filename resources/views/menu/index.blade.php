@@ -38,12 +38,12 @@
         <td>
              <!-- <a class="btn btn-info btn-sm" href="{{ route('menu.show',$menu->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
              <a class="btn btn-primary btn-sm" href="{{ route('menu.edit',$menu->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-              <form method="POST" action="{{ route('menu.destroy', $menu->id) }}" style="display:inline">
+              <!-- <form method="POST" action="{{ route('menu.destroy', $menu->id) }}" style="display:inline">
                   @csrf
                   @method('DELETE')
 
                   <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
-              </form>
+              </form> -->
         </td>
     </tr>
  @endforeach

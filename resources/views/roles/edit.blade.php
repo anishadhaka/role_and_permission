@@ -13,21 +13,22 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12">
-        <form action="{{ route('roles.edit', $role->id) }}" method="GET" style="text-align:right; margin-top:10px;">
-            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
-                <select name="module_title" class="form-control" style="width: 300px; display: inline-block;">
-                    <option value="">-- Select Module --</option>
-                    @foreach($modules as $module)
-                        <option value="{{ $module->Title }}" 
-                                {{ request()->input('module_title') == $module->Title ? 'selected' : '' }}>
-                            {{ $module->Title }}
-                        </option>
-                    @endforeach
-                </select>
-                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> Search</button>
-            </div>
-        </form>
+    <div class="moduleContainer">
+    <form id="moduleSearchForm" data-id="{{ $role->id }}" style="text-align:right; margin-top:10px;">
+    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <select name="module_title" class="form-control" style="width: 300px; display: inline-block;">
+            <option value="">-- Select Module --</option>
+            @foreach($modules as $module)
+                <option value="{{ $module->Title }}" 
+                        {{ request()->input('module_title') == $module->Title ? 'selected' : '' }}>
+                    {{ $module->Title }}
+                </option>
+            @endforeach
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> Search</button>
+    </div>
+</form>
+
     </div>
 </div>
 
@@ -142,21 +143,52 @@
         });
     });
     
-    document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.querySelector('input[name="search"]');
-    const modules = document.querySelectorAll('.form-group');
 
-    searchInput.addEventListener('input', function () {
-        const query = this.value.toLowerCase();
+$(document).ready(function () {
+    $('#moduleSearchForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent form submission
+        
+        const form = $(this);
+        const roleId = form.data('id');
+        const url = `/roles/${roleId}/edit`;
+        const moduleTitle = form.find('select[name="module_title"]').val();
 
-        modules.forEach(module => {
-            const title = module.querySelector('strong').textContent.toLowerCase();
-            const matches = title.includes(query);
+        $.ajax({
+            url: /roles.edit,
+            method: 'GET',
+            data: { module_title: moduleTitle },
+            success: function (response) {
+                if (response.success) {
+                    const modules = response.modules;
 
-            module.style.display = matches ? '' : 'none';
+                    // Clear and repopulate modules (example)
+                    const moduleContainer = $('#moduleContainer');
+                    moduleContainer.empty();
+
+                    if (modules.length > 0) {
+                        modules.forEach(module => {
+                            moduleContainer.append(`
+                                <div>
+                                    <h5>${module.Title}</h5>
+                                    <p>${module.description || 'No description'}</p>
+                                </div>
+                            `);
+                        });
+                    } else {
+                        moduleContainer.append('<p>No modules found.</p>');
+                    }
+                } else {
+                    alert('Failed to load modules.');
+                }
+            },
+            error: function (xhr) {
+                console.error('Error fetching modules:', xhr);
+                alert('An error occurred while searching for modules.');
+            }
         });
     });
 });
+
 
 </script>
 @endsection

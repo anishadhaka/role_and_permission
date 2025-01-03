@@ -33,7 +33,7 @@
             </div>
         </div>
     
-            <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Category:</strong>
                 <select name="category_id" class="form-control" >
@@ -50,6 +50,39 @@
                 <strong>Content:</strong>
                 <input type="text" name="content" placeholder="content" class="form-control">
             </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Domain:</strong>
+        <select name="domain" class="form-control">
+            @foreach ($domains as $id => $domain_name) 
+                <option value="{{ $id }}" {{ old('domain') == $id ? 'selected' : '' }}>
+                    {{ $domain_name }}
+                </option>
+            @endforeach
+        </select>
+        @error('domain')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Language:</strong>
+        <select name="language" class="form-control">
+            @foreach ($languages as $id => $language_name) 
+                <option value="{{ $id }}" {{ old('language') == $id ? 'selected' : '' }}>
+                    {{ $language_name }}
+                </option>
+            @endforeach
+        </select>
+        @error('language')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">

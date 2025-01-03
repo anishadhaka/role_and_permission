@@ -4,12 +4,7 @@
 {{$formattedDate}}
 
 <div class="container">
-<!-- <div>
-    <a href="{{ route('blogsite') }}">
-        <i class="fas fa-eye" style="font-size:26px"></i>
-    </a>
-    Front
-</div> -->
+
 
     <div class="row justify-content-center">
         <div class="col-md-8">
