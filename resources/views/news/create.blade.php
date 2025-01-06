@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Create New Blog</h2>
+            <h2>Create New News</h2>
         </div>
         <div class="pull-right">
             <a class="btn btn-primary btn-sm mb-2" href="{{ route('news.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
@@ -54,9 +54,9 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <strong>Domain:</strong>
-        <select name="domain" class="form-control">
-            @foreach ($domains as $id => $domain_name) <!-- Variable should match what's passed to the view -->
-                <option value="{{ $id }}" {{ old('domain') == $id ? 'selected' : '' }}>
+        <select name="domain_id" class="form-control">
+            @foreach ($domains as $id => $domain_name)
+                <option value="{{ $id }}" >
                     {{ $domain_name }}
                 </option>
             @endforeach
@@ -69,9 +69,9 @@
 <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <strong>Language:</strong>
-        <select name="language" class="form-control">
-            @foreach ($languages as $id => $language_name) <!-- Variable should match what's passed to the view -->
-                <option value="{{ $id }}" {{ old('language') == $id ? 'selected' : '' }}>
+        <select name="language_id" class="form-control">
+            @foreach ($languages as $id => $language_name) <
+                <option value="{{ $id }}">
                     {{ $language_name }}
                 </option>
             @endforeach

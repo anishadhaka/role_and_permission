@@ -14,7 +14,7 @@
 
 <div class="row">
     <div class="moduleContainer">
-    <form id="moduleSearchForm" data-id="{{ $role->id }}" style="text-align:right; margin-top:10px;">
+    <form id="moduleSearchForm" data-id="{{ $role->id }}" style="text-align:right; margin-top:10px;" action="">
     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
         <select name="module_title" class="form-control" style="width: 300px; display: inline-block;">
             <option value="">-- Select Module --</option>
@@ -129,62 +129,56 @@
             });
         });
 
-        // Optionally, if you want menus to control permissions under them
-        document.querySelectorAll('.menu-checkbox').forEach(menuCheckbox => {
-            menuCheckbox.addEventListener('change', function () {
-                const category = this.getAttribute('data-category');
-                const isChecked = this.checked;
 
-                // Check/uncheck all permissions under this menu
-                document.querySelectorAll(`.permission-checkbox[data-category="${category}"]`).forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
-            });
-        });
-    });
     
-
-$(document).ready(function () {
+    $(document).ready(function () {
     $('#moduleSearchForm').on('submit', function (e) {
-        e.preventDefault(); // Prevent form submission
-        
-        const form = $(this);
-        const roleId = form.data('id');
-        const url = `/roles/${roleId}/edit`;
-        const moduleTitle = form.find('select[name="module_title"]').val();
+        e.preventDefault(); // Stop form submission
 
-        $.ajax({
-            url: /roles.edit,
-            method: 'GET',
-            data: { module_title: moduleTitle },
-            success: function (response) {
-                if (response.success) {
-                    const modules = response.modules;
+        const roleId = $(this).data('id'); // Get role ID
+        const moduleTitle = $('select[name="module_title"]').val(); // Get selected module
 
-                    // Clear and repopulate modules (example)
-                    const moduleContainer = $('#moduleContainer');
-                    moduleContainer.empty();
+        // AJAX request
+        $.get(`/roles/${roleId}/edit`, { module_title: moduleTitle }, function (response) {
+            const moduleContainer = $('.moduleContainer');
+            moduleContainer.empty(); // Clear the container
 
-                    if (modules.length > 0) {
-                        modules.forEach(module => {
-                            moduleContainer.append(`
-                                <div>
-                                    <h5>${module.Title}</h5>
-                                    <p>${module.description || 'No description'}</p>
-                                </div>
-                            `);
-                        });
-                    } else {
-                        moduleContainer.append('<p>No modules found.</p>');
-                    }
-                } else {
-                    alert('Failed to load modules.');
-                }
-            },
-            error: function (xhr) {
-                console.error('Error fetching modules:', xhr);
-                alert('An error occurred while searching for modules.');
+            if (response.success && response.modules.length > 0) {
+                // Loop through modules and append only the matching ones
+                response.modules.forEach(module => {
+                    moduleContainer.append(`
+                        <div>
+                            <h4>${module.Title}</h4>
+                            <div style="margin-left: 20px; border-left: 1px solid #ccc; padding-left: 10px;">
+                                ${module.childmodule.map(child => `
+                                    <div>
+                                        <strong>${child.Title}</strong>
+                                        <div style="margin-left: 15px;">
+                                            ${child.permission.map(perm => `
+                                                <label>
+                                                    <input type="checkbox" name="permission[${perm.id}]" value="${perm.id}">
+                                                    ${perm.name}
+                                                </label>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `);
+                });
+            } else {
+                moduleContainer.append('<p>No modules found.</p>');
             }
+
+            $('select[name="module_title"] option').each(function () {
+                const optionValue = $(this).val();
+                if (optionValue !== moduleTitle && optionValue !== "") {
+                    $(this).hide(); 
+                }
+            });
+        }).fail(function () {
+            alert('Error fetching data. Please try again.');
         });
     });
 });

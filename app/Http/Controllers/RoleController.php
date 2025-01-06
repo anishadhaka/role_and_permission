@@ -63,23 +63,20 @@ public function show($id): View
 
     return view('roles.show',compact('role','rolePermissions'));
 }
-public function edit(Request $request, $id): View|JsonResponse
+public function edit(Request $request, $id)
 {
     $role = Role::find($id);
-    $permission = Permission::get();
-    $modulesQuery = module::with([
-        'permission',
-        'childmodule' => function ($query) {
-            $query->whereHas('permission');
-        }
-    ])->where('parent_id', 0);
+    $modulesQuery = Module::with(['childmodule.permission'])
+        ->where('parent_id', 0);
 
-    // Filter modules based on the AJAX request
+    // Check if it's an AJAX request
     if ($request->ajax()) {
         if ($request->has('module_title') && !empty($request->module_title)) {
             $modulesQuery->where('Title', 'like', '%' . $request->module_title . '%');
         }
+
         $filteredModules = $modulesQuery->get();
+
         return response()->json([
             'success' => true,
             'modules' => $filteredModules,
@@ -88,12 +85,13 @@ public function edit(Request $request, $id): View|JsonResponse
 
     $modules = $modulesQuery->get();
     $rolePermissions = DB::table("role_has_permissions")
-        ->where("role_has_permissions.role_id", $id)
-        ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-        ->all();
+        ->where("role_id", $id)
+        ->pluck('permission_id')
+        ->toArray();
 
-    return view('roles.edit', compact('role', 'permission', 'rolePermissions', 'modules'));
+    return view('roles.edit', compact('role', 'modules', 'rolePermissions'));
 }
+
 
 public function update(Request $request, $id): RedirectResponse
 {

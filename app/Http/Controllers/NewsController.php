@@ -28,18 +28,30 @@ class NewsController extends Controller
          $this->middleware('permission:news-delete', ['only' => ['destroy']]);
     }
 
-public function index(Request $request): View
-{
-    $query = News::with(['categories','languages','domains']);
-    if (!auth()->user()->hasRole('Admin')) {
-        $query->where('user_id', auth()->user()->id);
+    public function index(Request $request): View
+    {
+        $language = $request->get('language'); 
+    
+        $query = News::with(['categories', 'languages', 'domains']);
+    
+        if (!auth()->user()->hasRole('Admin')) {
+            $query->where('user_id', auth()->user()->id);
+        }
+    
+        if ($language) {
+            $query->whereHas('languages', function ($query) use ($language) {
+                $query->where('language_name', $language);
+            });
+        }
+    
+        $newss = $query->latest()->paginate(5);
+    
+        $languages = Language::pluck('language_name', 'id');
+    
+        return view('news.index', compact('newss', 'languages'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
     }
-  $languages=Language::pluck('language_name','id');
-    $newss = $query->latest()->paginate(5);
-
-    return view('news.index', compact('newss','languages'))
-        ->with('i', ($request->input('page', 1) - 1) * 5);
-}
+    
     
     
    
@@ -68,8 +80,8 @@ public function store(Request $request): RedirectResponse
         'user_id' => auth()->user()->id,
         'name' => $request->name,
         'description' => $request->description,
-        'domain' => $request->domain,
-        'language' => $request->language,
+        'domain_id' => $request->domain_id,
+        'language_id' => $request->language_id,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];

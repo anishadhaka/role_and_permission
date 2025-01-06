@@ -49,19 +49,15 @@ class LanguageController extends Controller
      */
     public function store(Request $request)
     {
-        // Perform validation
         $validated = $request->validate([
             'language_name' => 'required|string|max:255',
             'language_code' => 'required|string|max:10',
         ]);
-    
-        // Create a new language record
         Language::create([
             'language_name' => $validated['language_name'],
             'language_code' => $validated['language_code'],
         ]);
     
-        // Redirect with a success message
         return redirect()->route('language.index')->with('success', 'Language created successfully!');
     }
     
@@ -89,22 +85,18 @@ class LanguageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Retrieve the existing language by ID
         $language = Language::findOrFail($id);
     
-        // Validate the request data
         $validated = $request->validate([
             'language_name' => 'required|string|max:255',
             'language_code' => 'required|string|max:10',
         ]);
     
-        // Update the existing language
         $language->update([
             'language_name' => $validated['language_name'],
             'language_code' => $validated['language_code'],
         ]);
     
-        // Redirect with a success message
         return redirect()->route('language.index')->with('success', 'Language updated successfully!');
     }
     

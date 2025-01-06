@@ -7,7 +7,7 @@
         @csrf
 
         <div class="row">
-            <!-- Left Column -->
+            
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="domain_name">Domain Name</label>
@@ -39,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- Right Column -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="authentication">Authentication</label>
@@ -55,13 +54,12 @@
 
                 <div class="form-group">
                     <label for="to_mail_id">To Mail ID</label>
-                    <input type="text" name="to_mail_id" class="form-control" id="to_mail_id" 
+                    <input type="number" name="to_mail_id" class="form-control" id="to_mail_id" 
                            value="{{ old('to_mail_id') }}" required>
                 </div>
             </div>
         </div>
 
-        <!-- Rich Text Editors -->
         <div class="form-group">
             <label for="mail_header">Mail Header</label>
             <textarea name="mail_header" class="form-control rich-text-editor" id="mail_header">{{ old('mail_header') }}</textarea>
@@ -72,7 +70,6 @@
             <textarea name="mail_footer" class="form-control rich-text-editor" id="mail_footer">{{ old('mail_footer') }}</textarea>
         </div>
 
-        <!-- Action Buttons -->
         <button type="submit" class="btn btn-primary mt-3">Create Domain</button>
         <a href="{{ route('domain.index') }}" class="btn btn-secondary mt-3">Cancel</a>
     </form>

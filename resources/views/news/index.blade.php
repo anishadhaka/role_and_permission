@@ -11,16 +11,18 @@
             <a class="btn btn-success mb-2" href="{{ route('news.create') }}"><i class="fa fa-plus"></i> Create New News</a>
         </div>
     </div>
+    
 </div> 
-<div class="language-picker  mb-1" >
-    <form action="" class="language-picker__form" style="display:flex;margin-left:700px;">
-        <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;" >Language  </label>
-        <select name="language" class="form-control"style="width:120px;height:40px;">
-        @foreach ($languages as $key=>$language)
-                    <option value="{{ $language }}"  <i class="fa-solid fa-caret-down"></i>> 
-                        {{ $language }}
-                    </option>
-                @endforeach
+<div class="language-picker mb-1">
+    <form action="{{ route('news.index') }}" method="GET" class="language-picker__form" style="display:flex;margin-left:700px;">
+        <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;">Language</label>
+        <select name="language" class="form-control" style="width:120px;height:40px;" onchange="this.form.submit()">
+            <option value="">All</option> 
+            @foreach ($languages as $key => $language)
+                <option value="{{ $language }}" >
+                    {{ $language }}
+                </option>
+            @endforeach
         </select>
     </form>
 </div>

@@ -57,7 +57,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <strong>Domain:</strong>
-        <select name="domain" class="form-control">
+        <select name="domain_id" class="form-control">
             @foreach ($domains as $id => $domain_name) 
                 <option value="{{ $id }}">
                     {{ $domain_name }}
@@ -72,7 +72,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <strong>Language:</strong>
-        <select name="language" class="form-control">
+        <select name="language_id" class="form-control">
             @foreach ($languages as $id => $language_name) 
                 <option value="{{$id }}">
                     {{ $language_name }}

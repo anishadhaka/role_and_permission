@@ -30,23 +30,33 @@ class BlogController extends Controller
  
     public function index(Request $request): View
     {
-        $blogs = Blog::with(['blogcategories','languages','domains']);
-        // dd($blogs);
-        // print_r(auth()->user()->hasRole('Admin'));die;
-        if(!auth()->user()->hasRole('Admin')){
+        $language = $request->get('language'); 
+        $blogs = Blog::with(['blogcategories', 'languages', 'domains']);
+    
+        if (!auth()->user()->hasRole('Admin')) {
             $blogs->where('user_id', auth()->user()->id);
         }
+    
         if ($request->search) {
             $blogs->where('name', 'like', '%' . $request->search . '%');
         }
-    $languages= Language::pluck('language_name','id');
+    
+        if ($language) {
+            $blogs->whereHas('languages', function ($query) use ($language) {
+                $query->where('language_name', $language);
+            });
+        }
+    
+        $languages = Language::pluck('language_name', 'id'); 
         $blogs = $blogs->latest()->paginate(5);
     
-        return view('blog.index', compact('blogs','languages'))
+        return view('blog.index', compact('blogs', 'languages'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
     
+
+
    
 public function create(): View
 {
@@ -73,8 +83,8 @@ public function store(Request $request): RedirectResponse
         'content' => $request->content,
         'category_id'=>$request->category_id,
         'user_id' => auth()->user()->id,
-        'domain' => $request->domain,
-        'language' => $request->language,
+        'domain_id' => $request->domain_id,
+        'language_id' => $request->language_id,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];

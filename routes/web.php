@@ -22,9 +22,8 @@ use App\Http\Controllers\ActionUserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\LanguageController;
-
-
-
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
 
 
 
@@ -69,10 +68,14 @@ Route::get('/newscategoriasite', [BlogSite::class, 'newsCategorySite'])->name('n
     Route::resource('newsCategory', NewsCategoryController::class)->middleware(['role:newscategory|Admin','permission:newscategory-list| newscategory-create| newscategory-edit| newscategory-delete']);
     Route::resource('pages', PagesController::class)->middleware(['role:pages|Admin','permission:pages-list| pages-create| pages-edit| pages-delete']);
     Route::resource('module', ModuleController::class)->middleware(['role:module|Admin']);  
-    Route::resource('menu', MenuController::class);  
+    Route::resource('menu', MenuController::class)->middleware(['role:menu|Admin']);  
     // Route::resource('domain', DomainController::class);  
-    Route::resource('domain', DomainController::class); 
-    Route::resource('language', LanguageController::class); 
+    Route::resource('domain', DomainController::class)->middleware(['role:domain|Admin']); 
+    Route::resource('language', LanguageController::class)->middleware(['role:language|Admin']); 
+    Route::resource('department', DepartmentController::class); 
+    Route::resource('designation', DesignationController::class); 
+
+
 
 
   

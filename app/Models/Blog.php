@@ -12,7 +12,7 @@ class Blog extends Model
     use HasFactory, HasRoles;
     protected $table = 'blogs';
     protected $fillable = [
-        'id','name','content','image','slug','user_id','category_id','domain','language'
+        'id','name','content','image','slug','user_id','category_id','domain_id','language_id'
     ];
     public function blogcategories()
     {
