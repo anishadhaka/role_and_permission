@@ -118,7 +118,7 @@
         </nav>
 
         <div class="main-container">
-      
+      @auth
             <aside class="sidebar">
             <ul class="menu">
             <h1>
@@ -154,7 +154,7 @@
         </li>
     @endforeach
 </ul>
-
+@endauth
  </aside>
     <main class="content">
                 <div class="container">

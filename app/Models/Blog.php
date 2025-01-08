@@ -12,7 +12,7 @@ class Blog extends Model
     use HasFactory, HasRoles;
     protected $table = 'blogs';
     protected $fillable = [
-        'id','name','content','image','slug','user_id','category_id','domain_id','language_id'
+        'id','name','content','image','slug','user_id','category_id','domain_id','language_id',
     ];
     public function blogcategories()
     {
@@ -25,6 +25,10 @@ class Blog extends Model
     public function domains()
 {
     return $this->belongsTo(Domain::class,'domain_id');
+}
+public function status()
+{
+    return $this->belongsTo(Status::class,'status_id');
 }
     
 }

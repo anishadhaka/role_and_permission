@@ -42,6 +42,8 @@
        <th>Title</th>
        <th>Language</th>
        <th>Domain</th>
+       <th>Status</th>
+
        <th>Image</th>
        <th width="280px">Action</th>
    </tr>
@@ -52,6 +54,15 @@
         <td>{{ $news->categories->title }}</td>
         <td>{{$news->languages?->language_name ?? 'no language'}}</td>
         <td>{{$news->domains?->domain_name ?? 'no domain'}} </td>
+        <td>
+    <select class="form-control status-dropdown" data-id="{{ $news->id }}">
+        @foreach($status as $id => $status_name)
+            <option value="{{ $id }}" {{ $news->status_id == $id ? 'selected' : '' }}>
+                {{ $status_name }}
+            </option>
+        @endforeach
+    </select>
+</td>
         <td>
            @if ($news->image)
            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top"  height="40px">
@@ -76,6 +87,35 @@
 </table>
 
 {!! $newss->links('pagination::bootstrap-5') !!}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Triggered when a status dropdown is changed
+        $('.status-dropdown').change(function() {
+            var status_id = $(this).val(); // Get the selected status id
+            var news_id = $(this).data('id'); // Get the news id
+
+            // Send the AJAX request
+            $.ajax({
+                url: '{{ route('news.status.update') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    news_id: news_id,
+                    status_id: status_id
+                },
+                success: function(response) {
+                    alert(response.success); // Show success message
+                },
+                error: function(response) {
+                    alert('There was an error updating the status.');
+                }
+            });
+        });
+    });
+</script>
+
 
 
 @endsection

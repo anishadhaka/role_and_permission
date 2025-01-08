@@ -26,7 +26,10 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>designation Name</th>
+            <th>Designation Name</th>
+            <th>Department </th>
+            <th>Level </th>
+
             <th width="280px">Action</th>
         </tr>
     </thead>
@@ -43,6 +46,8 @@ $(document).ready(function () {
         columns: [
             { data: 'id', name: 'id' },
             { data: 'designation_name', name: 'designation_name' },
+            { data: 'department_id', name: 'department_id' },
+            { data: 'level', name: 'level' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ]
     });

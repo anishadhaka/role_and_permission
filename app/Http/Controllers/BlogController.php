@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Domain;
 use App\Models\Language;
+use App\Models\Status;
+
 use Spatie\Permission\Models\Role;
 // use Spatie\Permission\Models\BlogCategory;
 use App\Models\BlogCategory;
@@ -31,7 +33,8 @@ class BlogController extends Controller
     public function index(Request $request): View
     {
         $language = $request->get('language'); 
-        $blogs = Blog::with(['blogcategories', 'languages', 'domains']);
+        $blogs = Blog::with(['blogcategories', 'languages', 'domains','status']);
+        // dd($blogs);
     
         if (!auth()->user()->hasRole('Admin')) {
             $blogs->where('user_id', auth()->user()->id);
@@ -48,9 +51,11 @@ class BlogController extends Controller
         }
     
         $languages = Language::pluck('language_name', 'id'); 
+        $status = Status::pluck('status_name', 'id'); 
+
         $blogs = $blogs->latest()->paginate(5);
     
-        return view('blog.index', compact('blogs', 'languages'))
+        return view('blog.index', compact('blogs', 'languages','status'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -182,5 +187,23 @@ public function destroy($id): RedirectResponse
     }
     return redirect()->route('blog.index')
                     ->with('success','User deleted successfully');
+}
+
+public function updateStatus(Request $request)
+{
+    // echo 'test';die;
+    $request->validate([
+        'blog_id' => 'required|exists:blogs,id',
+        'status_id' => 'required|exists:statuses,id', 
+    ]);
+    // echo 'test';die;
+
+    // dd($request);
+
+    $blog = Blog::findOrFail($request->blog_id);
+    $blog->status_id = $request->status_id;
+    $blog->save();
+
+    return response()->json(['success' => 'Status updated successfully']);
 }
 }

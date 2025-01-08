@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\Domain;
 use App\Models\Language;
+use App\Models\Status;
+
 
 use Spatie\Permission\Models\Role;
 use App\Models\NewsCategory;
@@ -47,8 +49,9 @@ class NewsController extends Controller
         $newss = $query->latest()->paginate(5);
     
         $languages = Language::pluck('language_name', 'id');
+        $status = Status::pluck('status_name', 'id'); 
     
-        return view('news.index', compact('newss', 'languages'))
+        return view('news.index', compact('newss', 'languages','status'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -180,6 +183,20 @@ public function destroy($id): RedirectResponse
     }
     return redirect()->route('news.index')
                     ->with('success','User deleted successfully');
+}
+
+public function updateStatus(Request $request)
+{
+    $request->validate([
+        'news_id' => 'required|exists:news,id',
+        'status_id' => 'required|exists:statuses,id', 
+    ]);
+
+    $news = News::findOrFail($request->news_id);
+    $news->status_id = $request->status_id;
+    $news->save();
+
+    return response()->json(['success' => 'Status updated successfully']);
 }
 }
 

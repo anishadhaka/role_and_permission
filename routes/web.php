@@ -74,6 +74,11 @@ Route::get('/newscategoriasite', [BlogSite::class, 'newsCategorySite'])->name('n
     Route::resource('language', LanguageController::class)->middleware(['role:language|Admin']); 
     Route::resource('department', DepartmentController::class); 
     Route::resource('designation', DesignationController::class); 
+    // Add this route to your routes/web.php
+Route::post('/news/status/update', [NewsController::class, 'updateStatus'])->name('news.status.update');
+Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->name('blogs.status.update');
+
+
 
 
 

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Designation;
+
+use App\Models\Department;
+
 use Spatie\Permission\Models\Role;
 // Use DB;
 use Illuminate\Support\Facades\DB;
@@ -37,8 +41,9 @@ class UserController extends Controller
     public function create(): View
     {
         $roles = Role::pluck('name','name')->all();
-
-        return view('users.create',compact('roles'));
+        $designation= Designation::pluck('designation_name','id');
+        $department=Department::pluck('department_name','id');
+        return view('users.create',compact('roles','designation','department'));
     }
     
     /**
@@ -90,8 +95,9 @@ class UserController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
-    
-        return view('users.edit',compact('user','roles','userRole'));
+        $designation= Designation::pluck('designation_name','id');
+        $department=Department::pluck('department_name','id');
+        return view('users.edit',compact('user','roles','userRole','designation','department'));
     }
     
     /**

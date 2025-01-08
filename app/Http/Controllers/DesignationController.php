@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Designation;
+use App\Models\Department;
 use App\Http\Requests\StoreDesignationRequest;
 use App\Http\Requests\UpdateDesignationRequest;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,8 +17,13 @@ class DesignationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $designation = Designation::select(['id', 'designation_name']);
+            $designation = Designation::select(['id', 'designation_name','department_id','level'])->get();
+
             return DataTables::of($designation)
+            ->editColumn('department_id', function ($row) {
+                return $row->departments ? $row->departments->department_name : 'N/A';
+            })
+    
                 ->addColumn('action', function ($designation) {
                     return '
                        
@@ -41,7 +47,10 @@ class DesignationController extends Controller
      */
     public function create()
     {
-        return view('designation.create');
+         
+       $department=Department::pluck('department_name','id');
+    //    dd($department);
+        return view('designation.create',compact('department'));
     }
 
     /**
@@ -55,7 +64,6 @@ class DesignationController extends Controller
         ]);
     
         Designation::create($request->all());
-    
         return redirect()->route('designation.index')
             ->with('success', 'designation created successfully.');
     }
@@ -73,8 +81,9 @@ class DesignationController extends Controller
      */
     public function edit($id)
     {
+       $department=Department::pluck('department_name','id');
          $designation= Designation::findorfail($id);
-        return view('designation.edit', compact('designation'));
+        return view('designation.edit', compact('designation','department'));
     }
 
     /**

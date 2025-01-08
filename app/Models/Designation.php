@@ -11,6 +11,12 @@ class Designation extends Model
     use HasFactory;
     protected $table='designations';
     protected $fillable=[
-     'id','designation_name'
+     'id','designation_name','department_id','level'
     ];
+    public function departments()
+    {
+        return $this->belongsTo(department::class, 'department_id','id');
+     }
+    
+    
 }
