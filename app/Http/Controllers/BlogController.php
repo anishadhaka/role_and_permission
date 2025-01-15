@@ -8,6 +8,10 @@ use App\Models\Blog;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Status;
+use App\Models\Designation;
+use App\Models\ApprovedStatus;
+
+
 
 use Spatie\Permission\Models\Role;
 // use Spatie\Permission\Models\BlogCategory;
@@ -33,29 +37,30 @@ class BlogController extends Controller
     public function index(Request $request): View
     {
         $language = $request->get('language'); 
-        $blogs = Blog::with(['blogcategories', 'languages', 'domains','status']);
+        
+        $blogs = Blog::with(['blogcategories', 'languages', 'domains', 'status', 'approvedstatus', 'designation', 'user'])
+            ->paginate(5);
         // dd($blogs);
-    
         if (!auth()->user()->hasRole('Admin')) {
             $blogs->where('user_id', auth()->user()->id);
         }
-    
+
         if ($request->search) {
             $blogs->where('name', 'like', '%' . $request->search . '%');
         }
-    
+
         if ($language) {
             $blogs->whereHas('languages', function ($query) use ($language) {
                 $query->where('language_name', $language);
             });
         }
-    
+
         $languages = Language::pluck('language_name', 'id'); 
         $status = Status::pluck('status_name', 'id'); 
-
-        $blogs = $blogs->latest()->paginate(5);
-    
-        return view('blog.index', compact('blogs', 'languages','status'))
+        $designation = Designation::all();
+        // dd($designation);
+        
+        return view('blog.index', compact('blogs', 'languages', 'status', 'designation'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -69,8 +74,11 @@ public function create(): View
     $categories = BlogCategory::pluck('title', 'id')->all();
     $domains= Domain::pluck('domain_name','id');
     $languages= Language::pluck('language_name','id');
+    $status= Status::pluck('status_name','id');
+    
 
-    return view('blog.create',compact('categories','domains','languages'));
+
+    return view('blog.create',compact('categories','domains','languages','status'));
 }
     
   
@@ -81,28 +89,35 @@ public function store(Request $request): RedirectResponse
         'name' => 'required',
         'content' => 'required',
     ]);
+    // dd(auth()->user()->id);  
 
   
     $data = [
         'name' => $request->name,
         'content' => $request->content,
         'category_id'=>$request->category_id,
-        'user_id' => auth()->user()->id,
+        'user_id'=> auth()->user()->id,
         'domain_id' => $request->domain_id,
         'language_id' => $request->language_id,
+        'status_id'=>$request->status_id,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];
 
-    
-    $data = $request->all();
+    // dd($data);
+    // $data = $request->all();
+    // dd($data);
+   
     if ($request->hasFile('image')) {
         $image = $request->file('image');
         $imageName = time() . '_' . $image->getClientOriginalName();
         $imagePath = 'images/' . $imageName;
         $image->move(public_path('images'), $imageName);
-        $blog->image = $imagePath;
+        $data['image'] = $imagePath;
+    } else {
+        $data['image'] = 'images/default_image.jpg';
     }
+
  
     $slug = Str::slug($request->name);
     $existingSlugCount = Blog::where('slug', $slug)->count();
@@ -111,7 +126,7 @@ public function store(Request $request): RedirectResponse
     }
     $data['slug'] = $slug;
 
-   
+    // dd($data);
     Blog::create($data);
   
 
@@ -134,13 +149,13 @@ public function edit($id): View
     $blog = Blog::where('id',$id)->firstOrFail();
     $domains= Domain::pluck('domain_name','id');
     $languages= Language::pluck('language_name','id');
+    $status= Status::pluck('status_name','id');
     if(!auth()->user()->hasRole('Admin')){
         $user->where('user_id', auth()->user()->id);
     }
     $categories = BlogCategory::pluck('title', 'id');
     // dd($categories);
-
-    return view('blog.edit', compact('blog', 'categories','domains','languages'));
+    return view('blog.edit', compact('blog', 'categories','domains','languages','status'));
 }
     
   
@@ -206,4 +221,53 @@ public function updateStatus(Request $request)
 
     return response()->json(['success' => 'Status updated successfully']);
 }
+
+public function approveBook($id)
+{
+    $blog = Blog::find($id);
+
+    if (!$blog) {
+        return redirect()->route('blog.index')->with('error', 'Blog not found.');
+    }
+    $designation_id = auth()->user()->designation_id;
+    if (!$designation_id) {
+        return redirect()->route('blog.index')->with('error', 'No designation found for the current user.');
+    }
+  
+    ApprovedStatus::updateOrCreate(
+        [
+            'blog_id' => $id, 
+        ],
+        [
+            'user_id' => auth()->id(), 
+            'designation_id' => $designation_id,
+            'approvel' => '1', 
+        ]
+    );
+
+    return redirect()->route('blog.index')->with('success', 'Blog approved successfully!');
+}
+
+
+public function rejected($id)
+{
+    $blog = Blog::find($id);
+
+    if (!$blog) {
+        return redirect()->route('blog.index')->with('error', 'Blog not found.');
+    }
+
+    $designation_id = auth()->user()->designation_id;
+
+    if (!$designation_id) {
+        return redirect()->route('blog.index')->with('error', 'No designation found for the current user.');
+    }
+
+    ApprovedStatus::where('blog_id', $id)->delete();
+
+    return redirect()->route('blog.index')->with('success', 'Blog rejected successfully!');
+}
+
+
+
 }

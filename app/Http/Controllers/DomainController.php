@@ -58,8 +58,8 @@ class DomainController extends Controller
             'authentication' => 'required|string|max:255',
             'user_name' => 'required|string|max:255',
             'to_mail_id' => 'required|integer',
-            'mail_header' => 'nullable|string',
-            'mail_footer' => 'nullable|string',
+            'mail_header' => 'string',
+            'mail_footer' => 'string',
         ]);
     
         Domain::create($request->all());

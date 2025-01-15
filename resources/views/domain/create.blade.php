@@ -1,6 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
+  <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+
+  textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  .output {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+    min-height: 100px;
+    word-wrap: break-word;
+  }
+
+  body #cke_notifications_area_editor1,
+  body .cke_notifications_area {
+    display: none !important;
+  }
+</style>
+
     <h2>Create New Domain</h2>
     
     <form action="{{ route('domain.store') }}" method="POST">
@@ -62,29 +90,63 @@
 
         <div class="form-group">
             <label for="mail_header">Mail Header</label>
-            <textarea name="mail_header" class="form-control rich-text-editor" id="mail_header">{{ old('mail_header') }}</textarea>
+    <!-- <textarea name="editor1" id="editor1" rows="10" cols="80"></textarea> -->
+
+            <textarea name="mail_header" class="form-control" id="mail_header">{{ old('mail_header') }}</textarea>
         </div>
 
         <div class="form-group">
             <label for="mail_footer">Mail Footer</label>
-            <textarea name="mail_footer" class="form-control rich-text-editor" id="mail_footer">{{ old('mail_footer') }}</textarea>
+            <textarea name="mail_footer" class="form-control" id="mail_footer">{{ old('mail_footer') }}</textarea>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Create Domain</button>
         <a href="{{ route('domain.index') }}" class="btn btn-secondary mt-3">Cancel</a>
     </form>
+
+    <script>
+    $(document).ready(function () {
+      // Initialize CKEditor with custom toolbar
+      CKEDITOR.replace("mail_header", {
+        height: 300,
+        toolbar: [
+          {
+            name: "clipboard",
+            items: ["Cut", "Copy", "Paste", "Undo", "Redo"],
+          },
+          { name: "editing", items: ["Find", "Replace", "SelectAll"] },
+          {
+            name: "basicstyles",
+            items: ["Bold", "Italic", "Underline", "Strike", "RemoveFormat"],
+          },
+          {
+            name: "paragraph",
+            items: [
+              "NumberedList",
+              "BulletedList",
+              "-",
+              "Outdent",
+              "Indent",
+              "-",
+              "Blockquote",
+            ],
+          },
+          {
+            name: "insert",
+            items: ["Image", "Table", "HorizontalRule", "SpecialChar"],
+          },
+          { name: "tools", items: ["Maximize", "ShowBlocks"] },
+        ],
+      });
+
+      // Display content in the output div when "Get Content" is clicked
+      $("#getContent").click(function () {
+        var editorData = CKEDITOR.instances.mail_header.getData();
+        $("#output").html(editorData || "<em>No content to display.</em>");
+      });
+    });
+  </script>
 @endsection
 
-@section('scripts')
-    <!-- Include CKEditor -->
-    <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
-    <script>
-        // Initialize the rich text editor
-        CKEDITOR.replace('mail_header', {
-            height: 200
-        });
-        CKEDITOR.replace('mail_footer', {
-            height: 200
-        });
-    </script>
-@endsection
+
+

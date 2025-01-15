@@ -82,6 +82,23 @@
         @enderror
     </div>
 </div>
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Status:</strong>  
+        <select name="status_id" class="form-control">
+            @foreach ($status as $id => $status_name) 
+                <option value="{{ $id }}" {{ old('status_id', 1) == $id ? 'selected' : '' }}>
+                    {{ $status_name }}
+                </option>
+            @endforeach
+        </select>
+        @error('status')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+
+
 
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">

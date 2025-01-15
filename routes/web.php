@@ -35,7 +35,13 @@ Route::post('/action-user-store',[ActionUserController::class , 'store']);
 Route::get('menu/{id}', [MenuController::class, 'showMenu'])->name('menu');
 
 Route::post('/updatejsondata', [MenuController::class, 'updateJsonData'])->name('updatejsondata');
- 
+Route::post('/approve_book/{id}', [BlogController::class, 'approveBook'])->name('approve_book');
+Route::post('/rejected_book/{id}', [BlogController::class, 'rejected'])->name('rejected_book');
+
+// Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
+
+
+
 Auth::routes();
 Route::middleware(['auth'])->group(function () {
 Route::get('/blogsite', [BlogSite::class, 'index'])->name('blogsite');
