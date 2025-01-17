@@ -15,6 +15,9 @@ use Illuminate\Support\Str;
     
 class PagesController extends Controller
 {
+
+  
+
     function __construct()
     {
          $this->middleware('permission:pages-list|pages-create|pages-edit|pages-delete', ['only' => ['index','store']]);

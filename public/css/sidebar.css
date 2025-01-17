@@ -12,11 +12,14 @@ body {
 }
 
 .sidebar {
+    margin-top: -60px;
     width: 250px;
     background: linear-gradient(135deg, #2d3436, #636e72);
     color: white;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 20px;
+    /* padding: 20px; */
+    /* padding-left: 20px;
+    padding-right: 20px; */
     min-height: 100vh;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     position: sticky;
@@ -48,17 +51,20 @@ body {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     padding: 10px 15px;
     border-radius: 6px;
     transition: background 0.3s ease, color 0.3s ease;
+    /* margin-top: 10px; */
+    margin: 0px 20px;
 }
 
 .sidebar ul li a i {
     margin-right: 10px;
     font-size: 18px;
+    
 }
 
 .sidebar ul li a:hover {
@@ -109,6 +115,7 @@ body {
     display: block;
     max-height: 500px;
     opacity: 1;
+    
 }
 
 /* .sidebar li.show > a {
@@ -198,4 +205,13 @@ body {
 }
 .menu-item {
     display: block !important;
+}
+/* Initial state of the icon */
+.menu-toggle i {
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+/* When the 'rotate' class is added, the icon will rotate 180 degrees */
+.menu-toggle .fa-caret-down.rotate {
+    transform: rotate(180deg);
 }

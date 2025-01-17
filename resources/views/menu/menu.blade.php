@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-
-
-
 <script src="http://127.0.0.1:8000/bootstrap-iconpicker/js/iconset/fontawesome5-3-1.min.js"></script>
     <script src="http://127.0.0.1:8000/bootstrap-iconpicker/js/bootstrap-iconpicker.min.js"></script>   
     <script src="http://127.0.0.1:8000/bootstrap-iconpicker/js/jquery-menu-editor.min.js"></script>
@@ -53,6 +50,18 @@
                     <label for="Permission">Permission</label>
                     <input type="text" name="Permission" class="form-control item-menu" id="Permission" placeholder="Permission">
                 </div>
+                <div class="form-group">
+                <label for="model">Model Name</label>
+                <input type="text" name="model" class="form-control item-menu" id="model" placeholder="Model Name">
+            </div>
+            <div class="form-group">
+                <label for="view">View Name</label>
+                <input type="text" name="view" class="form-control item-menu" id="view" placeholder="View Name">
+            </div>
+            <div class="form-group">
+                <label for="controller">Controller Name</label>
+                <input type="text" name="controller" class="form-control item-menu" id="controller" placeholder="Controller Name">
+            </div>
                 <div class="card-footer">
                     <button type="button" id="Saveoutput" onclick="event.preventDefault();
                                                          document.querySelector('.json-form').submit();" class="btn btn-success">Save</button>
@@ -70,8 +79,7 @@
     <textarea id="myTextarea" class="form-control" rows="8" name="json_output" required></textarea>
     <input type="hidden" name="id" value="{{ $id }}">
     <input type="submit" value="Save" id="Save" class="btn btn-primary m-2 width-100">
-</form>
-
+    </form>
     </div>
 </div>
 

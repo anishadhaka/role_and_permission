@@ -30,7 +30,7 @@
         </div>
         <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('blog.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
-            <div class="language-picker mb-1">
+            <!-- <div class="language-picker mb-1">
                 <form action="{{ route('blog.index') }}" method="GET" class="language-picker__form" style="display:flex;margin-left:700px;margin-top:-50px;">
                     <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;">Language</label>
                     <select name="language" class="form-control" style="width:120px;height:40px;" onchange="this.form.submit()">
@@ -40,7 +40,7 @@
                         @endforeach
                     </select>
                 </form>
-            </div>
+            </div> -->
 
             <div class="searchbar">
                 <div class="search-container">
@@ -88,60 +88,56 @@
             </td>
          
             <td>
-    <select id="select" class="form-control status-dropdown" data-id="{{ $blog->id }}">
-        @if($blog->approvedstatus)
-            @foreach($designation->take($blog->approvedstatus->designation_id) as $item)
-            <option  id="option"  value="{{ $item->id }}" data-deginationid="{{ $blog->approvedstatus->designation_id }}"
-             data-userid="{{ $item->id }} " <?php  if ($blog->approvedstatus->designation_id == $item->id ){ echo 'selected'; }else{ echo 'disabled'; } ?> >
-                
-            {{ $item->designation_name }}
-            </option>
-            @endforeach
-        @else
-            <option>No designation</option>
-        @endif
-    </select> 
-</td>
+               <select id="select" class="form-control status-dropdown" data-id="{{ $blog->id }}" style="width: auto;">
+                   @if($blog->approvedstatus)
+                    @foreach($designation->take($blog->approvedstatus->designation_id) as $item)
+                    <option  id="option"  value="{{ $item->id }}" data-deginationid="{{ $blog->approvedstatus->designation_id }}"
+                     data-userid="{{ $item->id }} " <?php  if ($blog->approvedstatus->designation_id == $item->id ){ echo 'selected'; }else{ echo 'disabled'; } ?> >
+                        
+                    {{ $item->designation_name }}
+                    </option>
+                    @endforeach
+                   @else
+                    <option>No designation</option>
+                   @endif
+               </select> 
+            </td>
 
-<th>
-
-
-<form action="{{ route('approve_book', $blog->id) }}" method="POST" style="display:inline" data-userid="{{auth()->user()->designation_id }}" >
+<th style="display: flex; border: none;">
+    <form action="{{ route('approve_book', $blog->id) }}" method="POST" style="display:inline" data-userid="{{auth()->user()->designation_id }}" >
            @csrf
            @if($blog->approvedstatus && $blog->id  && $blog->approvedstatus->designation_id == $item->id )
-              <button type="submit"  class="btn btn-info btn-sm" data-deginationid="{{ $item->id }}" data-test="{{$blog->id}}"  <?php if(auth()->user()->designation_id > $item->id){ echo ''; }else{echo 'disabled'; } ?>>Approve</button>
-        @else
-           <button type="submit" class="btn btn-info btn-sm">Approve</button>
-             
+              <button type="submit"  class="btn btn-success btn-sm px-3" data-deginationid="{{ $item->id }}" data-test="{{$blog->id}}"  <?php if(auth()->user()->designation_id > $item->id){ echo ''; }else{echo 'disabled'; } ?>>Approve</button>
+           @else
+           <button type="submit" class="btn btn-success btn-sm px-3">Approve</button>  
           @endif
              
-</form>
+    </form>
 
 
-<form action="{{ route('rejected_book', $blog->id) }}" method="POST" style="display:inline">
-    @csrf
-
+   <form action="{{ route('rejected_book', $blog->id) }}" method="POST" style="display:inline">
+        @csrf
           @if($blog->approvedstatus && $blog->id  && $blog->approvedstatus->designation_id == $item->id )
-              <button type="submit"  class="btn btn-primary btn-sm" data-deginationid="{{ $item->id }}" data-test="{{$blog->id}}" <?php if(auth()->user()->designation_id < $item->id){ echo 'disabled'; }else{ echo ''; }  ?> >Reject</button>
+              <button type="submit"  class="btn btn-danger btn-sm px-3" data-deginationid="{{ $item->id }}" data-test="{{$blog->id}}" <?php if(auth()->user()->designation_id < $item->id){ echo 'disabled'; }else{ echo ''; }  ?> >Reject</button>
            @else
-           <button type="submit" class="btn btn-primary btn-sm">Reject</button>
+           <button type="submit" class="btn btn-danger btn-sm px-3">Reject</button>
           @endif
     <!-- <input type="hidden" name="status" value="rejected">
     <button type="submit" class="btn btn-primary btn-sm">Reject</button> -->
-</form>
+   </form>
 
 </th>
 
+         <td >
+              <!-- <a class="btn btn-info btn-sm" href="{{ route('blog.show', $blog->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
+              <a class="btn btn-primary btn-sm" href="{{ route('blog.edit', $blog->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+              <form method="POST" action="{{ route('blog.destroy', $blog->id) }}" style="display:inline">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
+          </form>
+        </td>
 
-            <td>
-                <a class="btn btn-info btn-sm" href="{{ route('blog.show', $blog->id) }}"><i class="fa-solid fa-list"></i> Show</a>
-                <a class="btn btn-primary btn-sm" href="{{ route('blog.edit', $blog->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-                <form method="POST" action="{{ route('blog.destroy', $blog->id) }}" style="display:inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
-                </form>
-            </td>
         </tr>
     @endforeach
 </table>

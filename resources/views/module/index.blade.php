@@ -7,11 +7,11 @@
         <div class="pull-left">
             <h2>Modules</h2>
         </div>
-        <div class="pull-right">
+        <!-- <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('module.create') }}">
                 <i class="fa fa-plus"></i> Create New Module
             </a>
-        </div>
+        </div> -->
     </div>
 </div>
 
@@ -20,7 +20,7 @@
         {{ $value }}
     </div>
 @endsession
-{{$formattedDate}}
+<!-- {{$formattedDate}} -->
 <table class="table table-bordered">
     <tr>
         <th>id</th>
@@ -31,7 +31,7 @@
         <th>Add Permission</th>
         <!-- <th>Access </th> -->
 
-        <th width="280px">Action</th>
+        <th>Action</th>
     </tr>
     @foreach ($data as $key => $user)
     <tr>
@@ -56,7 +56,7 @@
         </td> -->
         
         <td>
-            <a class="btn btn-info btn-sm" href="{{ route('module.show', $user->id) }}"><i class="fa-solid fa-list"></i> Show</a>
+            <!-- <a class="btn btn-info btn-sm" href="{{ route('module.show', $user->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
             <a class="btn btn-primary btn-sm" href="{{ route('module.edit', $user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
             <form method="POST" action="{{ route('module.destroy', $user->id) }}" style="display:inline">
                 @csrf

@@ -90,7 +90,6 @@
 
         <div class="form-group">
             <label for="mail_header">Mail Header</label>
-    <!-- <textarea name="editor1" id="editor1" rows="10" cols="80"></textarea> -->
 
             <textarea name="mail_header" class="form-control" id="mail_header">{{ old('mail_header') }}</textarea>
         </div>

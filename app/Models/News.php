@@ -24,4 +24,17 @@ class News extends Model
     {
         return $this->belongsTo(Domain::class,'domain_id');
     }
+    public function approvednewsstatus()
+    {
+        return $this->hasOne(ApprovedNewsStatus::class, 'news_id');
+    }
+
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'designation_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

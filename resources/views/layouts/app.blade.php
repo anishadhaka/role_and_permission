@@ -17,7 +17,7 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
    
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/sidebar.css') }}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ asset('css/sidebar.css') }}"> -->
 
     <script src="<?php echo asset('js/jquery.js');?>"></script>
     
@@ -28,7 +28,7 @@
 <script src="<?php echo asset('bootstrap-iconpicker\js\jquery-menu-editor.js');?>"></script>
 <script src="<?php echo asset('bootstrap-iconpicker\js\jquery-menu-editor.min.js');?>"></script>
  
-    {{-- <link rel="stylesheet" href="{{ asset('css/blog.css') }}"> --}}
+    <!-- {{-- <link rel="stylesheet" href="{{ asset('css/blog.css') }}"> --}} -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -62,17 +62,17 @@
 </head>
 <body>
     <div id="app">
-   
+   @auth
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                  Our Project
+                <a class="navbar-brand"  style=" margin-left:70px">
+                   Dashboard
                 </a>
-                <a href="{{ route('blogsite') }}"> <i class="fa-solid fa-arrow-right"></i> Front</a>
+                <a href="{{ route('blogsite') }}" > <i class="fa-solid fa-eye"></i> View</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
+@endauth
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 
 
@@ -95,12 +95,12 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a  id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown"  >
+                                    <a  class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
@@ -116,13 +116,15 @@
                 </div>
             </div>
         </nav>
-
-        <div class="main-container">
       @auth
-            <aside class="sidebar">
+        @include('layouts.sidebar')
+  @endauth
+        <!-- <div class="main-container"> -->
+      <!-- @auth -->
+            <!-- <aside class="sidebar">
             <ul class="menu">
-            <h1>
-            <img src="https://www.absglobaltravel.com/public/images/footer-abs-logo.webp" width="200px" height="70px;">
+            <h1 style="border-bottom:1px solid white; margin-top:6px; padding-left:20px;">
+            <img src="https://www.absglobaltravel.com/public/images/footer-abs-logo.webp" width="150px" height="50px;"  >
         </h1>
     @php
         // Check if $menu is null or if json_output exists
@@ -135,9 +137,10 @@
     
     @foreach($menuItems as $item)
         <li class="menu-item {{ request()->routeIs($item['href']) || (isset($item['children']) && collect($item['children'])->pluck('href')->contains(request()->route()->getName())) ? 'show active' : '' }}">
-            <a href="{{ $item['href'] ? route($item['href']) : 'javascript:void(0);' }}" class="menu-link menu-toggle">
-                <i class="menu-icon {{ $item['icon'] ?? 'fas fa-circle' }}"></i>
-                <div data-i18n="{{ $item['title'] ?? '' }}">{{ $item['text'] }}</div>
+            <a href="{{ $item['href'] ? route($item['href']) : 'javascript:void(0);' }}" class="menu-link menu-toggle" style="justify-content: space-between;">
+                
+                <div data-i18n="{{ $item['title'] ?? '' }}"><i class="menu-icon {{ $item['icon'] ?? 'fas fa-circle' }}"></i> {{ $item['text'] }} </div>
+                 <div><i class="fa-solid fa-caret-down"></i></div>
             </a>
             @if(!empty($item['children']))
                 <ul class="sidebar-dropdown">
@@ -154,12 +157,12 @@
         </li>
     @endforeach
 </ul>
-@endauth
- </aside>
+@endauth -->
+ <!-- </aside> -->
     <main class="content">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-md-12">
+                        <div class="col-md-12" style=" margin-left: 200px;">
                             <div class="card p-3 m-4">
                                 <div class="card-body">
                                     @yield('content')
@@ -169,18 +172,23 @@
                     </div>
                 </div>
             </main>
-        </div>
-    </div>
-    <script>
+        <!-- </div> -->
+    <!-- </div> -->
+    <!-- <script>
 
 document.querySelectorAll('.menu-toggle').forEach(item => {
     item.addEventListener('click', function(event) {
         const parentLi = this.parentElement;
-        parentLi.classList.toggle('show'); 
-        event.preventDefault(); 
+        const icon = this.querySelector('.fa-caret-down'); 
+        parentLi.classList.toggle('show');
+        parentLi.classList.toggle('active'); 
+        icon.classList.toggle('rotate'); 
+        event.preventDefault();
     });
 });
 
-</script>
+
+
+</script> -->
 </body>
 </html>

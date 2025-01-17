@@ -10,9 +10,7 @@ use App\Models\Language;
 use App\Models\Status;
 use App\Models\Designation;
 use App\Models\ApprovedStatus;
-
-
-
+use App\Models\User;
 use Spatie\Permission\Models\Role;
 // use Spatie\Permission\Models\BlogCategory;
 use App\Models\BlogCategory;
@@ -34,35 +32,31 @@ class BlogController extends Controller
          $this->middleware('permission:blog-delete', ['only' => ['destroy']]);
     }
  
-    public function index(Request $request): View
-    {
-        $language = $request->get('language'); 
-        
-        $blogs = Blog::with(['blogcategories', 'languages', 'domains', 'status', 'approvedstatus', 'designation', 'user'])
-            ->paginate(5);
-        // dd($blogs);
-        if (!auth()->user()->hasRole('Admin')) {
-            $blogs->where('user_id', auth()->user()->id);
-        }
-
-        if ($request->search) {
-            $blogs->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        if ($language) {
-            $blogs->whereHas('languages', function ($query) use ($language) {
-                $query->where('language_name', $language);
-            });
-        }
-
-        $languages = Language::pluck('language_name', 'id'); 
-        $status = Status::pluck('status_name', 'id'); 
-        $designation = Designation::all();
-        // dd($designation);
-        
-        return view('blog.index', compact('blogs', 'languages', 'status', 'designation'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+public function index(Request $request): View
+{
+    $language = $request->get('language'); 
+    $blogs = Blog::with(['blogcategories', 'languages', 'domains', 'status', 'approvedstatus', 'designation', 'user'])
+        ->paginate(5);
+    // dd($blogs);
+    if (!auth()->user()->hasRole('Admin')) {
+        $blogs->where('user_id', auth()->user()->id);
     }
+    if ($request->search) {
+        $blogs->where('name', 'like', '%' . $request->search . '%');
+    }
+    if ($language) {
+        $blogs->whereHas('languages', function ($query) use ($language) {
+            $query->where('language_name', $language);
+        });
+    }
+    $languages = Language::pluck('language_name', 'id'); 
+    $status = Status::pluck('status_name', 'id'); 
+    $designation = Designation::all();
+    // dd($designation);
+    
+    return view('blog.index', compact('blogs', 'languages', 'status', 'designation'))
+        ->with('i', ($request->input('page', 1) - 1) * 5);
+}
     
     
 
@@ -76,9 +70,7 @@ public function create(): View
     $languages= Language::pluck('language_name','id');
     $status= Status::pluck('status_name','id');
     
-
-
-    return view('blog.create',compact('categories','domains','languages','status'));
+   return view('blog.create',compact('categories','domains','languages','status'));
 }
     
   
@@ -163,27 +155,34 @@ public function update(Request $request, $id): RedirectResponse
 {
     $this->validate($request, [
         'name' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'content' => 'required|string',     
     ]);
 
+    $blog = Blog::findOrFail($id);
+
     $data = $request->all();
+
     if ($request->hasFile('image')) {
+        if ($blog->image && file_exists(public_path($blog->image))) {
+            unlink(public_path($blog->image));
+        }
+
         $image = $request->file('image');
         $imageName = time() . '_' . $image->getClientOriginalName();
-        $imagePath = 'images/' . $imageName;
         $image->move(public_path('images'), $imageName);
-        $blog->image = $imagePath;
+        $data['image'] = 'images/' . $imageName;  
+    } else {
+        $data['image'] = $blog->image;
     }
-
 
     $slug = Str::slug($request->name);
     $existingSlugCount = Blog::where('slug', $slug)->count();
     if ($existingSlugCount > 0) {
-        $slug = $slug . '-' . time();
+        $slug = $slug . '-' . time();  
     }
     $data['slug'] = $slug;
 
-    $blog = Blog::findOrFail($id);
     $blog->update($data);
 
     if ($request->has('roles')) {
@@ -192,6 +191,7 @@ public function update(Request $request, $id): RedirectResponse
 
     return redirect()->route('blog.index')->with('success', 'Blog updated successfully');
 }
+
     
     
 public function destroy($id): RedirectResponse
@@ -212,13 +212,10 @@ public function updateStatus(Request $request)
         'status_id' => 'required|exists:statuses,id', 
     ]);
     // echo 'test';die;
-
     // dd($request);
-
     $blog = Blog::findOrFail($request->blog_id);
     $blog->status_id = $request->status_id;
     $blog->save();
-
     return response()->json(['success' => 'Status updated successfully']);
 }
 
@@ -252,7 +249,6 @@ public function approveBook($id)
 public function rejected($id)
 {
     $blog = Blog::find($id);
-
     if (!$blog) {
         return redirect()->route('blog.index')->with('error', 'Blog not found.');
     }
@@ -262,12 +258,8 @@ public function rejected($id)
     if (!$designation_id) {
         return redirect()->route('blog.index')->with('error', 'No designation found for the current user.');
     }
-
     ApprovedStatus::where('blog_id', $id)->delete();
-
     return redirect()->route('blog.index')->with('success', 'Blog rejected successfully!');
 }
-
-
 
 }

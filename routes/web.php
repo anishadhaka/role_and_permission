@@ -37,6 +37,8 @@ Route::get('menu/{id}', [MenuController::class, 'showMenu'])->name('menu');
 Route::post('/updatejsondata', [MenuController::class, 'updateJsonData'])->name('updatejsondata');
 Route::post('/approve_book/{id}', [BlogController::class, 'approveBook'])->name('approve_book');
 Route::post('/rejected_book/{id}', [BlogController::class, 'rejected'])->name('rejected_book');
+Route::post('/approve/{id}', [NewsController::class, 'approve'])->name('approve');
+Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
 
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
 
@@ -93,3 +95,6 @@ Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->nam
    
 
 });
+
+
+

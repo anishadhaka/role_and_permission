@@ -8,10 +8,12 @@ use App\Models\News;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Status;
-
-
+use App\Models\ApprovedStatus;
+use App\Models\Designation;
+use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Models\NewsCategory;
+use App\Models\ApprovedNewsStatus;
 use DB;
 use Hash;
 use Illuminate\Support\Arr;
@@ -21,6 +23,9 @@ use Illuminate\Support\Str;
     
 class NewsController extends Controller
 {
+
+
+
  
     function __construct()
     {
@@ -30,30 +35,31 @@ class NewsController extends Controller
          $this->middleware('permission:news-delete', ['only' => ['destroy']]);
     }
 
-    public function index(Request $request): View
-    {
-        $language = $request->get('language'); 
-    
-        $query = News::with(['categories', 'languages', 'domains']);
-    
-        if (!auth()->user()->hasRole('Admin')) {
-            $query->where('user_id', auth()->user()->id);
-        }
-    
-        if ($language) {
-            $query->whereHas('languages', function ($query) use ($language) {
-                $query->where('language_name', $language);
-            });
-        }
-    
-        $newss = $query->latest()->paginate(5);
-    
-        $languages = Language::pluck('language_name', 'id');
-        $status = Status::pluck('status_name', 'id'); 
-    
-        return view('news.index', compact('newss', 'languages','status'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+public function index(Request $request): View
+{
+    $language = $request->get('language'); 
+
+    $query = News::with(['categories', 'languages', 'domains','approvednewsstatus','designation','user']);
+    //  dd($query);
+    // if (!auth()->user()->hasRole('Admin')) {
+    //     $query->where('user_id', auth()->user()->id);
+    // }
+
+    if ($language) {
+        $query->whereHas('languages', function ($query) use ($language) {
+            $query->where('language_name', $language);
+        });
     }
+
+    $newss = $query->latest()->paginate(5);
+
+    $languages = Language::pluck('language_name', 'id');
+    $status = Status::pluck('status_name', 'id'); 
+    $designation = Designation::all();
+
+    return view('news.index', compact('newss', 'languages','status','designation','query'))
+        ->with('i', ($request->input('page', 1) - 1) * 5);
+}
     
     
     
@@ -138,27 +144,39 @@ public function edit($id): View
   
 public function update(Request $request, $id): RedirectResponse
 {
-    
+    // Fetch the news entry by ID
+    $news = News::findOrFail($id);
+
+    // Validate the request
     $this->validate($request, [
         'name' => 'required|string|max:255', 
-        'description' => 'required|string',       
+        'description' => 'required|string',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'create_date' => 'nullable|date',     
         'update_date' => 'nullable|date',    
     ]);
 
-  
+    // Prepare data from the request
     $data = $request->all();
 
- 
+    // Handle image upload if a new image is provided
     if ($request->hasFile('image')) {
+        // Delete the old image if it exists
+        if ($news->image && file_exists(public_path($news->image))) {
+            unlink(public_path($news->image));
+        }
+
+        // Save the new image
         $image = $request->file('image');
         $imageName = time() . '_' . $image->getClientOriginalName();
-        $imagePath = 'images/' . $imageName;
         $image->move(public_path('images'), $imageName);
-        $blog->image = $imagePath;
+        $data['image'] = 'images/' . $imageName;
+    } else {
+        // Keep the existing image if no new image is uploaded
+        $data['image'] = $news->image;
     }
 
-    
+    // Generate a slug for the news
     $slug = Str::slug($request->name);
     $existingSlugCount = News::where('slug', $slug)->count();
     if ($existingSlugCount > 0) {
@@ -166,13 +184,13 @@ public function update(Request $request, $id): RedirectResponse
     }
     $data['slug'] = $slug;
 
-    $News = News::find($id);
-    $News->update($data); 
-
+    // Update the news
+    $news->update($data);
 
     return redirect()->route('news.index') 
                      ->with('success', 'News updated successfully');
 }
+
     
     
 public function destroy($id): RedirectResponse
@@ -198,6 +216,51 @@ public function updateStatus(Request $request)
 
     return response()->json(['success' => 'Status updated successfully']);
 }
+
+public function approve($id)
+{
+    $news = News::find($id);
+
+    if (!$news) {
+        return redirect()->route('news.index')->with('error', 'News not found.');
+    }
+    $designation_id = auth()->user()->designation_id;
+    if (!$designation_id) {
+        return redirect()->route('news.index')->with('error', 'No designation found for the current user.');
+    }
+  
+    ApprovedNewsStatus::updateOrCreate(
+        [
+            'news_id' => $id, 
+        ],
+        [
+            'user_id' => auth()->id(), 
+            'designation_id' => $designation_id,
+            'approvel' => '1', 
+        ]
+    );
+
+    return redirect()->route('news.index')->with('success', 'News approved successfully!');
+}
+
+public function reject($id)
+{
+    $news=News::find($id);
+    if (!$news) {
+        return redirect()->route('news.index')->with('error', 'news not found.');
+    }
+
+    $designation_id = auth()->user()->designation_id;
+
+    if (!$designation_id) {
+        return redirect()->route('news.index')->with('error', 'No designation found for the current user.');
+    }
+
+    ApprovedNewsStatus::where('news_id', $id)->delete();
+
+    return redirect()->route('news.index')->with('success', 'news rejected successfully!');
+}
+
 }
 
 
