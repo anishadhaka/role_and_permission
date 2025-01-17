@@ -87,14 +87,8 @@ Route::post('/news/status/update', [NewsController::class, 'updateStatus'])->nam
 Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->name('blogs.status.update');
 
 
-
-
-
-
-  
-   
-
 });
+
 
 
 

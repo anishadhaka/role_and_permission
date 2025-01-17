@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
 class PagesController extends Controller
 {
 
-  
 
     function __construct()
     {

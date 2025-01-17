@@ -26,7 +26,6 @@ class NewsController extends Controller
 
 
 
- 
     function __construct()
     {
          $this->middleware('permission:news-list|news-create|news-edit|news-delete', ['only' => ['index','store']]);

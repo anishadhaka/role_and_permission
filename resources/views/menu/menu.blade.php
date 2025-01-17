@@ -50,7 +50,7 @@
                     <label for="Permission">Permission</label>
                     <input type="text" name="Permission" class="form-control item-menu" id="Permission" placeholder="Permission">
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                 <label for="model">Model Name</label>
                 <input type="text" name="model" class="form-control item-menu" id="model" placeholder="Model Name">
             </div>
@@ -61,7 +61,7 @@
             <div class="form-group">
                 <label for="controller">Controller Name</label>
                 <input type="text" name="controller" class="form-control item-menu" id="controller" placeholder="Controller Name">
-            </div>
+            </div> -->
                 <div class="card-footer">
                     <button type="button" id="Saveoutput" onclick="event.preventDefault();
                                                          document.querySelector('.json-form').submit();" class="btn btn-success">Save</button>
