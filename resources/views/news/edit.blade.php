@@ -87,9 +87,9 @@
 <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <strong>Image:</strong>
-        @if ($news->image)
+        @if ($News->image)
             <div>
-            <img src="{{ asset('images/' . $news->image) }}" class="img-thumbnail" style="width: 150px; height: auto;" alt="News Image">
+            <img src="{{ asset('images/' . $News->image) }}" class="img-thumbnail" style="width: 150px; height: auto;" alt="News Image">
             </div>
             <small class="text-muted">If you don't want to change the image, leave the field below empty.</small>
         @endif
