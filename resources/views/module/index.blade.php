@@ -29,7 +29,7 @@
         <th>Create date</th>
         <th>Update date</th>
         <th>Add Permission</th>
-        <!-- <th>Access </th> -->
+        <th>MVC </th>
 
         <th>Action</th>
     </tr>
@@ -54,7 +54,11 @@
         <!-- <td>
         <a class="btn btn-dark btn-sm" href="{{ route('access', $user->id) }}">Access</a>
         </td> -->
-        
+        <td>
+            <button class="btn btn-dark btn-sm" onclick="generateMVC({{ $user->id }})">MVC</button>
+        </td>
+
+
         <td>
             <!-- <a class="btn btn-info btn-sm" href="{{ route('module.show', $user->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
             <a class="btn btn-primary btn-sm" href="{{ route('module.edit', $user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
@@ -202,6 +206,30 @@ function deletePermission(uniqueId, permissionId = null) {
         });
     }
 }
+
+
+// generate MVC
+function generateMVC(moduleId) {
+    if (!confirm('Are you sure you want to generate MVC files for this module?')) {
+        return;
+    }
+
+    $.ajax({
+        url: `/module/mvc/${moduleId}`,
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            alert(response.message || 'MVC files generated successfully!');
+            location.reload();
+        },
+        error: function () {
+            alert('Error generating MVC files. Please try again.');
+        }
+    });
+}
+
 
 </script>
 

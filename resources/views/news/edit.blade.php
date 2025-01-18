@@ -84,11 +84,18 @@
     </div>
 </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Image:</strong>
-                <input type="file" name="image" placeholder="image" class="form-control"  value="{{ $News->image }}">
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Image:</strong>
+        @if ($news->image)
+            <div>
+            <img src="{{ asset('images/' . $news->image) }}" class="img-thumbnail" style="width: 150px; height: auto;" alt="News Image">
             </div>
+            <small class="text-muted">If you don't want to change the image, leave the field below empty.</small>
+        @endif
+        <input type="file" name="image" class="form-control mt-2">
+    </div>
+</div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>

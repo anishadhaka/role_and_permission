@@ -39,6 +39,7 @@ Route::post('/approve_book/{id}', [BlogController::class, 'approveBook'])->name(
 Route::post('/rejected_book/{id}', [BlogController::class, 'rejected'])->name('rejected_book');
 Route::post('/approve/{id}', [NewsController::class, 'approve'])->name('approve');
 Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
+Route::post('/module/mvc/{id}', [ModuleController::class, 'generateMVC'])->name('module.generateMVC');
 
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
 

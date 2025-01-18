@@ -43,6 +43,8 @@
        <th>Language</th>
        <th>Domain</th>
        <th>Image</th>
+       <th>Status</th>
+       <th> Status Update</th>
        <th width="280px">Action</th>
    </tr>
    @foreach ($newss as $key => $news)
@@ -59,10 +61,49 @@
                No image
            @endif
         </td>
+        <td>
+               <select id="select" class="form-control status-dropdown" data-id="{{ $news->id }}" style="width: auto;">
+                   @if($news->approvednewsstatus)
+                    @foreach($designation->take($news->approvednewsstatus->designation_id) as $item)
+                    <option  id="option"  value="{{ $item->id }}" data-deginationid="{{ $news->approvednewsstatus->designation_id }}"
+                     data-userid="{{ $item->id }} " <?php  if ($news->approvednewsstatus->designation_id == $item->id ){ echo 'selected'; }else{ echo 'disabled'; } ?> >
+                        
+                    {{ $item->designation_name }}
+                    </option>
+                    @endforeach
+                   @else
+                    <option>No designation</option>
+                   @endif
+               </select> 
+            </td>
 
+<th style="display: flex; border: none;">
+    <form action="{{ route('approve', $news->id) }}" method="POST" style="display:inline" data-userid="{{auth()->user()->designation_id }}" >
+           @csrf
+           @if($news->approvednewsstatus && $news->id  && $news->approvednewsstatus->designation_id == $item->id )
+              <button type="submit"  class="btn btn-success btn-sm px-3" data-deginationid="{{ $item->id }}" data-test="{{$news->id}}"  <?php if(auth()->user()->designation_id > $item->id){ echo ''; }else{echo 'disabled'; } ?>>Approve</button>
+           @else
+           <button type="submit" class="btn btn-success btn-sm px-3">Approve</button>  
+          @endif
+             
+    </form>
+
+
+   <form action="{{ route('reject', $news->id) }}" method="POST" style="display:inline">
+        @csrf
+          @if($news->approvednewsstatus && $news->id  && $news->approvednewsstatus->designation_id == $item->id )
+              <button type="submit"  class="btn btn-danger btn-sm px-3" data-deginationid="{{ $item->id }}" data-test="{{$news->id}}" <?php if(auth()->user()->designation_id < $item->id){ echo 'disabled'; }else{ echo ''; }  ?> >Reject</button>
+           @else
+           <button type="submit" class="btn btn-danger btn-sm px-3">Reject</button>
+          @endif
+    <!-- <input type="hidden" name="status" value="rejected">
+    <button type="submit" class="btn btn-primary btn-sm">Reject</button> -->
+   </form>
+
+</th>
        
         <td>
-             <a class="btn btn-info btn-sm" href="{{ route('news.show',$news->id) }}"><i class="fa-solid fa-list"></i> Show</a>
+             <!-- <a class="btn btn-info btn-sm" href="{{ route('news.show',$news->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
              <a class="btn btn-primary btn-sm" href="{{ route('news.edit',$news->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
               <form method="POST" action="{{ route('news.destroy', $news->id) }}" style="display:inline">
                   @csrf

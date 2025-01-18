@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\File;
 
 
 class ModuleController extends Controller
@@ -181,5 +182,91 @@ public function destroyPermission($id)
     }
 }
 
+
+public function generateMVC($id)
+{
+    $module = Module::findOrFail($id);
+    // dd($module);
+    $moduleName = ucfirst($module->Title); 
+
+    try {
+        // Check if the model already exists
+        $modelPath = app_path("Models/{$moduleName}.php");
+        if (File::exists($modelPath)) {
+            return response()->json(['message' => "Model '{$moduleName}' already exists!"], 400);
+        }
+
+        // Check if the controller already exists
+        $controllerPath = app_path("Http/Controllers/{$moduleName}Controller.php");
+        if (File::exists($controllerPath)) {
+            return response()->json(['message' => "Controller '{$moduleName}Controller' already exists!"], 400);
+        }
+
+        // Check if the views folder already exists
+        $viewPath = resource_path("views/{$module->Title}");
+        if (File::exists($viewPath)) {
+            return response()->json(['message' => "View directory for '{$moduleName}' already exists!"], 400);
+        }
+
+        // Generate the model
+        $modelTemplate = "<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class {$moduleName} extends Model
+{
+    use HasFactory;
+
+    protected \$fillable = ['field1', 'field2']; // Define your fields here
+}
+";
+        File::put($modelPath, $modelTemplate);
+
+        // Generate the controller
+        $controllerTemplate = "<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\\{$moduleName};
+use Illuminate\Http\Request;
+
+class {$moduleName}Controller extends Controller
+{
+    public function index()
+    {
+        \$data = {$moduleName}::all();
+        return view('{$module->Title}.index', compact('data'));
+    }
+
+    public function create()
+    {
+        return view('{$module->Title}.create');
+    }
+
+    public function store(Request \$request)
+    {
+        {$moduleName}::create(\$request->all());
+        return redirect()->route('{$module->Title}.index')->with('success', 'Created successfully.');
+    }
+}
+";
+        File::put($controllerPath, $controllerTemplate);
+
+        // Generate the view directory
+        File::makeDirectory($viewPath, 0755, true);
+
+        // Add a basic index view file
+        $indexViewPath = "{$viewPath}/index.blade.php";
+        $indexViewTemplate = "<h1>{$moduleName} Index</h1>";
+        File::put($indexViewPath, $indexViewTemplate);
+
+        return response()->json(['message' => 'MVC files generated successfully!']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error generating MVC files: ' . $e->getMessage()], 500);
+    }
+}
 
 }
