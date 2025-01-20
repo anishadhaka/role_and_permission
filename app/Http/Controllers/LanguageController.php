@@ -33,7 +33,7 @@ class LanguageController extends Controller
                 ->make(true);
         }
     
-        return view('language.index');
+        return view('backend.language.index');
     }
 
     /**
@@ -41,7 +41,7 @@ class LanguageController extends Controller
      */
     public function create()
     {
-        return view('language.create');
+        return view('backend.language.create');
     }
 
     /**
@@ -76,7 +76,7 @@ class LanguageController extends Controller
     public function edit($id)
     {
         $language = Language::findOrFail($id);
-        return view('language.edit', compact('language'));
+        return view('backend.language.edit', compact('language'));
     }
     
 

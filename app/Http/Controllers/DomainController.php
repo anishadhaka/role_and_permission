@@ -33,7 +33,7 @@ class DomainController extends Controller
                 ->make(true);
         }
     
-        return view('domain.index');
+        return view('backend.domain.index');
     }
 
     /**
@@ -41,7 +41,7 @@ class DomainController extends Controller
      */
     public function create()
     {
-    return view('domain.create');
+    return view('backend.domain.create');
         
     }
 
@@ -82,7 +82,7 @@ class DomainController extends Controller
     public function edit($id)
     {
         $domain = Domain::findOrFail($id);
-        return view('domain.edit', compact('domain'));
+        return view('backend.domain.edit', compact('domain'));
     }
 
     /**

@@ -15,12 +15,12 @@ class CityController extends Controller
             $cities = City::all();
             return DataTables::of($cities)->make(true);
         }
-        return view('City.index');
+        return view('backend.City.index');
     }
 
     public function create()
     {
-        return view('City.create');
+        return view('backend.City.create');
     }
 
     public function store(Request $request)

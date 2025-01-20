@@ -31,7 +31,7 @@ public function index(Request $request): View
      }
     $data = $query->latest()->paginate(5);
 
-    return view('blogCategory.index',compact('data'))
+    return view('backend.blogCategory.index',compact('data'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
     
@@ -39,7 +39,7 @@ public function index(Request $request): View
 public function create(): View
 {
     $roles = Role::pluck('name','name')->all();
-    return view('blogCategory.create',compact('roles'));
+    return view('backend.blogCategory.create',compact('roles'));
 }
     
   
@@ -71,7 +71,7 @@ public function store(Request $request): RedirectResponse
 public function show($id): View
 {
     $user = BlogCategory::find($id);
-    return view('blogCategory.show',compact('user'));
+    return view('backend.blogCategory.show',compact('user'));
 }
   
 public function edit($id): View
@@ -79,7 +79,7 @@ public function edit($id): View
     $BlogCategory = BlogCategory::find($id);
     // $userRole = $user->roles->pluck('name','name')->all();
 
-    return view('blogCategory.edit',compact('BlogCategory'));
+    return view('backend.blogCategory.edit',compact('BlogCategory'));
 }
     
   

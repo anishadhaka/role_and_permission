@@ -15,12 +15,12 @@ class CountryController extends Controller
             return DataTables::of($countries)->make(true);
         }
         
-        return view('Country.index');
+        return view('backend.Country.index');
     }
 
     public function create()
     {
-        return view('Country.create');
+        return view('backend.Country.create');
     }
 
     public function store(Request $request)

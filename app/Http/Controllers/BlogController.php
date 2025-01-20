@@ -53,7 +53,7 @@ public function index(Request $request): View
     }
     $languages = Language::pluck('language_name', 'id'); 
     $status = Status::pluck('status_name', 'id'); 
-    $designation = Designation::all();~
+    $designation = Designation::all();
     // dd($designation);
     
     return view('backend.blog.index', compact('blogs', 'languages', 'status', 'designation'))
@@ -73,7 +73,7 @@ public function create(): View
     $status= Status::pluck('status_name','id');
     $country=Country::all();
     
-   return view('blog.create',compact('categories','domains','languages','status','country'));
+   return view('backend.blog.create',compact('categories','domains','languages','status','country'));
 }
     
   
@@ -137,7 +137,7 @@ public function show($id): View
     if(!auth()->user()->hasRole('Admin')){
         $user->where('user_id', auth()->user()->id);
     }
-    return view('blog.show',compact('user'));
+    return view('backend.blog.show',compact('user'));
 }
   
 public function edit($id): View
@@ -152,7 +152,7 @@ public function edit($id): View
     }
     $categories = BlogCategory::pluck('title', 'id');
     // dd($categories);
-    return view('blog.edit', compact('blog', 'categories','domains','languages','status','country'));
+    return view('backend.blog.edit', compact('blog', 'categories','domains','languages','status','country'));
 }
     
   

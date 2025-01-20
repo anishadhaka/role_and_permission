@@ -36,7 +36,7 @@ public function index(Request $request): View
     // dd("fgtf");
     $formattedDate = format_date('2024-12-24');
     $data = Module::latest()->paginate(5);
-    return view('module.index', compact('data','formattedDate'))
+    return view('backend.module.index', compact('data','formattedDate'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
 
@@ -52,7 +52,7 @@ public function create(): View
 
     ];
     $permissions = Permission::all();
-    return view('module.create', compact('categories', 'permissions'));
+    return view('backend.module.create', compact('categories', 'permissions'));
 }
 public function showAccess()
 {
@@ -67,7 +67,7 @@ public function showAccess()
     // dd("$modules");
 
     // print_r($modules); die;
-    return view('module.Access',compact('modules'));
+    return view('backend.module.Access',compact('modules'));
 }
 
 public function store(Request $request)
@@ -122,13 +122,13 @@ public function store(Request $request)
 public function show($id): View
 {
     $module = Module::findOrFail($id);
-    return view('module.show', compact('module'));
+    return view('backend.module.show', compact('module'));
 }
 
 public function edit($id): View
 {
     $module = Module::findOrFail($id);
-    return view('module.edit', compact('module'));
+    return view('backend.module.edit', compact('module'));
 }
 
 public function update(Request $request, $id): RedirectResponse

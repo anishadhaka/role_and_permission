@@ -38,7 +38,7 @@ class DesignationController extends Controller
                 ->make(true);
         }
     
-        return view('designation.index');
+        return view('backend.designation.index');
     }
     
 
@@ -50,7 +50,7 @@ class DesignationController extends Controller
          
        $department=Department::pluck('department_name','id');
     //    dd($department);
-        return view('designation.create',compact('department'));
+        return view('backend.designation.create',compact('department'));
     }
 
     /**
@@ -83,7 +83,7 @@ class DesignationController extends Controller
     {
        $department=Department::pluck('department_name','id');
          $designation= Designation::findorfail($id);
-        return view('designation.edit', compact('designation','department'));
+        return view('backend.designation.edit', compact('designation','department'));
     }
 
     /**

@@ -27,14 +27,14 @@ public function index(Request $request): View
 {
     $roles = Role::orderBy('id','DESC')->paginate(5);
    
-    return view('roles.index',compact('roles'))
+    return view('backend.roles.index',compact('roles'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
 
 public function create(): View
 {
     $permission = Permission::get();
-    return view('roles.create',compact('permission'));
+    return view('backend.roles.create',compact('permission'));
 }
 
 public function store(Request $request): RedirectResponse
@@ -61,7 +61,7 @@ public function show($id): View
         ->where("role_has_permissions.role_id",$id)
         ->get();
 
-    return view('roles.show',compact('role','rolePermissions'));
+    return view('backend.roles.show',compact('role','rolePermissions'));
 }
 public function edit(Request $request, $id)
 {
@@ -89,7 +89,7 @@ public function edit(Request $request, $id)
         ->pluck('permission_id')
         ->toArray();
 
-    return view('roles.edit', compact('role', 'modules', 'rolePermissions'));
+    return view('backend.roles.edit', compact('role', 'modules', 'rolePermissions'));
 }
 
 

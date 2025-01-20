@@ -32,7 +32,7 @@ class DepartmentController extends Controller
                 ->make(true);
 
         }
-        return view('department.index');
+        return view('backend.department.index');
     }
 
     /**
@@ -40,7 +40,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('department.create');
+        return view('backend.department.create');
     }
 
     /**
@@ -73,7 +73,7 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $department= Department::findorfail($id);
-        return view('department.edit', compact('department'));
+        return view('backend.department.edit', compact('department'));
     }
 
     /**

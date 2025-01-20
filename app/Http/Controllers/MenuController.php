@@ -24,13 +24,13 @@ public function index(Request $request):view
     {
         $data = Menu::latest()->paginate(5);
   
-        return view('menu.index',compact('data'));
+        return view('backend.menu.index',compact('data'));
     }
 }
 
 public function create()
 {
-    return view('menu.create');
+    return view('backend.menu.create');
 }
 public function store(Request $request)
 {
@@ -56,7 +56,7 @@ public function show(Menu $menu)
 public function edit($id)
 {
     $menu = Menu::where('id',$id)->firstOrFail();
-    return view('menu.edit',compact('menu'));
+    return view('backend.menu.edit',compact('menu'));
 }
 
 public function update(Request $request, $id): RedirectResponse
@@ -93,7 +93,7 @@ public function showmenu($id){
     $finalmenu_output = json_decode($menu, true);
     // dd($finalmenu_output);
     if ($finalmenu_output ) {
-        return view('menu.menu', compact('finalmenu_output'));
+        return view('backend.menu.menu', compact('finalmenu_output'));
     } else {
         return redirect()->route('menulist')->with('error', 'Menu not found');
    }

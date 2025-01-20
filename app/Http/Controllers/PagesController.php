@@ -31,7 +31,7 @@ public function index(Request $request): View
         $data->where('user_id', auth()->user()->id);
     }
  //   dd($data['items']);
-    return view('pages.index',compact('data'))
+    return view('backend.pages.index',compact('data'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
     
@@ -39,7 +39,7 @@ public function index(Request $request): View
 public function create(): View
 {
     // $roles = Role::pluck('name','name')->all();
-    return view('pages.create');
+    return view('backend.pages.create');
 }
     
   
@@ -80,7 +80,7 @@ public function store(Request $request): RedirectResponse
 public function show($id): View
 {
     $pages = Pages::find($id);
-    return view('pages.show',compact('pages'));
+    return view('backend.pages.show',compact('pages'));
 }
   
 public function edit($id): View
@@ -91,7 +91,7 @@ public function edit($id): View
     }
     // $userRole = $user->roles->pluck('name','name')->all();
 
-    return view('pages.edit',compact('pages'));
+    return view('backend.pages.edit',compact('pages'));
 }
     
   

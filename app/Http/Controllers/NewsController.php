@@ -58,7 +58,7 @@ public function index(Request $request): View
     $status = Status::pluck('status_name', 'id'); 
     $designation = Designation::all();
 
-    return view('news.index', compact('newss', 'languages','status','designation','query'))
+    return view('backend.news.index', compact('newss', 'languages','status','designation','query'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
     
@@ -72,7 +72,7 @@ public function create(): View
     $domains= Domain::pluck('domain_name','id');
     $languages= Language::pluck('language_name','id');
     $country=Country::all();
-    return view('news.create',compact('categories','domains','languages','country'));
+    return view('backend.news.create',compact('categories','domains','languages','country'));
 }
     
   
@@ -128,7 +128,7 @@ public function show($id): View
     if (!auth()->user()->hasRole('Admin')) {
         $news->where('user_id', auth()->user()->id);
     }
-    return view('news.show',compact('news'));
+    return view('backend.news.show',compact('news'));
 }
   
 public function edit($id): View
@@ -142,7 +142,7 @@ public function edit($id): View
     $languages=Language::pluck('language_name','id');
     $country=Country::all();
 // dd($domains);
-    return view('news.edit',compact('News','categories','domains','languages','country'));
+    return view('backend.news.edit',compact('News','categories','domains','languages','country'));
 }
     
   

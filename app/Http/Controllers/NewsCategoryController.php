@@ -26,7 +26,7 @@ public function index(Request $request): View
 {
     $data = NewsCategory::latest()->paginate(5);
  //   dd($data['items']);
-    return view('newsCategory.index',compact('data'))
+    return view('backend.newsCategory.index',compact('data'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
     
@@ -34,7 +34,7 @@ public function index(Request $request): View
 public function create(): View
 {
     $roles = Role::pluck('name','name')->all();
-    return view('newsCategory.create',compact('roles'));
+    return view('backend.newsCategory.create',compact('roles'));
 }
     
   
@@ -66,7 +66,7 @@ public function store(Request $request): RedirectResponse
 public function show($id): View
 {
     $user = NewsCategory::find($id);
-    return view('newsCategory.show',compact('user'));
+    return view('backend.newsCategory.show',compact('user'));
 }
   
 public function edit($id): View
@@ -74,7 +74,7 @@ public function edit($id): View
     $NewsCategory = NewsCategory::find($id);
     // $userRole = $user->roles->pluck('name','name')->all();
 
-    return view('newsCategory.edit',compact('NewsCategory'));
+    return view('backend.newsCategory.edit',compact('NewsCategory'));
 }
     
   
