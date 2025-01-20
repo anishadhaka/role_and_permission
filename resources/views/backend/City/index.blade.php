@@ -6,9 +6,9 @@
         <div class="pull-left">
             <h2>City Management</h2>
         </div>
-        <!-- <div class="pull-right">
+        <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('City.create') }}"><i class="fa fa-plus"></i> Create New Country</a>
-        </div> -->
+        </div>
     </div>
 </div>
 
@@ -25,6 +25,7 @@
             <th>City Name</th>
             <th>State Id</th>
             <th>Country Id</th>
+            <th>Action</th>
 
     </thead>
     <tbody>
@@ -48,6 +49,7 @@ $(document).ready(function () {
             { data: 'name', name: 'name' },
             { data: 'state_id', name: 'state_id' },
             { data: 'country_id', name: 'country_id' },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
 
         ]
     });

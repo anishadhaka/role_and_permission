@@ -88,7 +88,8 @@ public function destroy($id)
                     ->with('success','User deleted successfully');
 }
 
-public function showmenu($id){
+public function showmenu($id)
+{
     $menu = Menu::whereid($id)->first();
     $finalmenu_output = json_decode($menu, true);
     // dd($finalmenu_output);

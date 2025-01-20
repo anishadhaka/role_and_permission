@@ -15,13 +15,13 @@ use Illuminate\Support\Str;
     
 class NewsCategoryController extends Controller
 {
-    function __construct()
-    {
-         $this->middleware('permission:newscategory-list|newscategory-create|newscategory-edit|newscategory-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:newscategory-create', ['only' => ['create','store']]);
-         $this->middleware('permission:newscategory-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:newscategory-delete', ['only' => ['destroy']]);
-    }
+function __construct()
+{
+     $this->middleware('permission:newscategory-list|newscategory-create|newscategory-edit|newscategory-delete', ['only' => ['index','store']]);
+     $this->middleware('permission:newscategory-create', ['only' => ['create','store']]);
+     $this->middleware('permission:newscategory-edit', ['only' => ['edit','update']]);
+     $this->middleware('permission:newscategory-delete', ['only' => ['destroy']]);
+}
 public function index(Request $request): View
 {
     $data = NewsCategory::latest()->paginate(5);

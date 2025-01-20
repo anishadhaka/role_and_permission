@@ -17,13 +17,13 @@ class PagesController extends Controller
 {
 
 
-    function __construct()
-    {
-         $this->middleware('permission:pages-list|pages-create|pages-edit|pages-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:pages-create', ['only' => ['create','store']]);
-         $this->middleware('permission:pages-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:pages-delete', ['only' => ['destroy']]);
-    }
+function __construct()
+{
+     $this->middleware('permission:pages-list|pages-create|pages-edit|pages-delete', ['only' => ['index','store']]);
+     $this->middleware('permission:pages-create', ['only' => ['create','store']]);
+     $this->middleware('permission:pages-edit', ['only' => ['edit','update']]);
+     $this->middleware('permission:pages-delete', ['only' => ['destroy']]);
+}
 public function index(Request $request): View
 {
     $data = Pages::latest()->paginate(5);

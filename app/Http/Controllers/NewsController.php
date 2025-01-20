@@ -28,13 +28,13 @@ class NewsController extends Controller
 
 
 
-    function __construct()
-    {
-         $this->middleware('permission:news-list|news-create|news-edit|news-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:news-create', ['only' => ['create','store']]);
-         $this->middleware('permission:news-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:news-delete', ['only' => ['destroy']]);
-    }
+function __construct()
+{
+     $this->middleware('permission:news-list|news-create|news-edit|news-delete', ['only' => ['index','store']]);
+     $this->middleware('permission:news-create', ['only' => ['create','store']]);
+     $this->middleware('permission:news-edit', ['only' => ['edit','update']]);
+     $this->middleware('permission:news-delete', ['only' => ['destroy']]);
+}
 
 public function index(Request $request): View
 {
@@ -141,7 +141,7 @@ public function edit($id): View
     $domains =Domain::pluck('domain_name','id');
     $languages=Language::pluck('language_name','id');
     $country=Country::all();
-// dd($domains);
+    // dd($domains);
     return view('backend.news.edit',compact('News','categories','domains','languages','country'));
 }
     
