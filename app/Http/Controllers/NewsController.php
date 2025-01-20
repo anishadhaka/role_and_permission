@@ -11,6 +11,8 @@ use App\Models\Status;
 use App\Models\ApprovedStatus;
 use App\Models\Designation;
 use App\Models\User;
+use App\Models\Country;
+
 use Spatie\Permission\Models\Role;
 use App\Models\NewsCategory;
 use App\Models\ApprovedNewsStatus;
@@ -69,7 +71,8 @@ public function create(): View
     $categories = NewsCategory::pluck('title', 'id')->all();
     $domains= Domain::pluck('domain_name','id');
     $languages= Language::pluck('language_name','id');
-    return view('news.create',compact('categories','domains','languages'));
+    $country=Country::all();
+    return view('news.create',compact('categories','domains','languages','country'));
 }
     
   
@@ -90,6 +93,7 @@ public function store(Request $request): RedirectResponse
         'description' => $request->description,
         'domain_id' => $request->domain_id,
         'language_id' => $request->language_id,
+        'country_id'=>$request->country_id,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];
@@ -136,8 +140,9 @@ public function edit($id): View
     $categories = NewsCategory::pluck('title', 'id');
     $domains =Domain::pluck('domain_name','id');
     $languages=Language::pluck('language_name','id');
+    $country=Country::all();
 // dd($domains);
-    return view('news.edit',compact('News','categories','domains','languages'));
+    return view('news.edit',compact('News','categories','domains','languages','country'));
 }
     
   

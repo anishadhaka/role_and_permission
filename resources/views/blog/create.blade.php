@@ -99,6 +99,22 @@
 </div>
 
 
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Country:</strong>  
+        <select name="country_id" class="form-control">
+            @foreach ($country as $id => $name) 
+                <option value="{{ $id }}" {{ old('country_id', 1) == $id ? 'selected' : '' }}>
+                    {{ $name->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('status')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
+
 
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">

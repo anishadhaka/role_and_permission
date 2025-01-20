@@ -186,8 +186,7 @@ public function destroyPermission($id)
 public function generateMVC($id)
 {
     $module = Module::findOrFail($id);
-    // dd($module);
-    $moduleName = ucfirst($module->Title); 
+    $moduleName = ucfirst($module->Title);
 
     try {
         // Check if the model already exists
@@ -206,6 +205,13 @@ public function generateMVC($id)
         $viewPath = resource_path("views/{$module->Title}");
         if (File::exists($viewPath)) {
             return response()->json(['message' => "View directory for '{$moduleName}' already exists!"], 400);
+        }
+
+        // Check if the migration file already exists
+        $migrationPath = database_path("migrations");
+        $migrationFile = now()->format('Y_m_d_His') . "_create_{$module->Title}_table.php";
+        if (File::exists("{$migrationPath}/{$migrationFile}")) {
+            return response()->json(['message' => "Migration file '{$migrationFile}' already exists!"], 400);
         }
 
         // Generate the model
@@ -263,10 +269,45 @@ class {$moduleName}Controller extends Controller
         $indexViewTemplate = "<h1>{$moduleName} Index</h1>";
         File::put($indexViewPath, $indexViewTemplate);
 
-        return response()->json(['message' => 'MVC files generated successfully!']);
+        // Generate the migration file
+        $migrationTemplate = "<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('{$module->Title}', function (Blueprint \$table) {
+            \$table->id();
+            \$table->string('field1'); // Example fields
+            \$table->string('field2');
+            \$table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('{$module->Title}');
+    }
+};
+";
+        File::put("{$migrationPath}/{$migrationFile}", $migrationTemplate);
+
+        // Add routes
+        $routePath = base_path('routes/web.php');
+        $routeDefinition = "
+Route::resource('{$module->Title}', \\App\\Http\\Controllers\\{$moduleName}Controller::class);
+";
+        File::append($routePath, $routeDefinition);
+
+        return response()->json(['message' => 'MVC files, route, and migration generated successfully!']);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Error generating MVC files: ' . $e->getMessage()], 500);
     }
 }
+
 
 }

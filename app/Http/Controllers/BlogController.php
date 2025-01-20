@@ -11,6 +11,8 @@ use App\Models\Status;
 use App\Models\Designation;
 use App\Models\ApprovedStatus;
 use App\Models\User;
+use App\Models\Country;
+
 use Spatie\Permission\Models\Role;
 // use Spatie\Permission\Models\BlogCategory;
 use App\Models\BlogCategory;
@@ -69,8 +71,9 @@ public function create(): View
     $domains= Domain::pluck('domain_name','id');
     $languages= Language::pluck('language_name','id');
     $status= Status::pluck('status_name','id');
+    $country=Country::all();
     
-   return view('blog.create',compact('categories','domains','languages','status'));
+   return view('blog.create',compact('categories','domains','languages','status','country'));
 }
     
   
@@ -92,6 +95,7 @@ public function store(Request $request): RedirectResponse
         'domain_id' => $request->domain_id,
         'language_id' => $request->language_id,
         'status_id'=>$request->status_id,
+        'country_id'=>$request->country_id,
         'create_date' => $request->created_at ?? now(),
         'update_date' => $request->updated_at ?? now(),
     ];
@@ -142,12 +146,13 @@ public function edit($id): View
     $domains= Domain::pluck('domain_name','id');
     $languages= Language::pluck('language_name','id');
     $status= Status::pluck('status_name','id');
+    $country= Country::all();
     if(!auth()->user()->hasRole('Admin')){
         $user->where('user_id', auth()->user()->id);
     }
     $categories = BlogCategory::pluck('title', 'id');
     // dd($categories);
-    return view('blog.edit', compact('blog', 'categories','domains','languages','status'));
+    return view('blog.edit', compact('blog', 'categories','domains','languages','status','country'));
 }
     
   

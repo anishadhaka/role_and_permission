@@ -11,7 +11,7 @@ class Blog extends Model
 
     protected $table = 'blogs';
     protected $fillable = [
-        'id', 'name', 'content', 'image', 'slug', 'user_id', 'category_id', 'domain_id', 'language_id', 'status_id'
+        'id', 'name', 'content', 'image', 'slug', 'user_id', 'category_id', 'domain_id', 'language_id', 'status_id','country_id'
     ];
 
     public function blogcategories()

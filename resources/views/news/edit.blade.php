@@ -86,6 +86,20 @@
 
 <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
+        <strong>Country:</strong>
+        <select name="country_id" class="form-control">
+            @foreach($country as $countries)
+            <option value="{{$countries->id}}">
+                {{$countries->name}}
+            </option>
+            @endforeach
+        </select>
+
+    </div>
+    </div>
+
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
         <strong>Image:</strong>
         @if ($News->image)
             <div>
