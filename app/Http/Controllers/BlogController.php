@@ -53,10 +53,10 @@ public function index(Request $request): View
     }
     $languages = Language::pluck('language_name', 'id'); 
     $status = Status::pluck('status_name', 'id'); 
-    $designation = Designation::all();
+    $designation = Designation::all();~
     // dd($designation);
     
-    return view('blog.index', compact('blogs', 'languages', 'status', 'designation'))
+    return view('backend.blog.index', compact('blogs', 'languages', 'status', 'designation'))
         ->with('i', ($request->input('page', 1) - 1) * 5);
 }
     

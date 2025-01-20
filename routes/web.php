@@ -91,3 +91,5 @@ Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->nam
 });
 
 Route::resource('Country', \App\Http\Controllers\CountryController::class);
+Route::resource('City', \App\Http\Controllers\CityController::class);
+Route::resource('State', \App\Http\Controllers\StateController::class);

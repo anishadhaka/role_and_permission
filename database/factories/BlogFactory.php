@@ -31,8 +31,6 @@ class BlogFactory extends Factory
             'user_id'=>'',
             'category_id'=>'',
             
-         
-            
         ];
     }
 }
