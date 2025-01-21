@@ -6,9 +6,9 @@
         <div class="pull-left">
             <h2>Country Management</h2>
         </div>
-        <!-- <div class="pull-right">
+        <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('Country.create') }}"><i class="fa fa-plus"></i> Create New Country</a>
-        </div> -->
+        </div>
     </div>
 </div>
 
@@ -25,6 +25,7 @@
             <th>Country Name</th>
             <th>Country Code</th>
             <th>Time Zone</th>
+            <th>Action </th>
 
     </thead>
     <tbody>
@@ -48,6 +49,7 @@ $(document).ready(function () {
             { data: 'name', name: 'name' },
             { data: 'country_code', name: 'country_code' },
             { data: 'time_zone', name: 'time_zone' },
+            { data: 'action' , name:'action'},
 
         ]
     });

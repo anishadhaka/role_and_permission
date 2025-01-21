@@ -24,6 +24,7 @@
             <th>Id</th>
             <th>State Name</th>
             <th>Country Id</th>
+            <th>Action</th>
 
     </thead>
     <tbody>
@@ -46,6 +47,8 @@ $(document).ready(function () {
             { data: 'id', name: 'id' },
             { data: 'name', name: 'name' },
             { data: 'country_id', name: 'country_id' },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+
 
         ]
     });

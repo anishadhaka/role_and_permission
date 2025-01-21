@@ -84,6 +84,16 @@
         justify-content: space-between;
         transition: 0.2s;
     }
+    .sidebar-dropdown-item a {
+        padding: 15px 25px;
+        text-decoration: none;
+        font-size: 16px;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        justify-content: normal;
+        transition: 0.2s;
+    }
 
     .sidebar a div {
         display: flex;
@@ -174,7 +184,7 @@
                             <li class="sidebar-dropdown-item {{ request()->routeIs($child['href']) ? 'active' : '' }}">
                                 <a href="{{ $child['href'] ? route($child['href']) : 'javascript:void(0);' }}">
                                     <i class="{{ $child['icon'] ?? 'fas fa-circle' }}"></i>
-                                    <span>{{ $child['text'] }}</span>
+                                    <span style="padding:5px">{{ $child['text'] }}</span>
                                 </a>
                             </li>
                         @endforeach
