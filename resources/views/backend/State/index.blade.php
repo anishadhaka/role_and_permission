@@ -6,9 +6,9 @@
         <div class="pull-left">
             <h2>State Management</h2>
         </div>
-        <!-- <div class="pull-right">
-            <a class="btn btn-success mb-2" href="{{ route('State.create') }}"><i class="fa fa-plus"></i> Create New Country</a>
-        </div> -->
+        <div class="pull-right">
+            <a class="btn btn-success mb-2" href="{{ route('State.create') }}"><i class="fa fa-plus"></i> Create New State</a>
+        </div>
     </div>
 </div>
 

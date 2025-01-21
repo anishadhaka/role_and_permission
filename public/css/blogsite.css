@@ -203,6 +203,7 @@ header nav ul li a:hover {
   border-radius: 20px;
   background-color: #d0e1e5;
   text-decoration: none;
+  margin-bottom: 10px;
 }
 
 .review-card a.read-more:hover, .review-card2 a.read-more:hover {

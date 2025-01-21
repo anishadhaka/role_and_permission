@@ -116,6 +116,11 @@ public function store(Request $request): RedirectResponse
 
    
     News::create($data);
+ 
+    if ($request->has('stay_on_page') && $request->stay_on_page) {
+        return redirect()->back()->with('success', 'News post created successfully. You can create another.');
+    }
+
 
     return redirect()->route('news.index')
         ->with('success', 'News post created successfully');

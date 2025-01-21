@@ -6,7 +6,7 @@
             <h2>Menu Management</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-success mb-2" href="{{ route('menu.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
+            <a class="btn btn-success mb-2" href="{{ route('menu.create') }}"><i class="fa fa-plus"></i> Create New Menu</a>
         </div>
     </div>
 </div>

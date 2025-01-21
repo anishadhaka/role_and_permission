@@ -125,7 +125,10 @@ public function store(Request $request): RedirectResponse
     // dd($data);
     Blog::create($data);
   
-
+    if ($request->has('stay_on_page') && $request->stay_on_page) {
+        return redirect()->back()->with('success', 'Blog post created successfully. You can create another.');
+    }
+    
     return redirect()->route('blog.index')
         ->with('success', 'Blog post created successfully');
 }

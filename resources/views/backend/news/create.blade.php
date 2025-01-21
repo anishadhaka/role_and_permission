@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Create New News</h2>
+            <h2>Create  News</h2>
         </div>
         <div class="pull-right">
             <a class="btn btn-primary btn-sm mb-2" href="{{ route('news.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
@@ -103,6 +103,13 @@
             </div>
         </div>
         
+        <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <label>
+            <input type="checkbox" name="stay_on_page" value="1"> Stay on this page after submitting
+        </label>
+    </div>
+</div>
      
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>

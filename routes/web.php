@@ -32,13 +32,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/action-user-store',[ActionUserController::class , 'store']);
-Route::get('menu/{id}', [MenuController::class, 'showMenu'])->name('menu');
 
+Route::get('menu/{id}', [MenuController::class, 'showMenu'])->name('menu');
 Route::post('/updatejsondata', [MenuController::class, 'updateJsonData'])->name('updatejsondata');
+
 Route::post('/approve_book/{id}', [BlogController::class, 'approveBook'])->name('approve_book');
 Route::post('/rejected_book/{id}', [BlogController::class, 'rejected'])->name('rejected_book');
+
 Route::post('/approve/{id}', [NewsController::class, 'approve'])->name('approve');
 Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
+
 Route::post('/module/mvc/{id}', [ModuleController::class, 'generateMVC'])->name('module.generateMVC');
 
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
@@ -61,9 +64,7 @@ Route::get('/newscategoriasite', [BlogSite::class, 'newsCategorySite'])->name('n
     //
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('/module', ModuleController::class);
-   
     Route::get('/module/{id}/access', [ModuleController::class, 'showAccess'])->name('access');
-
     Route::post('/module/save-permissions', [ModuleController::class, 'savePermissions'])->name('modulesave')->middleware(['role:module|Admin']); 
     Route::get('/module/permissions/{id}', [ModuleController::class, 'getPermissions'])->name('module.permissions')->middleware(['role:module|Admin']); 
     Route::delete('/module/permissions/{id}', [ModuleController::class, 'destroyPermission'])->name('permission.destroy')->middleware(['role:module|Admin']); 
@@ -93,3 +94,5 @@ Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->nam
 Route::resource('Country', \App\Http\Controllers\CountryController::class);
 Route::resource('City', \App\Http\Controllers\CityController::class);
 Route::resource('State', \App\Http\Controllers\StateController::class);
+// Route::get('/menulist', [MenuController::class, 'create'])->name('menulist');
+
