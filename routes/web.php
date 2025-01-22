@@ -43,6 +43,11 @@ Route::post('/approve/{id}', [NewsController::class, 'approve'])->name('approve'
 Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
 
 Route::post('/module/mvc/{id}', [ModuleController::class, 'generateMVC'])->name('module.generateMVC');
+Route::post('recycle', [ModuleController::class, 'recycle'])->name('recycle');
+Route::put('module/recover/{id}', [ModuleController::class, 'recover'])->name('module.recover');
+
+
+
 
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
 

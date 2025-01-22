@@ -12,6 +12,15 @@
                 <i class="fa fa-plus"></i> Create New Module
             </a>
         </div> -->
+        <div class="pull-right">
+    <form action="{{ route('recycle') }}" method="POST" style="display:inline;">
+        @csrf
+        <button type="submit" class="btn btn-success mb-2">
+            Recycle
+        </button>
+    </form>
+</div>
+
     </div>
 </div>
 

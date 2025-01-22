@@ -117,10 +117,10 @@ function updatejsondata(Request $request)
                     $module = new module();
                     $module->Title = $item['text'] ?? 'Unnamed Module';
                     $module->parent_id = $parentId;
-                    
+                    $module->deleted_at = null; 
                     $module->created_at = now();
                     $module->updated_at = now();
-                    $module->save();
+                    $module->save();    
 
                     if (!empty($item['children'])) {
                         saveModule($item['children'], $module->id);

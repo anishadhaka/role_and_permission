@@ -217,50 +217,50 @@ public function generateMVC($id)
         // Generate the model
         $modelTemplate = "<?php
 
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class {$moduleName} extends Model
-{
-    use HasFactory;
-
-    protected \$fillable = ['field1', 'field2']; // Define your fields here
-}
-";
-        File::put($modelPath, $modelTemplate);
-
-        // Generate the controller
-        $controllerTemplate = "<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\\{$moduleName};
-use Illuminate\Http\Request;
-
-class {$moduleName}Controller extends Controller
-{
-    public function index()
-    {
-        \$data = {$moduleName}::all();
-        return view('{$module->Title}.index', compact('data'));
-    }
-
-    public function create()
-    {
-        return view('{$module->Title}.create');
-    }
-
-    public function store(Request \$request)
-    {
-        {$moduleName}::create(\$request->all());
-        return redirect()->route('{$module->Title}.index')->with('success', 'Created successfully.');
-    }
-}
-";
-        File::put($controllerPath, $controllerTemplate);
-
+ namespace App\Models;
+ 
+ use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Database\Eloquent\Model;
+ 
+ class {$moduleName} extends Model
+ {
+     use HasFactory;
+ 
+     protected \$fillable = ['field1', 'field2']; // Define your fields here
+ }
+ ";
+         File::put($modelPath, $modelTemplate);
+ 
+         // Generate the controller
+         $controllerTemplate = "<?php
+ 
+ namespace App\Http\Controllers;
+ 
+ use App\Models\\{$moduleName};
+ use Illuminate\Http\Request;
+ 
+ class {$moduleName}Controller extends Controller
+ {
+     public function index()
+     {
+         \$data = {$moduleName}::all();
+         return view('{$module->Title}.index', compact('data'));
+     }
+ 
+     public function create()
+     {
+         return view('{$module->Title}.create');
+     }
+ 
+     public function store(Request \$request)
+     {
+         {$moduleName}::create(\$request->all());
+         return redirect()->route('{$module->Title}.index')->with('success', 'Created successfully.');
+     }
+ }
+ ";
+         File::put($controllerPath, $controllerTemplate);
+ 
         // Generate the view directory
         File::makeDirectory($viewPath, 0755, true);
 
@@ -271,43 +271,67 @@ class {$moduleName}Controller extends Controller
 
         // Generate the migration file
         $migrationTemplate = "<?php
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    public function up()
-    {
-        Schema::create('{$module->Title}', function (Blueprint \$table) {
-            \$table->id();
-            \$table->string('field1'); // Example fields
-            \$table->string('field2');
-            \$table->timestamps();
-        });
-    }
-
-    public function down()
-    {
-        Schema::dropIfExists('{$module->Title}');
-    }
-};
-";
-        File::put("{$migrationPath}/{$migrationFile}", $migrationTemplate);
-
-        // Add routes
-        $routePath = base_path('routes/web.php');
-        $routeDefinition = "
-Route::resource('{$module->Title}', \\App\\Http\\Controllers\\{$moduleName}Controller::class);
-";
-        File::append($routePath, $routeDefinition);
-
-        return response()->json(['message' => 'MVC files, route, and migration generated successfully!']);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Error generating MVC files: ' . $e->getMessage()], 500);
-    }
+ 
+ use Illuminate\Database\Migrations\Migration;
+ use Illuminate\Database\Schema\Blueprint;
+ use Illuminate\Support\Facades\Schema;
+ 
+ return new class extends Migration
+ {
+     public function up()
+     {
+         Schema::create('{$module->Title}', function (Blueprint \$table) {
+             \$table->id();
+             \$table->string('field1'); // Example fields
+             \$table->string('field2');
+             \$table->timestamps();
+         });
+     }
+ 
+     public function down()
+     {
+         Schema::dropIfExists('{$module->Title}');
+     }
+ };
+ ";
+         File::put("{$migrationPath}/{$migrationFile}", $migrationTemplate);
+ 
+         // Add routes
+         $routePath = base_path('routes/web.php');
+         $routeDefinition = "
+ Route::resource('{$module->Title}', \\App\\Http\\Controllers\\{$moduleName}Controller::class);
+ ";
+         File::append($routePath, $routeDefinition);
+ 
+         return response()->json(['message' => 'MVC files, route, and migration generated successfully!']);
+     } catch (\Exception $e) {
+         return response()->json(['message' => 'Error generating MVC files: ' . $e->getMessage()], 500);
+     }
 }
+ 
+public function recycle(Request $request): View
+{
+    $data = Module::onlyTrashed()
+        ->latest()
+        ->paginate(5);
+
+    $currentPage = $request->input('page', 1);
+    $startIndex = ($currentPage - 1) * 5;
+
+    return view('backend.module.recycle', compact('data'))
+        ->with('i', $startIndex);
+}
+public function recover($id)
+{
+    //  soft-deleted record
+    $module = Module::onlyTrashed()->findOrFail($id);
+
+    $module->restore();
+
+    return redirect()->route('recycle')
+        ->with('success', 'Module restored successfully!');
+}
+
 
 
 }

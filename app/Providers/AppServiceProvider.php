@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Retrieve the menu and module data
         $menuData = Menu::where('id', 5)->first();
-        $module = Module::get();
+        $module = Module::whereNull('deleted_at')->get();
         // Ensure that the menu data is decoded
         if ($menuData) {
             $menuData->json_output = json_decode($menuData->json_output, true);
