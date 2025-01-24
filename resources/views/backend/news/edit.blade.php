@@ -98,20 +98,21 @@
     </div>
     </div>
 
- <div class="col-xs-12 col-sm-12 col-md-12">
-     <div class="form-group">
-         <strong>Upload Image:</strong>
-         <div class="d-flex flex-column align-items-center">
-             <img src="{{ asset('images/' . $News->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
-             <div class="input-group">
-                 <input type="text" id="image_label" class="form-control" name="news_image" value="{{ old('news_image', $News->image) }}" placeholder="Select an image..." aria-label="Image">
-                 <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
-             </div>
-         </div>
-     </div>
-     @error('image')<p class="text-danger">{{ $message }}</p>@enderror
- </div>
- </div>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Upload Image:</strong>
+        <div class="d-flex flex-column align-items-center">
+            @if ($News->image)
+                <img src="{{ asset('images/' . $News->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
+            @endif
+            <div class="input-group">
+                <input type="text" id="image_label" class="form-control" name="image" value="{{ old('image', $News->image) }}" placeholder="Select an image..." aria-label="Image">
+                <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
+            </div>
+        </div>
+    </div>
+    @error('image')<p class="text-danger">{{ $message }}</p>@enderror
+</div>
 
 
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">

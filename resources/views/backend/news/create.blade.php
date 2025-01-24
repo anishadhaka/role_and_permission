@@ -96,14 +96,17 @@
     </div> 
 </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Image:</strong>
-                <input type="file" name="image" placeholder="image" class="form-control">
+       <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="input-group">
+                <label for="image">Image</label>
+                <input type="text" id="image_label" class="form-control" name="image" value="" placeholder="Select an image..." aria-label="Image">
+                <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
             </div>
         </div>
+
+
         
-        <div class="col-xs-12 col-sm-12 col-md-12">
+<div class="col-xs-12 col-sm-12 col-md-12">
     <div class="form-group">
         <label>
             <input type="checkbox" name="stay_on_page" value="1"> Stay on this page after submitting

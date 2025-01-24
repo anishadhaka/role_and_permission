@@ -80,57 +80,44 @@ public function create(): View
 public function store(Request $request): RedirectResponse
 {
    
-    $this->validate($request, [
-        'name' => 'required',
-        'content' => 'required',
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'content' => 'required|string',
+        'image' => 'nullable|string|max:255', 
     ]);
-    // dd(auth()->user()->id);  
-    
+
     $data = [
         'name' => $request->name,
         'content' => $request->content,
-        'category_id'=>$request->category_id,
-        'user_id'=> auth()->user()->id,
+        'category_id' => $request->category_id,
+        'user_id' => auth()->user()->id,
         'domain_id' => $request->domain_id,
         'language_id' => $request->language_id,
-        'status_id'=>$request->status_id,
-        'country_id'=>$request->country_id,
-        'create_date' => $request->created_at ?? now(),
-        'update_date' => $request->updated_at ?? now(),
+        'status_id' => $request->status_id,
+        'country_id' => $request->country_id,
+        'create_date' => now(),
+        'update_date' => now(),
     ];
 
-    // dd($data);
-    // $data = $request->all();
-    // dd($data);
-   
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $imageName = time() . '_' . $image->getClientOriginalName();
-        $imagePath = 'images/' . $imageName;
-        $image->move(public_path('images'), $imageName);
-        $data['image'] = $imagePath;
-    } else {
-        $data['image'] = 'images/default_image.jpg';
+    if ($request->has('image') && $request->image) {
+        $imageName = basename($request->image); 
+        $data['image'] = $imageName;
     }
 
- 
+   
     $slug = Str::slug($request->name);
     $existingSlugCount = Blog::where('slug', $slug)->count();
     if ($existingSlugCount > 0) {
-        $slug = $slug . '-' . time();
+        $slug = $slug . '-' . time();  
     }
     $data['slug'] = $slug;
-
-    // dd($data);
     Blog::create($data);
-  
     if ($request->has('stay_on_page') && $request->stay_on_page) {
         return redirect()->back()->with('success', 'Blog post created successfully. You can create another.');
     }
-    
-    return redirect()->route('blog.index')
-        ->with('success', 'Blog post created successfully');
+    return redirect()->route('blog.index')->with('success', 'Blog post created successfully');
 }
+
     
   
 public function show($id): View
@@ -162,7 +149,7 @@ public function update(Request $request, $id): RedirectResponse
 {
     $this->validate($request, [
         'name' => 'required|string|max:255',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        // 'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'content' => 'required|string',     
     ]);
 
@@ -170,18 +157,15 @@ public function update(Request $request, $id): RedirectResponse
 
     $data = $request->all();
 
-    if ($request->hasFile('image')) {
-        if ($blog->image && file_exists(public_path($blog->image))) {
-            unlink(public_path($blog->image));
-        }
 
-        $image = $request->file('image');
-        $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('images'), $imageName);
-        $data['image'] = 'images/' . $imageName;  
-    } else {
-        $data['image'] = $blog->image;
+    if ($request->has('image') && $request->image) {
+        $imageName = basename($request->image); // Extract only the file name from the path
+        $data['image'] = $imageName;
+    } elseif (!$request->has('image') && !$blog->image) {
+        // Handle case where no image is provided and there's no existing image
+        $data['image'] = null;
     }
+
 
     $slug = Str::slug($request->name);
     $existingSlugCount = Blog::where('slug', $slug)->count();

@@ -143,8 +143,10 @@
     });
 
     function fmSetLink(url) {
-        document.getElementById('image_label').value = url.replace(/^https?:\/\/[^\/]+\//, '');
-    }
+    // Extract only the image name from the URL
+    const imageName = url.split('/').pop(); // Get the last part of the URL
+    document.getElementById('image_label').value = imageName;
+}
 
     CKEDITOR.replace('content', {
         filebrowserImageBrowseUrl: '/file-manager/ckeditor'

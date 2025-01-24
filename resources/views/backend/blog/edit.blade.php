@@ -109,19 +109,22 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Upload Image:</strong>
-                <div class="d-flex flex-column align-items-center">
-                    <img src="{{ asset('images/' . $blog->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
-                    <div class="input-group">
-                        <input type="text" id="image_label" class="form-control" name="news_image" value="{{ old('news_image', $blog->image) }}" placeholder="Select an image..." aria-label="Image">
-                        <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
-                    </div>
-                </div>
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="form-group">
+        <strong>Upload Image:</strong>
+        <div class="d-flex flex-column align-items-center">
+            @if ($blog->image)
+                <img src="{{ asset('images/' . $blog->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
+            @endif
+            <div class="input-group">
+                <input type="text" id="image_label" class="form-control" name="image" value="{{ old('image', $blog->image) }}" placeholder="Select an image..." aria-label="Image">
+                <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
             </div>
-            @error('image')<p class="text-danger">{{ $message }}</p>@enderror
         </div>
+    </div>
+    @error('image')<p class="text-danger">{{ $message }}</p>@enderror
+</div>
+
 
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3">
@@ -131,26 +134,7 @@
     </div>
 </form>
 
-<script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById('button-image').addEventListener('click', (event) => {
-            event.preventDefault();
-            const width = 600;
-            const height = 400;
-            const left = (window.screen.width / 2) - (width / 2);
-            const top = (window.screen.height / 2) - (height / 2);
-            window.open('/file-manager/fm-button', 'fm', `width=${width},height=${height},top=${top},left=${left}`);
-        });
-    });
 
-    function fmSetLink(url) {
-        document.getElementById('image_label').value = url.replace(/^https?:\/\/[^\/]+\//, '');
-    }
 
-    CKEDITOR.replace('content', {
-        filebrowserImageBrowseUrl: '/file-manager/ckeditor'
-    });
-</script>
 
 @endsection

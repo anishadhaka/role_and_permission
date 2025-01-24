@@ -99,12 +99,9 @@ public function store(Request $request): RedirectResponse
     ];
 
     
-    if ($request->hasFile('image')) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $imageName);
-        $data['image'] = 'images/' . $imageName;  
-    } else {
-        $data['image'] = 'images/default-image.jpg'; 
+    if ($request->has('image') && $request->image) {
+        $imageName = basename($request->image); 
+        $data['image'] = $imageName;
     }
  
     $slug = Str::slug($request->name);
@@ -153,39 +150,25 @@ public function edit($id): View
   
 public function update(Request $request, $id): RedirectResponse
 {
-    // Fetch the news entry by ID
     $news = News::findOrFail($id);
 
-    // Validate the request
     $this->validate($request, [
         'name' => 'required|string|max:255', 
         'description' => 'required|string',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        // 'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'create_date' => 'nullable|date',     
         'update_date' => 'nullable|date',    
     ]);
 
-    // Prepare data from the request
     $data = $request->all();
 
-    // Handle image upload if a new image is provided
-    if ($request->hasFile('image')) {
-        // Delete the old image if it exists
-        if ($news->image && file_exists(public_path($news->image))) {
-            unlink(public_path($news->image));
-        }
-
-        // Save the new image
-        $image = $request->file('image');
-        $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('images'), $imageName);
-        $data['image'] = 'images/' . $imageName;
-    } else {
-        // Keep the existing image if no new image is uploaded
-        $data['image'] = $news->image;
+    if ($request->has('image') && $request->image) {
+        $imageName = basename($request->image); 
+        $data['image'] = $imageName;
+    } elseif (!$request->has('image') && !$blog->image) {
+        $data['image'] = null;
     }
 
-    // Generate a slug for the news
     $slug = Str::slug($request->name);
     $existingSlugCount = News::where('slug', $slug)->count();
     if ($existingSlugCount > 0) {
@@ -193,9 +176,7 @@ public function update(Request $request, $id): RedirectResponse
     }
     $data['slug'] = $slug;
 
-    // Update the news
     $news->update($data);
-
     return redirect()->route('news.index') 
                      ->with('success', 'News updated successfully');
 }

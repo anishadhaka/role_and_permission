@@ -48,7 +48,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Content:</strong>
-                <input type="text" name="content" placeholder="content" class="form-control">
+                <textarea name="content" placeholder="Content" class="form-control">{{ old('content') }}</textarea>
             </div>
         </div>
 
@@ -113,14 +113,13 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
     </div>
+   </div>
 </div>
 
-
-        </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Image:</strong>
-                <input type="file" name="image" placeholder="image" class="form-control">
+            <div class="input-group">
+                <input type="text" id="image_label" class="form-control" name="image" value="" placeholder="Select an image..." aria-label="Image">
+                <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
             </div>
         </div>
         
