@@ -24,4 +24,6 @@ let config = {
     axisColor: '#a1acb8',
     borderColor: '#eceef1'
   }
+
 };
+

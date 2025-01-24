@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('backend.layouts.app')
 
 @section('content')
     <h2>Edit Domain</h2>

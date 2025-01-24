@@ -85,8 +85,7 @@ public function store(Request $request): RedirectResponse
         'content' => 'required',
     ]);
     // dd(auth()->user()->id);  
-
-  
+    
     $data = [
         'name' => $request->name,
         'content' => $request->content,

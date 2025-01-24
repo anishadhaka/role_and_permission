@@ -24,6 +24,7 @@ use App\Http\Controllers\DomainController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\FileManagerControllerController;
 
 
 
@@ -100,4 +101,6 @@ Route::resource('Country', \App\Http\Controllers\CountryController::class);
 Route::resource('City', \App\Http\Controllers\CityController::class);
 Route::resource('State', \App\Http\Controllers\StateController::class);
 // Route::get('/menulist', [MenuController::class, 'create'])->name('menulist');
+Route::get('filemanager', [FileManagerControllerController::class, 'index'])->name('filemanager.index');
+
 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('backend.layouts.app')
 
 @section('content')
 <div class="row">
@@ -98,19 +98,22 @@
     </div>
     </div>
 
-<div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-        <strong>Image:</strong>
-        @if ($News->image)
-            <div>
-            <img src="{{ asset('images/' . $News->image) }}" class="img-thumbnail" style="width: 150px; height: auto;" alt="News Image">
-            </div>
-            <small class="text-muted">If you don't want to change the image, leave the field below empty.</small>
-        @endif
-        <input type="file" name="image" class="form-control mt-2">
-    </div>
-</div>
-        </div>
+ <div class="col-xs-12 col-sm-12 col-md-12">
+     <div class="form-group">
+         <strong>Upload Image:</strong>
+         <div class="d-flex flex-column align-items-center">
+             <img src="{{ asset('images/' . $News->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
+             <div class="input-group">
+                 <input type="text" id="image_label" class="form-control" name="news_image" value="{{ old('news_image', $News->image) }}" placeholder="Select an image..." aria-label="Image">
+                 <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
+             </div>
+         </div>
+     </div>
+     @error('image')<p class="text-danger">{{ $message }}</p>@enderror
+ </div>
+ </div>
+
+
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
         </div>

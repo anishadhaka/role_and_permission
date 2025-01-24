@@ -3,24 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
    
     <!-- <link rel="stylesheet" type="text/css" href="{{ asset('css/sidebar.css') }}"> -->
 
     <script src="<?php echo asset('js/jquery.js');?>"></script>
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -117,48 +110,9 @@
             </div>
         </nav>
       @auth
-        @include('layouts.sidebar')
+        @include('backend.layouts.sidebar')
   @endauth
-        <!-- <div class="main-container"> -->
-      <!-- @auth -->
-            <!-- <aside class="sidebar">
-            <ul class="menu">
-            <h1 style="border-bottom:1px solid white; margin-top:6px; padding-left:20px;">
-            <img src="https://www.absglobaltravel.com/public/images/footer-abs-logo.webp" width="150px" height="50px;"  >
-        </h1>
-    @php
-        // Check if $menu is null or if json_output exists
-
-        //dd($menu_nav);
-        $menuItems = !is_null($menu_nav) && isset($menu_nav->json_output) 
-            ? (is_string($menu_nav->json_output) ? json_decode($menu_nav->json_output, true) : $menu_nav->json_output) 
-            : [];
-    @endphp
     
-    @foreach($menuItems as $item)
-        <li class="menu-item {{ request()->routeIs($item['href']) || (isset($item['children']) && collect($item['children'])->pluck('href')->contains(request()->route()->getName())) ? 'show active' : '' }}">
-            <a href="{{ $item['href'] ? route($item['href']) : 'javascript:void(0);' }}" class="menu-link menu-toggle" style="justify-content: space-between;">
-                
-                <div data-i18n="{{ $item['title'] ?? '' }}"><i class="menu-icon {{ $item['icon'] ?? 'fas fa-circle' }}"></i> {{ $item['text'] }} </div>
-                 <div><i class="fa-solid fa-caret-down"></i></div>
-            </a>
-            @if(!empty($item['children']))
-                <ul class="sidebar-dropdown">
-                    @foreach($item['children'] as $child)
-                        <li class="sidebar-dropdown-item {{ request()->routeIs($child['href']) ? 'active' : '' }}">
-                            <a href="{{ $child['href'] ? route($child['href']) : 'javascript:void(0);' }}">
-                                <i class="menu-icon {{ $child['icon'] ?? 'fas fa-circle' }}"></i>
-                                <div data-i18n="{{ $child['title'] ?? '' }}">{{ $child['text'] }}</div>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-        </li>
-    @endforeach
-</ul>
-@endauth -->
- <!-- </aside> -->
     <main class="content">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -172,23 +126,28 @@
                     </div>
                 </div>
             </main>
-        <!-- </div> -->
-    <!-- </div> -->
-    <!-- <script>
-
-document.querySelectorAll('.menu-toggle').forEach(item => {
-    item.addEventListener('click', function(event) {
-        const parentLi = this.parentElement;
-        const icon = this.querySelector('.fa-caret-down'); 
-        parentLi.classList.toggle('show');
-        parentLi.classList.toggle('active'); 
-        icon.classList.toggle('rotate'); 
-        event.preventDefault();
-    });
-});
 
 
-
-</script> -->
 </body>
+<script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('button-image').addEventListener('click', (event) => {
+            event.preventDefault();
+            const width = 600;
+            const height = 400;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            window.open('/file-manager/fm-button', 'fm', `width=${width},height=${height},top=${top},left=${left}`);
+        });
+    });
+
+    function fmSetLink(url) {
+        document.getElementById('image_label').value = url.replace(/^https?:\/\/[^\/]+\//, '');
+    }
+
+    CKEDITOR.replace('content', {
+        filebrowserImageBrowseUrl: '/file-manager/ckeditor'
+    });
+</script>
 </html>

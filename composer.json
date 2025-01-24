@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "alexusmai/laravel-file-manager": "^3.2",
         "illuminate/auth": "*",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",

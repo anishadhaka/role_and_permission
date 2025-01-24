@@ -17,9 +17,31 @@ use App\Models\module;
 
 class BlogSite extends Controller
 {
-    public function index()
+//     public function index()
+// {
+//     //  dd("jbj");
+//     $blog = Blog::all(); 
+//     $news = News::all(); 
+//     $action= ActionUser::all();
+//     $blogs = Blog::all()->map(function ($blog) {
+//         $blog->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+//         $blog->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+//         $blog->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
+//         return $blog;
+//     });
+
+//     $news = News::all()->map(function ($newsItem) {
+//         $newsItem->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+//         $newsItem->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+//         $newsItem->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
+//         return $newsItem;
+//     });
+//     return view('frontend.blogsite.blogsite', compact('blog', 'news','blogs','news'));
+// }
+
+public function index()
 {
-    //  dd("jbj");
+        //  dd("jbj");
     $blog = Blog::all(); 
     $news = News::all(); 
     $action= ActionUser::all();
@@ -36,8 +58,10 @@ class BlogSite extends Controller
         $newsItem->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
         return $newsItem;
     });
-    return view('frontend.blogsite.blogsite', compact('blog', 'news','blogs','news'));
+    return view('frontend.front',compact('blog', 'news','blogs','news'));
+
 }
+
 
 public function blogsitecateg($categoryTitle)
 {
@@ -93,13 +117,17 @@ public function blogsbyslug($slug)
     $blog= Blog::with('blogcategories')->whereLike('slug', $slug)->first();
     // dd($blog);
     $related_blogs = Blog::where('category_id', $blog->blogcategories->id)->get();
-    return view('frontend.blogsite.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
+    // return view('frontend.blogsite.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
+    return view('frontend.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
+
 }
 public function newsbyslug($slug)
 {
     $news= News::with('categories')->whereLike('slug', $slug)->first();
     $related_news = News::where('category_id', $news->categories->id)->get();
     return view('frontend.blogsite.readmorenews',['news' => $news,'related_news'=>$related_news]);
+    // return view('frontend.blogsite.readmorenews',['news' => $news,'related_news'=>$related_news]);
+
 }
 
 

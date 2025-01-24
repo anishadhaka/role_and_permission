@@ -10,14 +10,14 @@
     
 <body>
   
-    @include('layout2.blogsiteheader')
-    @include('layout2.blogsiteheader2')
+    @include('SiteLayout.header')
 
     <main>
         @yield('content')
     </main>
     @yield('scripts')
-    @include('layout2.blogsitefooter')
+    @include('SiteLayout.footer')
+
 </body>
 
 </html>

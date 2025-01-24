@@ -10,6 +10,8 @@ use App\Models\Pages;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Menu;
+
 
 
 // use App\Models\Permission;
@@ -139,12 +141,29 @@ public function update(Request $request, $id): RedirectResponse
         ->with('success', 'Module updated successfully.');
 }
 
-public function destroy($id): RedirectResponse
-{
-    Module::findOrFail($id)->delete();
-    return redirect()->route('module.index')
-        ->with('success', 'Module deleted successfully.');
-}
+
+
+// public function destroy($id): RedirectResponse
+// {
+//     $module = Module::findOrFail($id);
+
+//     // Check if the module has related menu data
+//     $menu = Menu::where('module_id', $module->id)->first(); // Assuming 'module_id' is the foreign key
+
+//     if ($menu) {
+//         // Soft delete or mark JSON data as deleted
+//         $menu->json_output = null; // Or set a flag to mark it as deleted
+//         $menu->save();
+//     }
+
+//     // Soft delete the module itself
+//     $module->delete();
+
+//     return redirect()->route('module.index')
+//         ->with('success', 'Module and its JSON data deleted successfully.');
+// }
+
+
 
 //
 public function savePermissions(Request $request)
@@ -321,15 +340,105 @@ public function recycle(Request $request): View
     return view('backend.module.recycle', compact('data'))
         ->with('i', $startIndex);
 }
-public function recover($id)
+// public function recover($id)
+// {
+//     // Restore the soft-deleted module
+//     $module = Module::onlyTrashed()->findOrFail($id);
+//     $module->restore();
+
+//     // Restore the associated Menu and JSON data if it was cleared during soft delete
+//     $menu = Menu::where('module_id', $module->id)->first();
+
+//     if ($menu && $menu->json_output === null) {
+//         // Restore the JSON data (could be from a backup or a default value)
+//         $menu->json_output = '[]'; // Or restore previous JSON from a backup or another source
+//         $menu->save();
+//     }
+
+//     return redirect()->route('recycle')
+//         ->with('success', 'Module and its JSON data restored successfully!');
+// }
+
+public function destroy($id)
 {
-    //  soft-deleted record
-    $module = Module::onlyTrashed()->findOrFail($id);
+    $modulesdata = Module::find($id);
 
-    $module->restore();
+    $menuData = Menu::where('id', 5)->first();
+    if (!$menuData) {
+        return redirect()->back()->withErrors('Module not found.');
+    }
+    $modulesdata->deleted_at = now();
+    $modulesdata->save();
+    $jsonoutput = json_decode($menuData->json_output, true);
 
-    return redirect()->route('recycle')
-        ->with('success', 'Module restored successfully!');
+    $this->markModuleAsDeleted($jsonoutput, $id);
+
+    $menuData->json_output = json_encode($jsonoutput);
+    if ($menuData->save() ) {
+        return redirect()->back()->with('success', 'Module delete successful');
+    } else {
+        return redirect()->back()->withErrors('Module delete unsuccessful');
+    }
+}
+
+private function markModuleAsDeleted(&$menuItems, $moduleId)
+{
+    foreach ($menuItems as &$item) {
+        if ($item['moduleid'] == $moduleId) {
+            $item['deletestatus'] = '0';
+            return; 
+        }
+
+        if (!empty($item['children'])) {
+            foreach ($item['children'] as &$child) {
+                if ($child['moduleid'] == $moduleId) {
+                    $child['deletestatus'] = '0';
+                    return;
+                }
+            }
+        }
+    }
+}
+
+public function recover($id)
+    {
+        $modulesdata = Module::onlyTrashed()->findOrFail($id);
+    
+        $menuData = Menu::where('id', 5)->first();
+        if (!$menuData) {
+            return redirect()->back()->withErrors('Module not found.');
+        }
+         $modulesdata->restore();
+ 
+        $jsonoutput = json_decode($menuData->json_output, true);
+    
+        $this->recovermoduledata($jsonoutput, $id);
+    
+        $menuData->json_output = json_encode($jsonoutput);
+        if ($menuData->save() ) {
+            return redirect()->back()->with('success', 'Module delete successful');
+        } else {
+            return redirect()->back()->withErrors('Module delete unsuccessful');
+        }
+    }
+
+private function recovermoduledata(&$menuItems, $moduleId)
+{
+    foreach ($menuItems as &$item) {
+        if ($item['moduleid'] == $moduleId) {
+            $item['deletestatus'] = NULL; 
+            return; 
+        }
+
+        if (!empty($item['children'])) {
+            foreach ($item['children'] as &$child) {
+                if ($child['moduleid'] == $moduleId) {
+                    $child['deletestatus'] = NULL; 
+                    return;
+                }
+            }
+        }
+    }
 }
 
 

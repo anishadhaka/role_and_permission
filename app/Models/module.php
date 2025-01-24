@@ -27,5 +27,9 @@ class module extends Model
     {
         return $this->hasMany(Module::class,'parent_id');
     }
+    public function menu()
+{
+    return $this->hasOne(Menu::class); 
+}
  
 }
