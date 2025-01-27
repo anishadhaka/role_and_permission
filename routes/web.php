@@ -43,9 +43,19 @@ Route::post('/rejected_book/{id}', [BlogController::class, 'rejected'])->name('r
 Route::post('/approve/{id}', [NewsController::class, 'approve'])->name('approve');
 Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
 
-Route::post('/module/mvc/{id}', [ModuleController::class, 'generateMVC'])->name('module.generateMVC');
+// Route::post('/module/mvc/{id}', [ModuleController::class, 'generateMVC'])->name('module.generateMVC');
 Route::post('recycle', [ModuleController::class, 'recycle'])->name('recycle');
 Route::put('module/recover/{id}', [ModuleController::class, 'recover'])->name('module.recover');
+Route::get('/module/get-tables', [ModuleController::class, 'getTables'])->name('module.getTables');
+Route::get('/mvc/generate', [ModuleController::class, 'generatepopup'])->name('mvc.generate');
+// Route::post('/mvc/generate/mvc', [ModuleController::class, 'handleMVCGeneration'])->name('mvc.generate.mvc');
+Route::post('/mvc/generate', [ModuleController::class, 'generateMVC'])->name('mvc.generate.mvc');
+
+
+
+
+
+
 
 
 
@@ -100,6 +110,8 @@ Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->nam
 Route::resource('Country', \App\Http\Controllers\CountryController::class);
 Route::resource('City', \App\Http\Controllers\CityController::class);
 Route::resource('State', \App\Http\Controllers\StateController::class);
+Route::resource('test', \App\Http\Controllers\TestController::class);
+
 // Route::get('/menulist', [MenuController::class, 'create'])->name('menulist');
 Route::get('filemanager', [FileManagerControllerController::class, 'index'])->name('filemanager.index');
 

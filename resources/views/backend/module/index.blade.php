@@ -1,5 +1,4 @@
 @extends('backend.layouts.app')
-
 @section('content')
 
 <div class="row">
@@ -7,20 +6,14 @@
         <div class="pull-left">
             <h2>Modules</h2>
         </div>
-        <!-- <div class="pull-right">
-            <a class="btn btn-success mb-2" href="{{ route('module.create') }}">
-                <i class="fa fa-plus"></i> Create New Module
-            </a>
-        </div> -->
         <div class="pull-right">
-    <form action="{{ route('recycle') }}" method="POST" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-success mb-2">
-            Recycle
-        </button>
-    </form>
-</div>
-
+            <form action="{{ route('recycle') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-success mb-2">
+                    Recycle
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -29,7 +22,7 @@
         {{ $value }}
     </div>
 @endsession
-<!-- {{$formattedDate}} -->
+
 <table class="table table-bordered">
     <tr>
         <th>id</th>
@@ -38,8 +31,7 @@
         <th>Create date</th>
         <th>Update date</th>
         <th>Add Permission</th>
-        <th>MVC </th>
-
+        <th>MVC</th>
         <th>Action</th>
     </tr>
     @foreach ($data as $key => $user)
@@ -54,23 +46,10 @@
                 Add Permission
             </button>
         </td>
-        @if(!empty($user->getRoleNames()))
-            @foreach($user->getRoleNames() as $v)
-                <label class="badge bg-success">{{ $v }}</label>
-            @endforeach
-        @endif
-        </td>
-        <!-- <td>
-        <a class="btn btn-dark btn-sm" href="{{ route('access', $user->id) }}">Access</a>
-        </td> -->
         <td>
             <button class="btn btn-dark btn-sm" onclick="generateMVC({{ $user->id }})">MVC</button>
         </td>
-
-
         <td>
-            <!-- <a class="btn btn-info btn-sm" href="{{ route('module.show', $user->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
-            <a class="btn btn-primary btn-sm" href="{{ route('module.edit', $user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
             <form method="POST" action="{{ route('module.destroy', $user->id) }}" style="display:inline">
                 @csrf
                 @method('DELETE')
@@ -83,35 +62,43 @@
 
 {!! $data->links('pagination::bootstrap-5') !!}
 
-<div class="modal fade" id="permissionModal" tabindex="-1" aria-labelledby="permissionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+
+
+<!-- MVC Confirmation Modal -->
+<div class="modal fade" id="mvcConfirmationModal" tabindex="-1" aria-labelledby="mvcConfirmationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="permissionModalLabel">Manage Permissions</h5>
+                <h5 class="modal-title" id="mvcConfirmationLabel">Generate MVC</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="permissionForm">
-                    @csrf
-                    <input type="hidden" name="module_id" id="module_id">
-                    
-
-                 
+                <form id="mvcForm">
+                    <label for="table-name" class="form-label">Select Table Name</label>
+                    <select id="table-name" name="table_name" class="form-control" required>
+                        <option value="">-- Select Table --</option>
+                    </select>
                 </form>
-                <div class="form-group mt-3">
-                        <button type="button" id="add-more" class="btn btn-info" onclick="add()">Add More</button>
-                        <button type="button" id="save-permission" class="btn btn-success" onclick="save()">Save</button>
-                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmMVCButton" onclick="redirectToMVCPage()">Generate</button>
+
             </div>
         </div>
     </div>
 </div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-function openPermissionModal(moduleId) {
-    $('#module_id').val(moduleId);
-    $('#permissionForm').find('.permission-wrapper').remove(); 
+let selectedModuleId = null;
 
+function openPermissionModal(moduleId) 
+{
+    $('#module_id').val(moduleId);
+    $('#permissionForm').find('.permission-wrapper').remove();
     $.ajax({
         url: '/module/permissions/' + moduleId,
         method: 'GET',
@@ -127,12 +114,12 @@ function openPermissionModal(moduleId) {
         },
         error: function () {
             alert('Error fetching permissions. Please try again.');
-            addDefaultPermissionField(moduleId); 
+            addDefaultPermissionField(moduleId);
         }
     });
 }
-
-function createPermissionField(uniqueId, moduleId, permissionName = '', permissionId = null) {
+function createPermissionField(uniqueId, moduleId, permissionName = '', permissionId = null) 
+{
     return `
         <div class="permission-wrapper mt-3" id="${uniqueId}">
             <input type="hidden" name="module_id[]" value="${moduleId}">
@@ -146,32 +133,30 @@ function createPermissionField(uniqueId, moduleId, permissionName = '', permissi
         </div>
     `;
 }
-
-function addDefaultPermissionField(moduleId) {
+function addDefaultPermissionField(moduleId) 
+{
     const uniqueId = 'permission-' + Date.now();
     $('#permissionForm').append(createPermissionField(uniqueId, moduleId));
 }
-
-function add() {
+function add() 
+{
     const uniqueId = 'permission-' + Date.now();
     const moduleId = $('#module_id').val();
     $('#permissionForm').append(createPermissionField(uniqueId, moduleId));
 }
-
-function save() {
+function save() 
+{
     let isValid = true;
     $('#permissionForm input[name="name[]"]').each(function () {
         if (!$(this).val().trim()) {
             isValid = false;
-            $(this).css('border', '2px solid red'); 
+            $(this).css('border', '2px solid red');
             return false;
         } else {
-            $(this).css('border', ''); 
+            $(this).css('border', '');
         }
-        
     });
     if (!isValid) return;
-
     const formData = $('#permissionForm').serialize();
     $.ajax({
         url: '{{ route('modulesave') }}',
@@ -190,15 +175,13 @@ function save() {
         }
     });
 }
-
-function deletePermission(uniqueId, permissionId = null) {
+function deletePermission(uniqueId, permissionId = null)
+{
     $(`#${uniqueId}`).remove();
-
     if ($('.permission-wrapper').length === 0) {
         const moduleId = $('#module_id').val();
         addDefaultPermissionField(moduleId);
     }
-
     if (permissionId) {
         $.ajax({
             url: `/module/permissions/${permissionId}`,
@@ -215,29 +198,56 @@ function deletePermission(uniqueId, permissionId = null) {
         });
     }
 }
+// show popup box 
+function generateMVC(moduleId) 
+{
+    selectedModuleId = moduleId;
 
-
-// generate MVC
-function generateMVC(moduleId) {
-    if (!confirm('Are you sure you want to generate MVC files for this module?')) {
-        return;
-    }
-
+    // Fetch table names from the server
     $.ajax({
-        url: `/module/mvc/${moduleId}`,
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        url: '{{ route('module.getTables') }}',
+        method: 'GET',
+        success: function(response) {
+            const tableDropdown = $('#table-name');
+            tableDropdown.empty(); // Clear previous options
+            tableDropdown.append('<option value="">-- Select Table --</option>');
+
+            if (response.tables && response.tables.length > 0) {
+                response.tables.forEach((table) => {
+                    const tableName = Object.values(table)[0]; // Extract table name
+                    tableDropdown.append(`<option value="${tableName}">${tableName}</option>`);
+                });
+            } else {
+                tableDropdown.append('<option value="">No Tables Available</option>');
+            }
+
+            $('#mvcConfirmationModal').modal('show');
         },
-        success: function (response) {
-            alert(response.message || 'MVC files generated successfully!');
-            location.reload();
-        },
-        error: function () {
-            alert('Error generating MVC files. Please try again.');
+        error: function() {
+            alert('Error fetching table names. Please try again.');
         }
     });
 }
+
+function redirectToMVCPage() {
+    const tableName = $('#table-name').val();
+
+    if (!tableName) {
+        alert('Please select a table name before proceeding.');
+        return;
+    }
+
+    if (!selectedModuleId) {
+        alert('Module ID is not set. Please try again.');
+        return;
+    }
+
+    // Redirect to the desired route with query parameters
+    const url = `/mvc/generate?module_id=${selectedModuleId}&table_name=${encodeURIComponent(tableName)}`;
+    window.location.href = url;
+}
+
+
 
 
 </script>

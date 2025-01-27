@@ -11,8 +11,7 @@ use App\Models\News;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Menu;
-
-
+use Illuminate\Support\Facades\DB;
 
 // use App\Models\Permission;
 use Spatie\Permission\Models\Permission;
@@ -22,7 +21,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class ModuleController extends Controller
 {
@@ -120,7 +120,6 @@ public function store(Request $request)
     return redirect()->route('module.index')->with('success', 'Module created successfully.');
 }
 
-
 public function show($id): View
 {
     $module = Module::findOrFail($id);
@@ -141,31 +140,6 @@ public function update(Request $request, $id): RedirectResponse
         ->with('success', 'Module updated successfully.');
 }
 
-
-
-// public function destroy($id): RedirectResponse
-// {
-//     $module = Module::findOrFail($id);
-
-//     // Check if the module has related menu data
-//     $menu = Menu::where('module_id', $module->id)->first(); // Assuming 'module_id' is the foreign key
-
-//     if ($menu) {
-//         // Soft delete or mark JSON data as deleted
-//         $menu->json_output = null; // Or set a flag to mark it as deleted
-//         $menu->save();
-//     }
-
-//     // Soft delete the module itself
-//     $module->delete();
-
-//     return redirect()->route('module.index')
-//         ->with('success', 'Module and its JSON data deleted successfully.');
-// }
-
-
-
-//
 public function savePermissions(Request $request)
 {
     foreach ($request->module_id as $key => $moduleId) {
@@ -202,131 +176,7 @@ public function destroyPermission($id)
 }
 
 
-public function generateMVC($id)
-{
-    $module = Module::findOrFail($id);
-    $moduleName = ucfirst($module->Title);
 
-    try {
-        // Check if the model already exists
-        $modelPath = app_path("Models/{$moduleName}.php");
-        if (File::exists($modelPath)) {
-            return response()->json(['message' => "Model '{$moduleName}' already exists!"], 400);
-        }
-
-        // Check if the controller already exists
-        $controllerPath = app_path("Http/Controllers/{$moduleName}Controller.php");
-        if (File::exists($controllerPath)) {
-            return response()->json(['message' => "Controller '{$moduleName}Controller' already exists!"], 400);
-        }
-
-        // Check if the views folder already exists
-        $viewPath = resource_path("views/{$module->Title}");
-        if (File::exists($viewPath)) {
-            return response()->json(['message' => "View directory for '{$moduleName}' already exists!"], 400);
-        }
-
-        // Check if the migration file already exists
-        $migrationPath = database_path("migrations");
-        $migrationFile = now()->format('Y_m_d_His') . "_create_{$module->Title}_table.php";
-        if (File::exists("{$migrationPath}/{$migrationFile}")) {
-            return response()->json(['message' => "Migration file '{$migrationFile}' already exists!"], 400);
-        }
-
-        // Generate the model
-        $modelTemplate = "<?php
-
- namespace App\Models;
- 
- use Illuminate\Database\Eloquent\Factories\HasFactory;
- use Illuminate\Database\Eloquent\Model;
- 
- class {$moduleName} extends Model
- {
-     use HasFactory;
- 
-     protected \$fillable = ['field1', 'field2']; // Define your fields here
- }
- ";
-         File::put($modelPath, $modelTemplate);
- 
-         // Generate the controller
-         $controllerTemplate = "<?php
- 
- namespace App\Http\Controllers;
- 
- use App\Models\\{$moduleName};
- use Illuminate\Http\Request;
- 
- class {$moduleName}Controller extends Controller
- {
-     public function index()
-     {
-         \$data = {$moduleName}::all();
-         return view('{$module->Title}.index', compact('data'));
-     }
- 
-     public function create()
-     {
-         return view('{$module->Title}.create');
-     }
- 
-     public function store(Request \$request)
-     {
-         {$moduleName}::create(\$request->all());
-         return redirect()->route('{$module->Title}.index')->with('success', 'Created successfully.');
-     }
- }
- ";
-         File::put($controllerPath, $controllerTemplate);
- 
-        // Generate the view directory
-        File::makeDirectory($viewPath, 0755, true);
-
-        // Add a basic index view file
-        $indexViewPath = "{$viewPath}/index.blade.php";
-        $indexViewTemplate = "<h1>{$moduleName} Index</h1>";
-        File::put($indexViewPath, $indexViewTemplate);
-
-        // Generate the migration file
-        $migrationTemplate = "<?php
- 
- use Illuminate\Database\Migrations\Migration;
- use Illuminate\Database\Schema\Blueprint;
- use Illuminate\Support\Facades\Schema;
- 
- return new class extends Migration
- {
-     public function up()
-     {
-         Schema::create('{$module->Title}', function (Blueprint \$table) {
-             \$table->id();
-             \$table->string('field1'); // Example fields
-             \$table->string('field2');
-             \$table->timestamps();
-         });
-     }
- 
-     public function down()
-     {
-         Schema::dropIfExists('{$module->Title}');
-     }
- };
- ";
-         File::put("{$migrationPath}/{$migrationFile}", $migrationTemplate);
- 
-         // Add routes
-         $routePath = base_path('routes/web.php');
-         $routeDefinition = "
- Route::resource('{$module->Title}', \\App\\Http\\Controllers\\{$moduleName}Controller::class);
- ";
-         File::append($routePath, $routeDefinition);
- 
-         return response()->json(['message' => 'MVC files, route, and migration generated successfully!']);
-     } catch (\Exception $e) {
-         return response()->json(['message' => 'Error generating MVC files: ' . $e->getMessage()], 500);
-     }
-}
  
 public function recycle(Request $request): View
 {
@@ -340,24 +190,6 @@ public function recycle(Request $request): View
     return view('backend.module.recycle', compact('data'))
         ->with('i', $startIndex);
 }
-// public function recover($id)
-// {
-//     // Restore the soft-deleted module
-//     $module = Module::onlyTrashed()->findOrFail($id);
-//     $module->restore();
-
-//     // Restore the associated Menu and JSON data if it was cleared during soft delete
-//     $menu = Menu::where('module_id', $module->id)->first();
-
-//     if ($menu && $menu->json_output === null) {
-//         // Restore the JSON data (could be from a backup or a default value)
-//         $menu->json_output = '[]'; // Or restore previous JSON from a backup or another source
-//         $menu->save();
-//     }
-
-//     return redirect()->route('recycle')
-//         ->with('success', 'Module and its JSON data restored successfully!');
-// }
 
 public function destroy($id)
 {
@@ -401,26 +233,26 @@ private function markModuleAsDeleted(&$menuItems, $moduleId)
 }
 
 public function recover($id)
-    {
-        $modulesdata = Module::onlyTrashed()->findOrFail($id);
-    
-        $menuData = Menu::where('id', 5)->first();
-        if (!$menuData) {
-            return redirect()->back()->withErrors('Module not found.');
-        }
-         $modulesdata->restore();
- 
-        $jsonoutput = json_decode($menuData->json_output, true);
-    
-        $this->recovermoduledata($jsonoutput, $id);
-    
-        $menuData->json_output = json_encode($jsonoutput);
-        if ($menuData->save() ) {
-            return redirect()->back()->with('success', 'Module delete successful');
-        } else {
-            return redirect()->back()->withErrors('Module delete unsuccessful');
-        }
-    }
+{
+     $modulesdata = Module::onlyTrashed()->findOrFail($id);
+
+     $menuData = Menu::where('id', 5)->first();
+     if (!$menuData) {
+         return redirect()->back()->withErrors('Module not found.');
+     }
+      $modulesdata->restore();
+
+     $jsonoutput = json_decode($menuData->json_output, true);
+
+     $this->recovermoduledata($jsonoutput, $id);
+
+     $menuData->json_output = json_encode($jsonoutput);
+     if ($menuData->save() ) {
+         return redirect()->back()->with('success', 'Module delete successful');
+     } else {
+         return redirect()->back()->withErrors('Module delete unsuccessful');
+     }
+}
 
 private function recovermoduledata(&$menuItems, $moduleId)
 {
@@ -440,6 +272,172 @@ private function recovermoduledata(&$menuItems, $moduleId)
         }
     }
 }
+// fetch table name from database
+public function getTables()
+{
+    $tables = DB::select('SHOW TABLES');
+    return response()->json(['tables' => $tables]);
+}
+public function generatepopup(Request $request)
+{
+    $moduleId = $request->query('module_id');
+    $tableName = $request->query('table_name');
+    $columns = Schema::getColumnListing($tableName);
+    return view('backend.module.mvc', compact('moduleId', 'tableName', 'columns'));
+}
+//
+public function handleMVCGeneration(Request $request)
+{
+    $selectedColumns = $request->input('columns');
+    // Perform logic to generate MVC based on selected columns
+
+    // Example: Process selected columns
+    dd($selectedColumns);  // This will show the selected columns
+}
+
+
+//
+public function generateMVC(Request $request)
+{
+    $moduleId = $request->input('moduleId');
+    $tableName = $request->input('tableName');
+    if (empty($tableName)) {
+        logger()->error('Table Name is null or empty.');
+        return back()->withErrors(['tableName' => 'Table name is required.']);
+    }
+    $columns = $request->input('columns', []);
+
+    if (empty($columns)) {
+        return back()->withErrors(['columns' => 'Please select at least one column.']);
+    }
+
+    $modelName = Str::studly(Str::singular($tableName));
+    $controllerName = $modelName . 'Controller';
+
+    // Create Model
+    $this->createModel($modelName, $columns);
+
+    // Create Controller
+    $this->createController($controllerName, $modelName, $tableName);
+
+    // Create Views
+    $this->createViews($tableName, $columns);
+
+    return redirect()->back()->with('success', 'MVC files generated successfully!');
+}
+
+protected function createModel($modelName, $columns)
+{
+    $modelTemplate = "<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class $modelName extends Model
+{
+    use HasFactory;
+
+    protected \$fillable = [
+        " . implode(", ", array_map(fn($col) => "'$col'", $columns)) . "
+    ];
+}";
+    File::put(app_path("Models/$modelName.php"), $modelTemplate);
+}
+
+protected function createController($controllerName, $modelName, $tableName)
+{
+    $controllerTemplate = "<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\\$modelName;
+use Illuminate\Http\Request;
+
+class $controllerName extends Controller
+{
+    public function index()
+    {
+        \$data = $modelName::all();
+        return view('$tableName.index', compact('data'));
+    }
+
+    public function create()
+    {
+        return view('$tableName.create');
+    }
+
+    public function edit(\$id)
+    {
+        \$item = $modelName::findOrFail(\$id);
+        return view('$tableName.edit', compact('item'));
+    }
+}";
+    File::put(app_path("Http/Controllers/$controllerName.php"), $controllerTemplate);
+}
+
+protected function createViews($tableName, $columns)
+{
+    $indexTemplate = "@extends('backend.layouts.app')
+     @section('content')
+    <title>{{ ucfirst('$tableName') }} List</title>
+
+    <h2>{{ ucfirst('$tableName') }} List</h2>
+    <a href=\"{{ route('$tableName.create') }}\">Add New</a>
+    <table border=\"1\">
+        <thead>
+            <tr>
+                " . implode('', array_map(fn($col) => "<th>$col</th>", $columns)) . "
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(\$data as \$row)
+                <tr>
+                    " . implode('', array_map(fn($col) => "<td>{{ \$row->$col }}</td>", $columns)) . "
+                    <td>
+                        <a href=\"{{ route('$tableName.edit', \$row->id) }}\">Edit</a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endsection";
+
+    $createTemplate = "@extends('backend.layouts.app')
+     @section('content')
+    <title>Add {{ ucfirst('$tableName') }}</title>
+</head>
+<body>
+    <h2>Add {{ ucfirst('$tableName') }}</h2>
+    <form action=\"{{ route('$tableName.store') }}\" method=\"POST\">
+        @csrf
+        " . implode('', array_map(fn($col) => "<label for=\"$col\">$col</label><input type=\"text\" name=\"$col\" id=\"$col\" required><br>", $columns)) . "
+        <button type=\"submit\">Save</button>
+    </form>
+@endsection";
+
+    $editTemplate = "@extends('backend.layouts.app')
+     @section('content')
+    <title>Edit {{ ucfirst('$tableName') }}</title>
+</head>
+<body>
+    <h2>Edit {{ ucfirst('$tableName') }}</h2>
+    <form action=\"{{ route('$tableName.update', \$item->id) }}\" method=\"POST\">
+        @csrf
+        @method('PUT')
+        " . implode('', array_map(fn($col) => "<label for=\"$col\">$col</label><input type=\"text\" name=\"$col\" id=\"$col\" value=\"{{ \$item->$col }}\" required><br>", $columns)) . "
+        <button type=\"submit\">Update</button>
+    </form>
+@endsection";
+
+    File::ensureDirectoryExists(resource_path("views/$tableName"));
+    File::put(resource_path("views/$tableName/index.blade.php"), $indexTemplate);
+    File::put(resource_path("views/$tableName/create.blade.php"), $createTemplate);
+    File::put(resource_path("views/$tableName/edit.blade.php"), $editTemplate);
+}
+
 
 
 
