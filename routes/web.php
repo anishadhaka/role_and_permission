@@ -110,9 +110,10 @@ Route::post('/blog/status/update', [BlogController::class, 'updateStatus'])->nam
 Route::resource('Country', \App\Http\Controllers\CountryController::class);
 Route::resource('City', \App\Http\Controllers\CityController::class);
 Route::resource('State', \App\Http\Controllers\StateController::class);
-Route::resource('test', \App\Http\Controllers\TestController::class);
 
 // Route::get('/menulist', [MenuController::class, 'create'])->name('menulist');
 Route::get('filemanager', [FileManagerControllerController::class, 'index'])->name('filemanager.index');
 
 
+
+Route::resource('tests', \App\Http\Controllers\TestController::class);
