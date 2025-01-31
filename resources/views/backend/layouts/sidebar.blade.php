@@ -84,6 +84,7 @@
         justify-content: space-between;
         transition: 0.2s;
     }
+
     .sidebar-dropdown-item a {
         padding: 15px 25px;
         text-decoration: none;
@@ -168,41 +169,40 @@
         @endphp
 
         @foreach($menuItems as $item)
-        @php
-             $hasValidRoute = !empty($item['href']) && Route::has($item['href']); 
-         @endphp
+            @php
+                $hasValidRoute = !empty($item['href']) && Route::has($item['href']);
+            @endphp
 
-       @if(!empty($item['deletestatus']))
-
-            <li class="menu-item {{ request()->routeIs($item['href']) || (isset($item['children']) && collect($item['children'])->pluck('href')->contains(request()->route()->getName())) ? 'show active' : '' }}">
-                <a href="{{ $item['href'] ? route($item['href']) : 'javascript:void(0);' }}" class="menu-toggle">
-                    <div>
-                        <i class="{{ $item['icon'] ?? 'fas fa-circle' }}"></i>
-                        <span>{{ $item['text'] }}</span>
-                    </div>
+            @if(!empty($item['deletestatus']))
+                <li class="menu-item {{ request()->routeIs($item['href']) || (isset($item['children']) && collect($item['children'])->pluck('href')->contains(request()->route()->getName())) ? 'show active' : '' }}">
+                    <a href="{{ $hasValidRoute ? route($item['href']) : 'javascript:void(0);' }}" class="menu-toggle">
+                        <div>
+                            <i class="{{ $item['icon'] ?? 'fas fa-circle' }}"></i>
+                            <span>{{ $item['text'] }}</span>
+                        </div>
+                        @if(!empty($item['children']))
+                            <i class="fa-solid fa-caret-down"></i>
+                        @endif
+                    </a>
                     @if(!empty($item['children']))
-                        <i class="fa-solid fa-caret-down"></i>
-                    @endif
-                </a>
-                @if(!empty($item['children']))
-                    <ul class="sidebar-dropdown">
-                        @foreach($item['children'] as $child)
-                        @php
-                            $childHasValidRoute = Route::has($child['href']) 
-                        @endphp
+                        <ul class="sidebar-dropdown">
+                            @foreach($item['children'] as $child)
+                                @php
+                                    $childHasValidRoute = Route::has($child['href']);
+                                @endphp
 
-                            @if(!empty($child['deletestatus']))
-                            <li class="sidebar-dropdown-item {{ request()->routeIs($child['href']) ? 'active' : '' }}">
-                                <a href="{{ $child['href'] ? route($child['href']) : 'javascript:void(0);' }}">
-                                    <i class="{{ $child['icon'] ?? 'fas fa-circle' }}"></i>
-                                    <span style="padding:5px">{{ $child['text'] }}</span>
-                                </a>
-                            </li>
-                          @endif
-                        @endforeach
-                    </ul>
-                @endif
-            </li>
+                                @if(!empty($child['deletestatus']))
+                                    <li class="sidebar-dropdown-item {{ request()->routeIs($child['href']) ? 'active' : '' }}">
+                                        <a href="{{ $childHasValidRoute ? route($child['href']) : 'javascript:void(0);' }}">
+                                            <i class="{{ $child['icon'] ?? 'fas fa-circle' }}"></i>
+                                            <span style="padding:5px">{{ $child['text'] }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    @endif
+                </li>
             @endif
         @endforeach
     </ul>
