@@ -205,7 +205,7 @@ function generateMVC(moduleId)
 
     // Fetch table names from the server
     $.ajax({
-        url: '{{ route('module.getTables') }}',
+       url: '{{ route("module.getTables") }}',
         method: 'GET',
         success: function(response) {
             const tableDropdown = $('#table-name');

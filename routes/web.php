@@ -45,23 +45,15 @@ Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
 
 // Route::post('/module/mvc/{id}', [ModuleController::class, 'generateMVC'])->name('module.generateMVC');
 Route::post('recycle', [ModuleController::class, 'recycle'])->name('recycle');
-Route::put('module/recover/{id}', [ModuleController::class, 'recover'])->name('module.recover');
+Route::PUT('module/recover/{id}', [ModuleController::class, 'recover'])->name('module.recover');
 Route::get('/module/get-tables', [ModuleController::class, 'getTables'])->name('module.getTables');
 Route::get('/mvc/generate', [ModuleController::class, 'generatepopup'])->name('mvc.generate');
 // Route::post('/mvc/generate/mvc', [ModuleController::class, 'handleMVCGeneration'])->name('mvc.generate.mvc');
 Route::post('/mvc/generate', [ModuleController::class, 'generateMVC'])->name('mvc.generate.mvc');
 
-
-
-
-
-
-
-
-
-
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
-
+Route::get('/module/get-tables1', [ModuleController::class, 'getTables1'])->name('module.getTables1');
+Route::get('/module/get-columns', [ModuleController::class, 'getColumns'])->name('fetch.columns');
 
 
 Auth::routes();
@@ -116,4 +108,8 @@ Route::get('filemanager', [FileManagerControllerController::class, 'index'])->na
 
 
 
-Route::resource('tests', \App\Http\Controllers\TestController::class);
+ 
+ Route::resource('tests', \App\Http\Controllers\TestController::class);
+ 
+ Route::resource('tests', \App\Http\Controllers\TestController::class);
+ 

@@ -168,6 +168,10 @@
         @endphp
 
         @foreach($menuItems as $item)
+        @php
+             $hasValidRoute = !empty($item['href']) && Route::has($item['href']); 
+         @endphp
+
        @if(!empty($item['deletestatus']))
 
             <li class="menu-item {{ request()->routeIs($item['href']) || (isset($item['children']) && collect($item['children'])->pluck('href')->contains(request()->route()->getName())) ? 'show active' : '' }}">
@@ -183,6 +187,10 @@
                 @if(!empty($item['children']))
                     <ul class="sidebar-dropdown">
                         @foreach($item['children'] as $child)
+                        @php
+                            $childHasValidRoute = Route::has($child['href']) 
+                        @endphp
+
                             @if(!empty($child['deletestatus']))
                             <li class="sidebar-dropdown-item {{ request()->routeIs($child['href']) ? 'active' : '' }}">
                                 <a href="{{ $child['href'] ? route($child['href']) : 'javascript:void(0);' }}">

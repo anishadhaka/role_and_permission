@@ -278,12 +278,36 @@ public function getTables()
     $tables = DB::select('SHOW TABLES');
     return response()->json(['tables' => $tables]);
 }
+public function getTables1()
+{
+    $tables = DB::select('SHOW TABLES');
+    return response()->json(['tables' => $tables]);
+}
+
+
+public function getColumns(Request $request)
+{
+    $tableName = $request->input('table');
+
+    if (!$tableName) {
+        return response()->json(['error' => 'Table name is required'], 400);
+    }
+
+    try {
+        $columns = DB::getSchemaBuilder()->getColumnListing($tableName);
+        return response()->json(['columns' => $columns]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error fetching columns: ' . $e->getMessage()], 500);
+    }
+}
+
+
 public function generatepopup(Request $request)
 {
     $moduleId = $request->query('module_id');
     $tableName = $request->query('table_name');
     $columns = Schema::getColumnListing($tableName);
-    return view('backend.module.mvc', compact('moduleId', 'tableName', 'columns'));
+    return view('backend.module.mvc', compact('moduleId', 'tableName', 'columns',));
 }
 //
 public function handleMVCGeneration(Request $request)
@@ -306,6 +330,9 @@ public function generateMVC(Request $request)
         return back()->withErrors(['tableName' => 'Table name is required.']);
     }
     $columns = $request->input('columns', []);
+    $inputTypes = $request->input('input_types', []);
+    $dropdownOptions = json_decode($request->input('dropdown_options'), true);
+    // dd($dropdownOptions);
 
     if (empty($columns)) {
         return redirect()->route('module.index')->withErrors(['columns' => 'Please select at least one column.']);
@@ -336,7 +363,7 @@ public function generateMVC(Request $request)
     // Check if views already exist
     if (!is_dir($viewsPath)) {
         // Create Views
-        $this->createViews($tableName, $columns);
+        $this->createViews($tableName, $columns,$inputTypes, $dropdownOptions);
     } else {
         return back()->withErrors(['views' => 'Views already exist.']);
     }
@@ -344,8 +371,8 @@ public function generateMVC(Request $request)
    // Add routes
    $routePath = base_path('routes/web.php');
    $routeDefinition = "
-Route::resource('{$tableName}', \\App\\Http\\Controllers\\{$controllerName}::class);
-";
+ Route::resource('{$tableName}', \\App\\Http\\Controllers\\{$controllerName}::class);
+ ";
    File::append($routePath, $routeDefinition);
 
     return redirect()->route('module.index')->with('success', 'MVC files generated successfully!');
@@ -355,19 +382,19 @@ protected function createModel($modelName, $columns)
 {
     $modelTemplate = "<?php
 
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class $modelName extends Model
-{
-    use HasFactory;
-
-    protected \$fillable = [
-        " . implode(", ", array_map(fn($col) => "'$col'", $columns)) . "
-    ];
-}";
+ namespace App\Models;
+ 
+ use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Database\Eloquent\Model;
+ 
+ class $modelName extends Model
+ {
+     use HasFactory;
+ 
+     protected \$fillable = [
+         " . implode(", ", array_map(fn($col) => "'$col'", $columns)) . "
+     ];
+ }";
     File::put(app_path("Models/$modelName.php"), $modelTemplate);
 }
 
@@ -375,167 +402,205 @@ protected function createController($controllerName, $modelName, $tableName)
 {
     $controllerTemplate = "<?php
 
-namespace App\Http\Controllers;
-
-use App\Models\\$modelName;
-use Illuminate\Http\Request;
-
-class $controllerName extends Controller
-{
-    public function index()
-    {
-        \$data = $modelName::all();
-        return view('backend.$tableName.index', compact('data'));
-    }
-
-    public function create()
-    {
-        return view('backend.$tableName.create');
-    }
-
-        public function store(Request \$request)
-    {
-        // Directly create the model with the incoming data
-        $modelName::create(\$request->all());
-
-        // Redirect to the index page with a success message
-        return redirect()->route('$tableName.index')->with('success', '$modelName created successfully.');
-    }
-        
-    public function edit(\$id)
-    {
-        \$item = $modelName::findOrFail(\$id);
-        return view('backend.$tableName.edit', compact('item'));
-    }
-
-
-
-    public function update(Request \$request, \$id)
-    {
-        // Find the item by ID
-        \$item = $modelName::findOrFail(\$id);
-
-        // Update the item with the incoming data
-        \$item->update(\$request->all());
-
-        // Redirect to the index page with a success message
-        return redirect()->route('$tableName.index')->with('success', '$modelName updated successfully.');
-    }
-}";
-    
+ namespace App\Http\Controllers;
+ 
+ use App\Models\\$modelName;
+ use Illuminate\Http\Request;
+ 
+ class $controllerName extends Controller
+ {
+     public function index()
+     {
+         \$data = $modelName::all();
+         return view('backend.$tableName.index', compact('data'));
+     }
+ 
+     public function create()
+     {
+         return view('backend.$tableName.create');
+     }
+ 
+         public function store(Request \$request)
+     {
+         // Directly create the model with the incoming data
+         $modelName::create(\$request->all());
+ 
+         // Redirect to the index page with a success message
+         return redirect()->route('$tableName.index')->with('success', '$modelName created successfully.');
+     }
+         
+     public function edit(\$id)
+     {
+         \$item = $modelName::findOrFail(\$id);
+         return view('backend.$tableName.edit', compact('item'));
+     }
+ 
+ 
+ 
+     public function update(Request \$request, \$id)
+     {
+         // Find the item by ID
+         \$item = $modelName::findOrFail(\$id);
+ 
+         // Update the item with the incoming data
+         \$item->update(\$request->all());
+ 
+         // Redirect to the index page with a success message
+         return redirect()->route('$tableName.index')->with('success', '$modelName updated successfully.');
+     }
+  
+       public function destroy(\$id)
+     {
+         $modelName::where('id',\$id)->firstorfail()->delete();
+         return redirect()->route('$tableName.index')
+                                 ->with('deleted successfully');
+     }
+ 
+ }";
+     
     // Write the controller file to the Controllers directory
     File::put(app_path("Http/Controllers/$controllerName.php"), $controllerTemplate);
 }
 
-protected function createViews($tableName, $columns)
+protected function createViews($tableName, $columns, $inputTypes, $dropdownOptions)
 {
+    // Generate Index Template
     $indexTemplate = "@extends('backend.layouts.app')
-    @section('content')
-    
-    <title>{{ ucfirst('$tableName') }} List</title>
-    
-    <div class=\"row\">
-        <div class=\"col-lg-12 margin-tb\">
-            <div class=\"pull-left\">
-                <h2>{{ ucfirst('$tableName') }} List</h2>
-            </div>
-            <div class=\"pull-right\">
-                <a class=\"btn btn-success mb-2\" href=\"{{ route('$tableName.create') }}\">
-                    Add New
-                </a>
-            </div>
+
+@section('content')
+<title>{{ ucfirst('$tableName') }} List</title>
+
+<div class=\"row\">
+    <div class=\"col-lg-12 margin-tb\">
+        <div class=\"pull-left\">
+            <h2>{{ ucfirst('$tableName') }} List</h2>
+        </div>
+        <div class=\"pull-right\">
+            <a class=\"btn btn-success mb-2\" href=\"{{ route('$tableName.create') }}\">
+                Add New
+            </a>
         </div>
     </div>
-    
-    <table class=\"table table-bordered\">
-        <thead>
-            <tr>
-                " . implode('', array_map(fn($col) => "<th>{{ ucfirst('$col') }}</th>", $columns)) . "
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(\$data as \$row)
-            <tr>
-                " . implode('', array_map(fn($col) => "<td>{{ \$row->$col }}</td>", $columns)) . "
-                <td>
-                    <a href=\"{{ route('$tableName.edit', \$row->id) }}\" class=\"btn btn-primary btn-sm\">Edit</a>
-                    <form action=\"{{ route('$tableName.destroy', \$row->id) }}\" method=\"POST\" style=\"display:inline;\">
-                        @csrf
-                        @method('DELETE')
-                        <button type=\"submit\" class=\"btn btn-danger btn-sm\">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    
-    @endsection";
-    
+</div>
 
+<table class=\"table table-bordered\">
+    <thead>
+        <tr>
+            " . implode('', array_map(fn($col) => "<th>{{ ucfirst('$col') }}</th>", $columns)) . "
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(\$data as \$row)
+        <tr>
+            " . implode('', array_map(fn($col) => "<td>{{ \$row->$col }}</td>", $columns)) . "
+            <td>
+                <a href=\"{{ route('$tableName.edit', \$row->id) }}\" class=\"btn btn-primary btn-sm\">Edit</a>
+                <form action=\"{{ route('$tableName.destroy', \$row->id) }}\" method=\"POST\" style=\"display:inline;\">
+                    @csrf
+                    @method('DELETE')
+                    <button type=\"submit\" class=\"btn btn-danger btn-sm\">Delete</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+@endsection";
+
+    // Generate Create Template
     $createTemplate = "@extends('backend.layouts.app')
 
-    @section('content')
-    <title>Add {{ ucfirst('$tableName') }}</title>
-    
-    <h2>Add {{ ucfirst('$tableName') }}</h2>
-    
-    <form action=\"{{ route('$tableName.store') }}\" method=\"POST\">
-        @csrf
-        <div class=\"row\">
-            " . implode('', array_map(function($col) {
+@section('content')
+<title>Add {{ ucfirst('$tableName') }}</title>
+
+<h2>Add {{ ucfirst('$tableName') }}</h2>
+
+<form action=\"{{ route('$tableName.store') }}\" method=\"POST\">
+    @csrf
+    <div class=\"row\">
+        " . implode('', array_map(function ($col, $type) {
+            if ($type === 'textarea') {
                 return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
                             <div class=\"form-group\">
                                 <strong>{{ ucfirst('$col') }}:</strong>
-                                <input type=\"text\" name=\"$col\" id=\"$col\" class=\"form-control\" required>
+                                <textarea name=\"$col\" id=\"$col\" class=\"form-control\" required></textarea>
                             </div>
                         </div>";
-            }, $columns)) . "
-            
-            <div class=\"col-xs-12 col-sm-12 col-md-12 text-center\">
-                <button type=\"submit\" class=\"btn btn-success\">Save</button>
-            </div>
-        </div>
-    </form>
-    
-    @endsection";
-    
+            } else {
+                return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
+                            <div class=\"form-group\">
+                                <strong>{{ ucfirst('$col') }}:</strong>
+                                <input type=\"$type\" name=\"$col\" id=\"$col\" class=\"form-control\" required>
+                            </div>
+                        </div>";
+            }
+        }, array_keys($inputTypes), $inputTypes)) . "
 
+        <div class=\"col-xs-12 col-sm-12 col-md-12 text-center\">
+            <button type=\"submit\" class=\"btn btn-success\">Save</button>
+        </div>
+    </div>
+</form>
+
+@endsection";
+
+    // Generate Edit Template
     $editTemplate = "@extends('backend.layouts.app')
 
-    @section('content')
-    <title>Edit {{ ucfirst('$tableName') }}</title>
-    
-    <h2>Edit {{ ucfirst('$tableName') }}</h2>
-    
-    <form action=\"{{ route('$tableName.update', \$item->id) }}\" method=\"POST\">
-        @csrf
-        @method('PUT')
-        <div class=\"row\">
-            " . implode('', array_map(function($col) {
-                // Generate form inputs based on column names
-                return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
+@section('content')
+<h2>Edit {{ ucfirst('$tableName') }}</h2>
+
+<form action=\"{{ route('$tableName.update', \$item->id) }}\" method=\"POST\">
+    @csrf
+    @method('PUT')
+    <div class=\"row\">
+        " . implode('', array_map(function ($col, $type) use ($dropdownOptions) {
+            if ($type === 'textarea') {
+                return "<div class=\"col-md-12\">
                             <div class=\"form-group\">
                                 <strong>{{ ucfirst('$col') }}:</strong>
-                                <input type=\"text\" name=\"$col\" id=\"$col\" class=\"form-control\" value=\"{{ \$item->$col }}\" required>
+                                <textarea name=\"$col\" class=\"form-control\">{{ \$item->$col }}</textarea>
                             </div>
                         </div>";
-            }, $columns)) . "
-            
-            <div class=\"col-xs-12 col-sm-12 col-md-12 text-center\">
-                <button type=\"submit\" class=\"btn btn-success\">Update</button>
-            </div>
-        </div>
-    </form>
-    
-    @endsection";
-    
+            } elseif ($type === 'select') {
+                // Handle dropdown options correctly
+                $options = isset($dropdownOptions[$col]) ? json_encode($dropdownOptions[$col]) : '[]';
+                return "<div class=\"col-md-12\">
+                            <div class=\"form-group\">
+                                <strong>{{ ucfirst('$col') }}:</strong>
+                                <select name=\"$col\" class=\"form-control\">
+                                    @foreach(json_decode('$options', true) as \$key => \$value)
+                                        <option value=\"{{ \$key }}\" {{ \$item->$col == \$key ? 'selected' : '' }}>{{ \$value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>";
+            } else {
+                return "<div class=\"col-md-12\">
+                            <div class=\"form-group\">
+                                <strong>{{ ucfirst('$col') }}:</strong>
+                                <input type=\"$type\" name=\"$col\" class=\"form-control\" value=\"{{ \$item->$col }}\">
+                            </div>
+                        </div>";
+            }
+        }, array_keys($inputTypes), $inputTypes)) . "
 
-    File::ensureDirectoryExists(resource_path("views/backend/$tableName"));
-    File::put(resource_path("views/backend/$tableName/index.blade.php"), $indexTemplate);
-    File::put(resource_path("views/backend/$tableName/create.blade.php"), $createTemplate);
-    File::put(resource_path("views/backend/$tableName/edit.blade.php"), $editTemplate);
+        <div class=\"col-md-12 text-center\">
+            <button type=\"submit\" class=\"btn btn-success\">Update</button>
+        </div>
+    </div>
+</form>
+@endsection";
+
+    // Ensure the directory exists and write the templates to the appropriate files
+    $path = resource_path("views/backend/$tableName");
+    File::ensureDirectoryExists($path);
+
+    File::put("$path/index.blade.php", $indexTemplate);
+    File::put("$path/create.blade.php", $createTemplate);
+    File::put("$path/edit.blade.php", $editTemplate);
 }
 
 
