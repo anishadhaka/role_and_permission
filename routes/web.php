@@ -48,7 +48,6 @@ Route::post('recycle', [ModuleController::class, 'recycle'])->name('recycle');
 Route::PUT('module/recover/{id}', [ModuleController::class, 'recover'])->name('module.recover');
 Route::get('/module/get-tables', [ModuleController::class, 'getTables'])->name('module.getTables');
 Route::get('/mvc/generate', [ModuleController::class, 'generatepopup'])->name('mvc.generate');
-// Route::post('/mvc/generate/mvc', [ModuleController::class, 'handleMVCGeneration'])->name('mvc.generate.mvc');
 Route::post('/mvc/generate', [ModuleController::class, 'generateMVC'])->name('mvc.generate.mvc');
 
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
@@ -108,8 +107,6 @@ Route::get('filemanager', [FileManagerControllerController::class, 'index'])->na
 
 
 
- 
- Route::resource('tests', \App\Http\Controllers\TestController::class);
  
  Route::resource('tests', \App\Http\Controllers\TestController::class);
  

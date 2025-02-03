@@ -243,7 +243,7 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
 --------------------------------------*/
 .welcome-hero {
     position: relative;
-    background:url(../images/welcome-hero/banner.jpg)no-repeat;
+    background:url(../images/bg.jpg)no-repeat;
     background-position:center;
     background-size:cover;
     text-align: center;
@@ -257,7 +257,7 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
     left: 0;
     width: 100%;
     height: 100%;
-    background:rgba(65,73,89,.65);
+    background:rgb(0 0 0 / 65%);
     z-index: -1;
 }
 .welcome-hero-txt { padding-top: 155px;}
@@ -387,7 +387,7 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
 
 .single-how-works{
     text-align: center;
-    padding:50px 42px;
+    /* padding:50px 42px; */
     border-radius: 3px;
     box-shadow: 0 0px 5px rgba(71,71,71,.2);
     margin-bottom: 30px;
@@ -947,5 +947,61 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
 @keyframes example {
     0%   {bottom:0px;}
     100%  {bottom:7px;}
+}
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    list-style-type: none;
+}
+
+.topic-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.topic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.topic-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.topic-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #3498db;
+    transition: transform 0.3s ease;
+}
+
+.topic-card:hover .topic-icon {
+    transform: scale(1.1);
+}
+
+.topic-title {
+    margin-bottom: 10px;
+}
+
+.topic-title a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.topic-title a:hover {
+    color: #3498db;
+}
+
+.topic-count {
+    color: #7f8c8d;
+    font-size: 0.9rem;
 }
 /*========================Thank you=================

@@ -39,7 +39,6 @@
    <tr>
        <th>Id</th>
        <th>Name</th>
-       <th>Title</th>
        <th>Language</th>
        <th>Domain</th>
        <th>Image</th>
@@ -51,7 +50,6 @@
     <tr>
         <td>{{ ++$i }}</td>
         <td>{{ $news->name }}</td>
-        <td>{{ $news->categories->title }}</td>
         <td>{{$news->languages?->language_name ?? 'no language'}}</td>
         <td>{{$news->domains?->domain_name ?? 'no domain'}} </td>
         <td>

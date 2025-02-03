@@ -310,14 +310,6 @@ public function generatepopup(Request $request)
     return view('backend.module.mvc', compact('moduleId', 'tableName', 'columns',));
 }
 //
-public function handleMVCGeneration(Request $request)
-{
-    $selectedColumns = $request->input('columns');
-    // Perform logic to generate MVC based on selected columns
-
-    // Example: Process selected columns
-    dd($selectedColumns);  // This will show the selected columns
-}
 
 
 //
@@ -331,8 +323,10 @@ public function generateMVC(Request $request)
     }
     $columns = $request->input('columns', []);
     $inputTypes = $request->input('input_types', []);
+    
+    $columnss = Schema::getColumnListing($tableName);
     $dropdownOptions = json_decode($request->input('dropdown_options'), true);
-    // dd($dropdownOptions);
+    // dd($columnss);
 
     if (empty($columns)) {
         return redirect()->route('module.index')->withErrors(['columns' => 'Please select at least one column.']);
@@ -346,7 +340,6 @@ public function generateMVC(Request $request)
 
       // Check if model already exists
      if (!file_exists($modelPath)) {
-        // Create Model
         $this->createModel($modelName, $columns);
     } else {
         return redirect()->route('module.index')->with(['model' => 'Model already exists.']);
@@ -354,15 +347,13 @@ public function generateMVC(Request $request)
 
        // Check if controller already exists
        if (!file_exists($controllerPath)) {
-        // Create Controller
-        $this->createController($controllerName, $modelName, $tableName);
+        $this->createController($controllerName, $modelName, $tableName,$dropdownOptions,$columns,$datacolumnss);
         } else {
             return redirect()->route('module.index')->with(['controller' => 'Controller already exists.']);
         }
 
     // Check if views already exist
     if (!is_dir($viewsPath)) {
-        // Create Views
         $this->createViews($tableName, $columns,$inputTypes, $dropdownOptions);
     } else {
         return back()->withErrors(['views' => 'Views already exist.']);
@@ -458,149 +449,144 @@ protected function createController($controllerName, $modelName, $tableName)
  
  }";
      
-    // Write the controller file to the Controllers directory
     File::put(app_path("Http/Controllers/$controllerName.php"), $controllerTemplate);
 }
 
 protected function createViews($tableName, $columns, $inputTypes, $dropdownOptions)
 {
-    // Generate Index Template
     $indexTemplate = "@extends('backend.layouts.app')
 
-@section('content')
-<title>{{ ucfirst('$tableName') }} List</title>
-
-<div class=\"row\">
-    <div class=\"col-lg-12 margin-tb\">
-        <div class=\"pull-left\">
-            <h2>{{ ucfirst('$tableName') }} List</h2>
-        </div>
-        <div class=\"pull-right\">
-            <a class=\"btn btn-success mb-2\" href=\"{{ route('$tableName.create') }}\">
-                Add New
-            </a>
-        </div>
-    </div>
-</div>
-
-<table class=\"table table-bordered\">
-    <thead>
-        <tr>
-            " . implode('', array_map(fn($col) => "<th>{{ ucfirst('$col') }}</th>", $columns)) . "
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(\$data as \$row)
-        <tr>
-            " . implode('', array_map(fn($col) => "<td>{{ \$row->$col }}</td>", $columns)) . "
-            <td>
-                <a href=\"{{ route('$tableName.edit', \$row->id) }}\" class=\"btn btn-primary btn-sm\">Edit</a>
-                <form action=\"{{ route('$tableName.destroy', \$row->id) }}\" method=\"POST\" style=\"display:inline;\">
-                    @csrf
-                    @method('DELETE')
-                    <button type=\"submit\" class=\"btn btn-danger btn-sm\">Delete</button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-
-@endsection";
-
-    // Generate Create Template
-    $createTemplate = "@extends('backend.layouts.app')
-
-@section('content')
-<title>Add {{ ucfirst('$tableName') }}</title>
-
-<h2>Add {{ ucfirst('$tableName') }}</h2>
-
-<form action=\"{{ route('$tableName.store') }}\" method=\"POST\">
-    @csrf
-    <div class=\"row\">
-        " . implode('', array_map(function ($col, $type) {
-            if ($type === 'textarea') {
-                return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
-                            <div class=\"form-group\">
-                                <strong>{{ ucfirst('$col') }}:</strong>
-                                <textarea name=\"$col\" id=\"$col\" class=\"form-control\" required></textarea>
-                            </div>
-                        </div>";
-            } else {
-                return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
-                            <div class=\"form-group\">
-                                <strong>{{ ucfirst('$col') }}:</strong>
-                                <input type=\"$type\" name=\"$col\" id=\"$col\" class=\"form-control\" required>
-                            </div>
-                        </div>";
-            }
-        }, array_keys($inputTypes), $inputTypes)) . "
-
-        <div class=\"col-xs-12 col-sm-12 col-md-12 text-center\">
-            <button type=\"submit\" class=\"btn btn-success\">Save</button>
-        </div>
-    </div>
-</form>
-
-@endsection";
-
-    // Generate Edit Template
-    $editTemplate = "@extends('backend.layouts.app')
-
-@section('content')
-<h2>Edit {{ ucfirst('$tableName') }}</h2>
-
-<form action=\"{{ route('$tableName.update', \$item->id) }}\" method=\"POST\">
-    @csrf
-    @method('PUT')
-    <div class=\"row\">
-        " . implode('', array_map(function ($col, $type) use ($dropdownOptions) {
-            if ($type === 'textarea') {
-                return "<div class=\"col-md-12\">
-                            <div class=\"form-group\">
-                                <strong>{{ ucfirst('$col') }}:</strong>
-                                <textarea name=\"$col\" class=\"form-control\">{{ \$item->$col }}</textarea>
-                            </div>
-                        </div>";
-            } elseif ($type === 'select') {
-                // Handle dropdown options correctly
-                $options = isset($dropdownOptions[$col]) ? json_encode($dropdownOptions[$col]) : '[]';
-                return "<div class=\"col-md-12\">
-                            <div class=\"form-group\">
-                                <strong>{{ ucfirst('$col') }}:</strong>
-                                <select name=\"$col\" class=\"form-control\">
-                                    @foreach(json_decode('$options', true) as \$key => \$value)
-                                        <option value=\"{{ \$key }}\" {{ \$item->$col == \$key ? 'selected' : '' }}>{{ \$value }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>";
-            } else {
-                return "<div class=\"col-md-12\">
-                            <div class=\"form-group\">
-                                <strong>{{ ucfirst('$col') }}:</strong>
-                                <input type=\"$type\" name=\"$col\" class=\"form-control\" value=\"{{ \$item->$col }}\">
-                            </div>
-                        </div>";
-            }
-        }, array_keys($inputTypes), $inputTypes)) . "
-
-        <div class=\"col-md-12 text-center\">
-            <button type=\"submit\" class=\"btn btn-success\">Update</button>
-        </div>
-    </div>
-</form>
-@endsection";
-
-    // Ensure the directory exists and write the templates to the appropriate files
-    $path = resource_path("views/backend/$tableName");
-    File::ensureDirectoryExists($path);
-
-    File::put("$path/index.blade.php", $indexTemplate);
-    File::put("$path/create.blade.php", $createTemplate);
-    File::put("$path/edit.blade.php", $editTemplate);
+ @section('content')
+ <title>{{ ucfirst('$tableName') }} List</title>
+ 
+ <div class=\"row\">
+     <div class=\"col-lg-12 margin-tb\">
+         <div class=\"pull-left\">
+             <h2>{{ ucfirst('$tableName') }} List</h2>
+         </div>
+         <div class=\"pull-right\">
+             <a class=\"btn btn-success mb-2\" href=\"{{ route('$tableName.create') }}\">
+                 Add New
+             </a>
+         </div>
+     </div>
+ </div>
+ 
+ <table class=\"table table-bordered\">
+     <thead>
+         <tr>
+             " . implode('', array_map(fn($col) => "<th>{{ ucfirst('$col') }}</th>", $columns)) . "
+             <th>Actions</th>
+         </tr>
+     </thead>
+     <tbody>
+         @foreach(\$data as \$row)
+         <tr>
+             " . implode('', array_map(fn($col) => "<td>{{ \$row->$col }}</td>", $columns)) . "
+             <td>
+                 <a href=\"{{ route('$tableName.edit', \$row->id) }}\" class=\"btn btn-primary btn-sm\">Edit</a>
+                 <form action=\"{{ route('$tableName.destroy', \$row->id) }}\" method=\"POST\" style=\"display:inline;\">
+                     @csrf
+                     @method('DELETE')
+                     <button type=\"submit\" class=\"btn btn-danger btn-sm\">Delete</button>
+                 </form>
+             </td>
+         </tr>
+         @endforeach
+     </tbody>
+ </table>
+ 
+ @endsection";
+ 
+     $createTemplate = "@extends('backend.layouts.app')
+ 
+ @section('content')
+ <title>Add {{ ucfirst('$tableName') }}</title>
+ 
+ <h2>Add {{ ucfirst('$tableName') }}</h2>
+ 
+ <form action=\"{{ route('$tableName.store') }}\" method=\"POST\">
+     @csrf
+     <div class=\"row\">
+         " . implode('', array_map(function ($col, $type) {
+             if ($type === 'textarea') {
+                 return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
+                             <div class=\"form-group\">
+                                 <strong>{{ ucfirst('$col') }}:</strong>
+                                 <textarea name=\"$col\" id=\"$col\" class=\"form-control\" required></textarea>
+                             </div>
+                         </div>";
+             } else {
+                 return "<div class=\"col-xs-12 col-sm-12 col-md-12\">
+                             <div class=\"form-group\">
+                                 <strong>{{ ucfirst('$col') }}:</strong>
+                                 <input type=\"$type\" name=\"$col\" id=\"$col\" class=\"form-control\" required>
+                             </div>
+                         </div>";
+             }
+         }, array_keys($inputTypes), $inputTypes)) . "
+ 
+         <div class=\"col-xs-12 col-sm-12 col-md-12 text-center\">
+             <button type=\"submit\" class=\"btn btn-success\">Save</button>
+         </div>
+     </div>
+ </form>
+ 
+ @endsection";
+ 
+     $editTemplate = "@extends('backend.layouts.app')
+ 
+ @section('content')
+ <h2>Edit {{ ucfirst('$tableName') }}</h2>
+ 
+ <form action=\"{{ route('$tableName.update', \$item->id) }}\" method=\"POST\">
+     @csrf
+     @method('PUT')
+     <div class=\"row\">
+         " . implode('', array_map(function ($col, $type) use ($dropdownOptions) {
+             if ($type === 'textarea') {
+                 return "<div class=\"col-md-12\">
+                             <div class=\"form-group\">
+                                 <strong>{{ ucfirst('$col') }}:</strong>
+                                 <textarea name=\"$col\" class=\"form-control\">{{ \$item->$col }}</textarea>
+                             </div>
+                         </div>";
+             } elseif ($type === 'select') {
+                 // Handle dropdown options correctly
+                 $options = isset($dropdownOptions[$col]) ? json_encode($dropdownOptions[$col]) : '[]';
+                 return "<div class=\"col-md-12\">
+                             <div class=\"form-group\">
+                                 <strong>{{ ucfirst('$col') }}:</strong>
+                                 <select name=\"$col\" class=\"form-control\">
+                                     @foreach(json_decode('$options', true) as \$key => \$value)
+                                         <option value=\"{{ \$key }}\" {{ \$item->$col == \$key ? 'selected' : '' }}>{{ \$value }}</option>
+                                     @endforeach
+                                 </select>
+                             </div>
+                         </div>";
+             } else {
+                 return "<div class=\"col-md-12\">
+                             <div class=\"form-group\">
+                                 <strong>{{ ucfirst('$col') }}:</strong>
+                                 <input type=\"$type\" name=\"$col\" class=\"form-control\" value=\"{{ \$item->$col }}\">
+                             </div>
+                         </div>";
+             }
+         }, array_keys($inputTypes), $inputTypes)) . "
+ 
+         <div class=\"col-md-12 text-center\">
+             <button type=\"submit\" class=\"btn btn-success\">Update</button>
+         </div>
+     </div>
+ </form>
+ @endsection";
+ 
+     $path = resource_path("views/backend/$tableName");
+     File::ensureDirectoryExists($path);
+ 
+     File::put("$path/index.blade.php", $indexTemplate);
+     File::put("$path/create.blade.php", $createTemplate);
+     File::put("$path/edit.blade.php", $editTemplate);
 }
 
 
