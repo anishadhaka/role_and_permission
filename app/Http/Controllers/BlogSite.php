@@ -111,22 +111,22 @@ public function contactUsData(Request $request)
     Contact::create($validated);
     return redirect()->route('contactus')->with('success', 'Your message has been sent successfully!');
 }
-
+// readmore
 public function blogsbyslug($slug)
 {
     $blog= Blog::with('blogcategories')->whereLike('slug', $slug)->first();
     // dd($blog);
     $related_blogs = Blog::where('category_id', $blog->blogcategories->id)->get();
-    // return view('frontend.blogsite.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
     return view('frontend.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
 
 }
 public function newsbyslug($slug)
 {
     $news= News::with('categories')->whereLike('slug', $slug)->first();
+    // dd($news);
+
     $related_news = News::where('category_id', $news->categories->id)->get();
-    return view('frontend.blogsite.readmorenews',['news' => $news,'related_news'=>$related_news]);
-    // return view('frontend.blogsite.readmorenews',['news' => $news,'related_news'=>$related_news]);
+    return view('frontend.readmorenews',['news' => $news,'related_news'=>$related_news]);
 
 }
 
@@ -158,5 +158,3 @@ public function newsCategorySite()
 }
 
 }
-
-

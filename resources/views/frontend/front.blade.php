@@ -200,6 +200,8 @@
                             <li class="scroll"><a href="#reviews">review</a></li>
                             <li class="scroll"><a href="#blog">NEWS</a></li>
                             <li class="scroll"><a href="#contact">contact</a></li>
+
+
                         </ul>
                         <!--/.nav -->
                     </div>

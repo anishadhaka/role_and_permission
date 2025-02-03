@@ -251,6 +251,12 @@ public function reject($id)
     return redirect()->route('news.index')->with('success', 'news rejected successfully!');
 }
 
+
+
+public function readMoreNews($slug)
+{
+    $newsIteam = News::where('slug', $slug)->firstOrFail();
+    return view('frontend.readmoreNews', compact('newsIteam'));
 }
 
-
+}

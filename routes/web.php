@@ -57,6 +57,7 @@ Route::get('/module/get-columns', [ModuleController::class, 'getColumns'])->name
 
 Auth::routes();
 Route::middleware(['auth'])->group(function () {
+    // for blogSite
 Route::get('/blogsite', [BlogSite::class, 'index'])->name('blogsite');
 Route::get('/contactus', [BlogSite::class, 'contactUs'])->name('contactus');
 Route::get('/about', [BlogSite::class, 'about'])->name('about');

@@ -5,15 +5,14 @@
         <div class="post-grid">
             <article class="featured">
                 <div class="post-image">
-                    <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top"
-                        style="height:auto;width:auto;">
+                    <img src="{{ asset('images/' . $news->image) }}" class="card-img-top" style="height:auto;">
 
                 </div>
                 <div class="post-content">
-                    <h3><strong> Title: </strong>{{ $blog['name'] }}</h3>
-                    <p>{{ $blog['content'] }}</p>
-                    <p class="para"> <strong> Post Date: </strong>{{ $blog['create_date'] }}</p>
-                    <p class="para"> <strong> Update Date:</strong>{{ $blog['update_date'] }}</p>
+                    <h3><strong> Title: </strong>{{ $news['name'] }}</h3>
+                    <p>{{ $news['description'] }}</p>
+                    <p class="para"> <strong> Post Date: </strong>{{ $news['created_at'] }}</p>
+                    <p class="para"> <strong> Update Date:</strong>{{ $news['updated_at'] }}</p>
                 </div>
             </article>
         </div>
@@ -23,8 +22,8 @@
 
         <ul class="list">
             <h4><strong>Related Category Blogs</strong></h4>
-            @foreach ($related_blogs as $row)
-            <a href="{{ url('/Blogs/' . $row->slug) }}" class="text-decoration-none text-dark">
+            @foreach ($related_news as $row)
+            <a href="{{ url('/News/' . $row->slug) }}" class="text-decoration-none text-dark">
                 <li class="li-container"> <img src="{{ asset('images/' . $row->image) }}" class="card-img-top"
                         style="height:100px;width:100px;">
                     <h5 class="card-title">{{ $row['name'] }}</h5>
