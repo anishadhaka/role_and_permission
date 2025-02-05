@@ -14,6 +14,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use App\Models\Menu;
 use App\Models\module;
+use App\Models\pages;
+
 
 class BlogSite extends Controller
 {
@@ -45,6 +47,8 @@ public function index()
     $blog = Blog::all(); 
     $news = News::all(); 
     $action= ActionUser::all();
+    $pages= pages::all();
+    // dd($pages);
     $blogs = Blog::all()->map(function ($blog) {
         $blog->isLiked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'like')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
         $blog->isDisliked = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'dislike')->where('action_id', $blog->id)->where('type', 'blog')->whereNull('deleted_at')->exists() : false;
@@ -58,7 +62,7 @@ public function index()
         $newsItem->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
         return $newsItem;
     });
-    return view('frontend.front',compact('blog', 'news','blogs','news'));
+    return view('frontend.front',compact('blog', 'news','blogs','news','pages'));
 
 }
 

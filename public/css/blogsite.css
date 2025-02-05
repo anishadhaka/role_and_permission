@@ -213,13 +213,13 @@ header nav ul li a:hover {
 
 /* Load More Button */
 #loadMore, #loadMore2 {
-  display: inline-block;
+  /* display: inline-block; */
   margin-top: 20px;
-  background-color: #3498db;
-  color: white;
-  padding: 12px 20px;
+  /* background-color: #3498db; */
+  color: rgb(12, 12, 12);
+  /* padding: 12px 20px; */
   border-radius: 30px;
-  text-decoration: none;
+  text-decoration: underline;
   font-size: 18px;
   transition: background-color 0.3s ease;
 }

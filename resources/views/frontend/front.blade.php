@@ -117,20 +117,22 @@
     /* Load More Button */
     #loadMore,
     #loadMore2 {
-        display: inline-block;
-        margin-top: 20px;
-        background-color: #3498db;
-        color: white;
-        padding: 12px 20px;
+        width: -webkit-fill-available;
+        text-align: -webkit-center;
+        /* display: inline-block; */
+        /* margin-top: 20px; */
+        /* background-color: #3498db; */
+        color: black;
+        /* padding: 12px 20px; */
         border-radius: 30px;
-        text-decoration: none;
+        text-decoration: underline;
         font-size: 18px;
         transition: background-color 0.3s ease;
     }
 
     #loadMore:hover,
     #loadMore2:hover {
-        background-color: #2980b9;
+        /* background-color: #2980b9; */
     }
     </style>
 </head>
@@ -196,7 +198,7 @@
                         <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
                             <li class="scroll active"><a href="#home">home</a></li>
                             <li class="scroll"><a href="#works">Blogs</a></li>
-                            <!-- <li class="scroll"><a href="#explore">explore</a></li> -->
+                            <li class="scroll"><a href="#explore">explore</a></li>
                             <li class="scroll"><a href="#reviews">review</a></li>
                             <li class="scroll"><a href="#blog">NEWS</a></li>
                             <li class="scroll"><a href="#contact">contact</a></li>
@@ -231,7 +233,7 @@
                     in just One click
                 </p>
             </div>
-            <div class="welcome-hero-serch-box">
+            <!-- <div class="welcome-hero-serch-box">
                 <div class="welcome-hero-form">
                     <div class="single-welcome-hero-form">
                         <h3>what?</h3>
@@ -251,13 +253,13 @@
                             <i class="flaticon-gps-fixed-indicator"></i>
                         </div>
                     </div>
-                </div>
-                <div class="welcome-hero-serch">
-                    <button class="welcome-hero-btn" onclick="window.location.href='#'">
-                        search <i data-feather="search"></i>
-                    </button>
-                </div>
-            </div>
+                </div> -->
+            <!-- <div class="welcome-hero-serch">
+                <button class="welcome-hero-btn" onclick="window.location.href='#'">
+                    search <i data-feather="search"></i>
+                </button>
+            </div> -->
+        </div>
         </div>
     </section>
     <!--/.welcome-hero-->
@@ -331,7 +333,6 @@
                 <div class="row">
                     @foreach($blogs as $blog)
 
-
                     <div class="col-md-4 col-sm-6">
                         <div class="single-how-works">
                             <div class="review-card">
@@ -357,8 +358,122 @@
                         </div>
 
                     </div>
+
                     @endforeach
+
+                    <!-- <button id="loadMore" class="load-more-btn">Load More</button> -->
     </section>
+
+    <!--explore start -->
+    <section id="explore" class="explore">
+        <div class="container">
+            <div class="section-header">
+                <h2>explore</h2>
+                <p>Explore New place, food, culture around the world and many more</p>
+            </div>
+            <!--/.section-header-->
+            <div class="explore-content">
+                <div class="row">
+
+
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="single-explore-item">
+
+                            <!-- <div class="single-explore-img">
+                                <img src="assets/images/explore/e6.jpg" alt="explore image" />
+                                <div class="single-explore-img-info">
+                                    <button onclick="window.location.href='#'">
+                                        best rated
+                                    </button>
+                                    <div class="single-explore-image-icon-box">
+                                        <ul>
+                                            <li>
+                                                <div class="single-explore-image-icon">
+                                                    <i class="fa fa-arrows-alt"></i>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="single-explore-image-icon">
+                                                    <i class="fa fa-bookmark-o"></i>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="single-explore-txt bg-theme-5">
+
+                                hjkjk
+
+                                <div class="review-grid">
+                                    @if($pages->isNotEmpty())
+                                    @foreach($pages as $page)
+                                    <div class="review-card">
+                                        <div class="date">{{ $page->created_at }}</div>
+                                        <h1>{{ $page->title }}</h1>
+                                        <p>{{ $page->description }}</p>
+                                        <a href="{{ url('/Blogs/' . $page->slug) }}" class="read-more">Read More</a>
+                                    </div>
+                                    @endforeach
+                                    @else
+                                    <p>No pages available.</p>
+                                    @endif
+                                </div>
+                                <!-- <h2><a href="#">thailand tour</a></h2>
+                                <p class="explore-rating-price">
+                                    <span class="explore-rating">5.0</span>
+                                    <a href="#"> 15 ratings</a>
+                                    <span class="explore-price-box">
+                                        form
+                                        <span class="explore-price">5k$-10k$</span>
+                                    </span>
+                                    <a href="#">destination</a>
+                                </p> -->
+                                <!-- <div class="explore-person">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <div class="explore-person-img">
+                                                <a href="#">
+                                                    <img src="assets/images/explore/person.png" alt="explore person" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing
+                                                elit, sed do eiusmod tempor incid ut labore et dolore
+                                                magna aliqua....
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!-- <div class="explore-open-close-part">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <button class="close-btn" onclick="window.location.href='#'">
+                                                close now
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <div class="explore-map-icon">
+                                                <a href="#"><i data-feather="map-pin"></i></a>
+                                                <a href="#"><i data-feather="upload"></i></a>
+                                                <a href="#"><i data-feather="heart"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.container-->
+    </section>
+    <!--/.explore-->
+    <!--explore end -->
 
 
     <!--reviews start -->
@@ -549,7 +664,7 @@
                     @foreach($news as $newsIteam)
                     <div class="col-md-4 col-sm-6">
                         <div class="single-how-works">
-                            <div class="review-card">
+                            <div class="review-card2">
                                 <div style="display:flex;">
                                     <img src="{{ asset('images/' . $newsIteam->image) }}" class="card-img-top">
                                     <i class="fa-{{ $newsIteam->isFavorited ? 'solid' : 'regular' }} fa-heart favorite-btn action"
@@ -572,8 +687,11 @@
                         </div>
                     </div>
                     @endforeach
+
+                    <!-- <button id="loadMore2" class="load-more-btn">Load More</button> -->
                 </div>
             </div>
+
     </section>
 
     <!--subscription strat -->
@@ -614,7 +732,7 @@
                     <div class="col-sm-9">
                         <ul class="footer-menu-item">
                             <li class="scroll"><a href="#works">how it works</a></li>
-                            <li class="scroll"><a href="#explore">explore</a></li>
+                            <!-- <li class="scroll"><a href="#explore">explore</a></li> -->
                             <li class="scroll"><a href="#reviews">review</a></li>
                             <li class="scroll"><a href="#blog">blog</a></li>
                             <li class="scroll"><a href="#contact">contact</a></li>
@@ -663,6 +781,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     $(document).ready(function() {
         // Handle like, dislike, and favorite actions
@@ -690,6 +809,81 @@
                 // Deselect the like button
                 $this.closest('.review-card, .review-card2').find('.fa-thumbs-up').removeClass(
                     'fa-solid').addClass('fa-regular');
+            }
+
+            // AJAX call to backend
+            $.ajax({
+                url: "/action-user-store",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: actionData.id,
+                    type: actionData.type,
+                    action: actionData.action,
+                },
+                success: function(response) {
+                    console.log("Action recorded:", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error recording action:", xhr.responseText);
+                    alert("An error occurred. Please try again.");
+                },
+            });
+        });
+    });
+
+
+
+
+    $(document).ready(function() {
+        $(".review-card").slice(3).hide();
+        $("#loadMore").on("click", function(e) {
+            e.preventDefault();
+            $(".review-card:hidden").slice(0, 3).slideDown();
+            if ($(".review-card:hidden").length == 0) {
+                $("#loadMore").hide();
+            }
+        });
+
+        $(".review-card2").slice(3).hide();
+        $("#loadMore2").on("click", function(e) {
+            e.preventDefault();
+            $(".review-card2:hidden").slice(0, 3).slideDown();
+            if ($(".review-card2:hidden").length == 0) {
+                $("#loadMore2").hide();
+            }
+        });
+    });
+    $(document).ready(function() {
+        // Handle like, dislike, and favorite actions
+        $(".action").on("click", function() {
+            const $this = $(this);
+            const actionData = {
+                id: $this.data("id"),
+                type: $this.data("type"),
+                action: $this.data("action"),
+            };
+
+            // Toggle the class for visual feedback (for favorite, like, or dislike)
+            if ($this.hasClass("fa-regular")) {
+                $this.removeClass("fa-regular").addClass("fa-solid");
+            } else {
+                $this.removeClass("fa-solid").addClass("fa-regular");
+            }
+
+            // If it's a like or dislike action, ensure the opposite button is deselected
+            if ($this.hasClass("fa-thumbs-up")) {
+                // Deselect the dislike button
+                $this.closest('.review-card, .review-card2').find('.fa-thumbs-down')
+                    .removeClass(
+                        'fa-solid')
+                    .addClass('fa-regular');
+            } else if ($this.hasClass("fa-thumbs-down")) {
+                // Deselect the like button
+                $this.closest('.review-card, .review-card2').find('.fa-thumbs-up')
+                    .removeClass(
+                        'fa-solid')
+                    .addClass('fa-regular');
             }
 
             // AJAX call to backend

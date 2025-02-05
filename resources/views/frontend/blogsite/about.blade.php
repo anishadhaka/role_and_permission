@@ -1,10 +1,14 @@
 @extends('frontend.SiteLayout.appSite')
 @yield('scripts')
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/about.css') }}">
+
 <section class="about">
     <h1>About Us</h1>
     <div class="about-content">
+
         <div class="about-text">
+            <!-- <h1>ABOUT US</h1> -->
             <p>We are Yoast and our mission is SEO for everyone! So, how do we achieve that? For starters, we have our
                 Yoast SEO software,
                 which is active on more than 13 million websites. Pretty awesome to help out that many people, right?
@@ -23,7 +27,7 @@
         </div>
         <div class="about-image">
             <img src="https://tse1.mm.bing.net/th?id=OIP.oqS6Tt-p6kqtVj2fmphd1wHaEK&pid=Api&rs=1&c=1&qlt=95&w=160&h=89"
-                alt="About Us Image" height="200px">
+                alt="About Us Image" style="height: auto;width: 500px;">
         </div>
 
 

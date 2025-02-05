@@ -18,12 +18,12 @@
         @endforeach
 
     </div>
-    <button id="loadMore" class="load-more-btn">Load More</button>
+    <!-- <button id="loadMore" class="load-more-btn">Load More</button> -->
     @else
     <h1 style="color:red;margin-top:100px;"><i>There is no blog related to this category</i></h1>
     @endif
 </section>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $(".review-card").slice(3).hide();
@@ -35,5 +35,5 @@ $(document).ready(function() {
         }
     });
 });
-</script>
+</script> -->
 @endsection

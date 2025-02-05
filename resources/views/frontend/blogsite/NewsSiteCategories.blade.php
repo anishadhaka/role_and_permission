@@ -29,21 +29,21 @@
         </div>
         @endforeach
     </div>
-    <button id="loadMore2" class="load-more-btn">Load More</button>
+    <!-- <button id="loadMore2" class="load-more-btn">Load More</button> -->
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    $(".review-card2").slice(3).hide();
-    $("#loadMore2").on("click", function(e) {
-        e.preventDefault();
-        $(".review-card2:hidden").slice(0, 3).slideDown();
-        if ($(".review-card2:hidden").length == 0) {
-            $("#loadMore2").hide();
-        }
-    });
-});
+// $(document).ready(function() {
+//     $(".review-card2").slice(3).hide();
+//     $("#loadMore2").on("click", function(e) {
+//         e.preventDefault();
+//         $(".review-card2:hidden").slice(0, 3).slideDown();
+//         if ($(".review-card2:hidden").length == 0) {
+//             $("#loadMore2").hide();
+//         }
+//     });
+// });
 
 $(document).ready(function() {
 

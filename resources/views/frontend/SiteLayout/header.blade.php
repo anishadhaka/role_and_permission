@@ -179,17 +179,17 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                         <i class="fa fa-bars"></i>
                     </button>
-                    <a class="navbar-brand" href="index.html">WEL<span>COME</span></a>
+                    <a class="navbar-brand" href="{{ url('/blogsite') }}">WEL<span>COME</span></a>
                 </div>
 
                 <div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
-                    <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
-                        <li class="scroll active"><a href="#home">home</a></li>
-                        <li class="scroll"><a href="#works">Blogs</a></li>
-                        <!-- <li class="scroll"><a href="#explore">explore</a></li> -->
-                        <li class="scroll"><a href="#reviews">review</a></li>
-                        <li class="scroll"><a href="#blog">NEWS</a></li>
-                        <li class="scroll"><a href="#contact">contact</a></li>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class=""><a href="{{ url('/blogsite') }}">home</a></li>
+                        <li class=""><a href="{{ url('/blogcategoriasite') }}">Blogs</a></li>
+                        <!-- <li class=""><a href="#explore">explore</a></li> -->
+                        <li class=""><a href="{{ url('/newscategoriasite') }}">NEWS</a></li>
+                        <li class=""><a href="{{ url('/about') }}">About</a></li>
+                        <li class=""><a href="{{ url('/contactus') }}">contact</a></li>
                     </ul>
                     <!--/.nav -->
                 </div>
@@ -219,7 +219,7 @@
                 in just One click
             </p>
         </div>
-        <div class="welcome-hero-serch-box">
+        <!-- <div class="welcome-hero-serch-box">
             <div class="welcome-hero-form">
                 <div class="single-welcome-hero-form">
                     <h3>what?</h3>
@@ -244,8 +244,8 @@
                 <button class="welcome-hero-btn" onclick="window.location.href='#'">
                     search <i data-feather="search"></i>
                 </button>
-            </div>
-        </div>
+            </div> -->
+        <!-- </div> -->
     </div>
 </section>
 <!--/.welcome-hero-->
