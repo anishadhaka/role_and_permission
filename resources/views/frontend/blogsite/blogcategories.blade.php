@@ -16,7 +16,7 @@
                 </i>
             </div>
             <div class="date">{{ $blog->create_at }}</div>
-            <h1>{{ $blog->name }}</h1>
+            <h1>{{ substr($blog->name, 0, 20) }}...</h1>
             <a href="{{ url('/Blogs/' . $blog->slug) }}" class="read-more">Read More</a>
             <i class="fa-{{ $blog->isLiked ? 'solid' : 'regular' }} fa-thumbs-up like-btn action"
                 data-id="{{ $blog->id }}" data-type="blog" data-action="like"

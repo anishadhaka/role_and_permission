@@ -40,6 +40,11 @@ Route::post('/updatejsondata', [MenuController::class, 'updateJsonData'])->name(
 Route::post('/approve_book/{id}', [BlogController::class, 'approveBook'])->name('approve_book');
 Route::post('/rejected_book/{id}', [BlogController::class, 'rejected'])->name('rejected_book');
 
+// country state  city
+Route::get('/get-states/{country_id}', [BlogController::class, 'getStates']);
+Route::get('/get-cities/{state_id}', [BlogController::class, 'getCities']);
+
+
 Route::post('/approve/{id}', [NewsController::class, 'approve'])->name('approve');
 Route::post('/reject/{id}', [NewsController::class, 'reject'])->name('reject');
 

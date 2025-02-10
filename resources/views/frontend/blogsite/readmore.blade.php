@@ -13,6 +13,8 @@
                 </div>
                 <div class="post-content">
                     <h3><strong> Title: </strong>{{ $blog['name'] }}</h3>
+
+
                     <p>{{ $blog['content'] }}</p>
                     <p class="para"> <strong> Post Date: </strong>{{ $blog['create_date'] }}</p>
                     <p class="para"> <strong> Update Date:</strong>{{ $blog['update_date'] }}</p>
@@ -29,7 +31,7 @@
             <a href="{{ url('/Blogs/' . $row->slug) }}" class="text-decoration-none text-dark">
                 <li class="li-container"> <img src="{{ asset('images/' . $row->image) }}" class="card-img-top"
                         style="height:100px;width:100px;">
-                    <h5 class="card-title">{{ $row['name'] }}</h5>
+                    <h5 class="card-title">{{ substr($blog['name'] ,0, 20)}}</h5>
             </a>
             </li>
             @endforeach

@@ -29,7 +29,7 @@
             <a href="{{ url('/News/' . $row->slug) }}" class="text-decoration-none text-dark">
                 <li class="li-container"> <img src="{{ asset('images/' . $row->image) }}" class="card-img-top"
                         style="height:100px;width:100px;">
-                    <h5 class="card-title">{{ $row['name'] }}</h5>
+                    <h5 class="card-title">{{substr( $row['name'],0,20 )}}</h5>
             </a>
             </li>
             @endforeach

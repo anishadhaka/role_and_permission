@@ -12,6 +12,9 @@ use App\Models\Designation;
 use App\Models\ApprovedStatus;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\State;
+use App\Models\City;
+
 
 use Spatie\Permission\Models\Role;
 // use Spatie\Permission\Models\BlogCategory;
@@ -252,5 +255,23 @@ public function rejected($id)
     ApprovedStatus::where('blog_id', $id)->delete();
     return redirect()->route('blog.index')->with('success', 'Blog rejected successfully!');
 }
+
+
+
+public function getStates($country_id)
+{
+    $states = State::where('country_id', $country_id)->pluck('name', 'id');
+    // dd($states);
+    return response()->json($states);
+}
+
+public function getCities($state_id)
+{
+    $cities = City::where('state_id', $state_id)->pluck('name', 'id');
+    // dd($cities);
+
+    return response()->json($cities);
+}
+
 
 }

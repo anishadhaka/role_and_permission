@@ -198,7 +198,7 @@
                         <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
                             <li class="scroll active"><a href="#home">home</a></li>
                             <li class="scroll"><a href="#works">Blogs</a></li>
-                            <li class="scroll"><a href="#explore">explore</a></li>
+                            <!-- <li class="scroll"><a href="#explore">explore</a></li> -->
                             <li class="scroll"><a href="#reviews">review</a></li>
                             <li class="scroll"><a href="#blog">NEWS</a></li>
                             <li class="scroll"><a href="#contact">contact</a></li>
@@ -344,7 +344,7 @@
                                     </i>
                                 </div>
                                 <div class="date">{{ $blog->created_at }}</div>
-                                <h1>{{ $blog->name }}</h1>
+                                <h1>{{ substr($blog->name, 0, 20) }}...</h1>
                                 <a href="{{ url('/Blogs/' . $blog->slug) }}" class="read-more">Read More</a>
                                 <i class="fa-{{ $blog->isLiked ? 'solid' : 'regular' }} fa-thumbs-up like-btn action"
                                     data-id="{{ $blog->id }}" data-type="blog" data-action="like"
@@ -365,22 +365,22 @@
     </section>
 
     <!--explore start -->
-    <section id="explore" class="explore">
+    <!-- <section id="explore" class="explore">
         <div class="container">
             <div class="section-header">
                 <h2>explore</h2>
                 <p>Explore New place, food, culture around the world and many more</p>
-            </div>
-            <!--/.section-header-->
-            <div class="explore-content">
+            </div> -->
+    <!--/.section-header-->
+    <!-- <div class="explore-content">
                 <div class="row">
 
 
 
                     <div class="col-md-4 col-sm-6">
-                        <div class="single-explore-item">
+                        <div class="single-explore-item"> -->
 
-                            <!-- <div class="single-explore-img">
+    <!-- <div class="single-explore-img">
                                 <img src="assets/images/explore/e6.jpg" alt="explore image" />
                                 <div class="single-explore-img-info">
                                     <button onclick="window.location.href='#'">
@@ -402,25 +402,25 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <div class="single-explore-txt bg-theme-5">
+    <!-- <div class="single-explore-txt bg-theme-5">
 
-                                hjkjk
+        hjkjk
 
-                                <div class="review-grid">
-                                    @if($pages->isNotEmpty())
-                                    @foreach($pages as $page)
-                                    <div class="review-card">
-                                        <div class="date">{{ $page->created_at }}</div>
-                                        <h1>{{ $page->title }}</h1>
-                                        <p>{{ $page->description }}</p>
-                                        <a href="{{ url('/Blogs/' . $page->slug) }}" class="read-more">Read More</a>
-                                    </div>
-                                    @endforeach
-                                    @else
-                                    <p>No pages available.</p>
-                                    @endif
-                                </div>
-                                <!-- <h2><a href="#">thailand tour</a></h2>
+        <div class="review-grid">
+            @if($pages->isNotEmpty())
+            @foreach($pages as $page)
+            <div class="review-card">
+                <div class="date">{{ $page->created_at }}</div>
+                <h1>{{ $page->title }}</h1>
+                <p>{{ $page->description }}</p>
+                <a href="{{ url('/Blogs/' . $page->slug) }}" class="read-more">Read More</a>
+            </div>
+            @endforeach
+            @else
+            <p>No pages available.</p>
+            @endif
+        </div> -->
+    <!-- <h2><a href="#">thailand tour</a></h2>
                                 <p class="explore-rating-price">
                                     <span class="explore-rating">5.0</span>
                                     <a href="#"> 15 ratings</a>
@@ -430,7 +430,7 @@
                                     </span>
                                     <a href="#">destination</a>
                                 </p> -->
-                                <!-- <div class="explore-person">
+    <!-- <div class="explore-person">
                                     <div class="row">
                                         <div class="col-sm-2">
                                             <div class="explore-person-img">
@@ -448,7 +448,7 @@
                                         </div>
                                     </div>
                                 </div> -->
-                                <!-- <div class="explore-open-close-part">
+    <!-- <div class="explore-open-close-part">
                                     <div class="row">
                                         <div class="col-sm-5">
                                             <button class="close-btn" onclick="window.location.href='#'">
@@ -464,14 +464,14 @@
                                         </div>
                                     </div>
                                 </div> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/.container-->
-    </section>
+    <!-- </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+    <!--/.container-->
+    <!-- </section> -->
     <!--/.explore-->
     <!--explore end -->
 
@@ -489,7 +489,7 @@
                     <div class="testimonial-description">
                         <div class="testimonial-info">
                             <div class="testimonial-img">
-                                <img src="assets/images/clients/c4.png" alt="clients" />
+                                <img src="images/c4.png" alt="clients" />
                             </div>
                             <div class="testimonial-person">
                                 <h2>Tom Leakar</h2>
@@ -518,7 +518,7 @@
                     <div class="testimonial-description">
                         <div class="testimonial-info">
                             <div class="testimonial-img">
-                                <img src="assets/images/clients/c4.png" alt="clients" />
+                                <img src="images/c1.png" alt="clients" />
                             </div>
                             <div class="testimonial-person">
                                 <h2>Tom Leakar</h2>
@@ -547,7 +547,7 @@
                     <div class="testimonial-description">
                         <div class="testimonial-info">
                             <div class="testimonial-img">
-                                <img src="assets/images/clients/c4.png" alt="clients" />
+                                <img src="images/c3.png" alt="clients" />
                             </div>
                             <div class="testimonial-person">
                                 <h2>Tom Leakar</h2>
@@ -577,7 +577,7 @@
                     <div class="testimonial-description">
                         <div class="testimonial-info">
                             <div class="testimonial-img">
-                                <img src="assets/images/clients/c4.png" alt="clients" />
+                                <img src="images/c2.png" alt="clients" />
                             </div>
                             <div class="testimonial-person">
                                 <h2>Tom Leakar</h2>
@@ -673,7 +673,8 @@
                                     </i>
                                 </div>
                                 <div class="date">{{ $newsIteam->created_at }}</div>
-                                <h1>{{ $newsIteam->name }}</h1>
+                                <h1>{{ substr($newsIteam->name, 0, 20) }}...</h1>
+
                                 <a href="{{ url('/News/' . $newsIteam->slug) }}" class="read-more">Read More</a>
                                 <i class="fa-{{ $newsIteam->isLiked ? 'solid' : 'regular' }} fa-thumbs-up like-btn action"
                                     data-id="{{ $newsIteam->id }}" data-type="newsIteam" data-action="like"

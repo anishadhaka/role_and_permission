@@ -2,26 +2,29 @@
 
 @section('content')
 <style>
-    .searchbar .search-container button {
-        margin-right: 16px;
-        background: #ddd;
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-    }
+.searchbar .search-container button {
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.searchbar .search-container {
+    float: right;
+}
+
+@media screen and (max-width: 600px) {
     .searchbar .search-container {
-        float: right;
+        float: none;
     }
-    @media screen and (max-width: 600px) {
-        .searchbar .search-container {
-            float: none;
-        }
-        .searchbar input[type=text] {
-            border: 1px solid #ccc;
-        }
+
+    .searchbar input[type=text] {
+        border: 1px solid #ccc;
     }
+}
 </style>
-<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">  
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
 
 <div class="row">
     <div class="col-lg-12 margin-tb">
@@ -29,7 +32,8 @@
             <h2>Blog Management</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-success mb-2" href="{{ route('blog.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
+            <a class="btn btn-success mb-2" href="{{ route('blog.create') }}"><i class="fa fa-plus"></i> Create New
+                Blog</a>
             <!-- <div class="language-picker mb-1">
                 <form action="{{ route('blog.index') }}" method="GET" class="language-picker__form" style="display:flex;margin-left:700px;margin-top:-50px;">
                     <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;">Language</label>
@@ -55,9 +59,9 @@
 </div>
 
 @session('success')
-    <div class="alert alert-success" role="alert"> 
-        {{ $value }}
-    </div>
+<div class="alert alert-success" role="alert">
+    {{ $value }}
+</div>
 @endsession
 
 <table class="table table-bordered" id="blogtable">
@@ -73,110 +77,84 @@
         <th width="280px">Action</th>
     </tr>
     @foreach ($blogs as $key => $blog)
-        <tr>
-            <td>{{ ++$i }}</td>
-            <td>{{ $blog->name }}</td>
-            <td>{{ $blog->blogcategories->title }}</td>
-            <td>{{ $blog->languages?->language_name ?? 'No language' }}</td>
-            <td>{{ $blog->domains?->domain_name ?? 'No domain' }}</td>
-            <td>
-                @if ($blog->image)
-                    <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top" height="50px" style="width:100px;">
-                @else
-                    No image    
-                @endif
-            </td>
-         
-            <td>
-               <select id="select" class="form-control status-dropdown" data-id="{{ $blog->id }}" style="width: auto;">
-                   @if($blog->approvedstatus)
-                    @foreach($designation->take($blog->approvedstatus->designation_id) as $item)
-                    <option  id="option"  value="{{ $item->id }}" data-deginationid="{{ $blog->approvedstatus->designation_id }}"
-                     data-userid="{{ $item->id }} " <?php  if ($blog->approvedstatus->designation_id == $item->id ){ echo 'selected'; }else{ echo 'disabled'; } ?> >
-                        
-                    {{ $item->designation_name }}
-                    </option>
-                    @endforeach
-                   @else
-                    <option>No designation</option>
-                   @endif
-               </select> 
-            </td>
-
-<th style="display: flex; border: none;">
-    <form action="{{ route('approve_book', $blog->id) }}" method="POST" style="display:inline" data-userid="{{auth()->user()->designation_id }}" >
-           @csrf
-           @if($blog->approvedstatus && $blog->id  && $blog->approvedstatus->designation_id == $item->id )
-              <button type="submit"  class="btn btn-success btn-sm px-3" data-deginationid="{{ $item->id }}" data-test="{{$blog->id}}"  <?php if(auth()->user()->designation_id > $item->id){ echo ''; }else{echo 'disabled'; } ?>>Approve</button>
-           @else
-           <button type="submit" class="btn btn-success btn-sm px-3">Approve</button>  
-          @endif
-             
-    </form>
-
-
-   <form action="{{ route('rejected_book', $blog->id) }}" method="POST" style="display:inline">
-        @csrf
-          @if($blog->approvedstatus && $blog->id  && $blog->approvedstatus->designation_id == $item->id )
-              <button type="submit"  class="btn btn-danger btn-sm px-3" data-deginationid="{{ $item->id }}" data-test="{{$blog->id}}" <?php if(auth()->user()->designation_id < $item->id){ echo 'disabled'; }else{ echo ''; }  ?> >Reject</button>
-           @else
-           <button type="submit" class="btn btn-danger btn-sm px-3">Reject</button>
-          @endif
-    <!-- <input type="hidden" name="status" value="rejected">
-    <button type="submit" class="btn btn-primary btn-sm">Reject</button> -->
-   </form>
-
-</th>
-
-         <td >
-              <!-- <a class="btn btn-info btn-sm" href="{{ route('blog.show', $blog->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
-              <a class="btn btn-primary btn-sm" href="{{ route('blog.edit', $blog->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-              <form method="POST" action="{{ route('blog.destroy', $blog->id) }}" style="display:inline">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
-          </form>
+    <tr>
+        <td>{{ ++$i }}</td>
+        <td>{{ substr($blog->name, 0, 10) }}...</td>
+        <td>{{ $blog->blogcategories->title }}</td>
+        <td>{{ $blog->languages?->language_name ?? 'No language' }}</td>
+        <td>{{ $blog->domains?->domain_name ?? 'No domain' }}</td>
+        <td>
+            @if ($blog->image)
+            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top" height="50px" style="width:100px;">
+            @else
+            No image
+            @endif
         </td>
 
-        </tr>
+        <td>
+            <select id="select" class="form-control status-dropdown" data-id="{{ $blog->id }}" style="width: auto;">
+                @if($blog->approvedstatus)
+                @foreach($designation->take($blog->approvedstatus->designation_id) as $item)
+                <option id="option" value="{{ $item->id }}"
+                    data-deginationid="{{ $blog->approvedstatus->designation_id }}" data-userid="{{ $item->id }} "
+                    <?php  if ($blog->approvedstatus->designation_id == $item->id ){ echo 'selected'; }else{ echo 'disabled'; } ?>>
+
+                    {{ $item->designation_name }}
+                </option>
+                @endforeach
+                @else
+                <option>No designation</option>
+                @endif
+            </select>
+        </td>
+
+        <th style="display: flex; border: none;">
+            <form action="{{ route('approve_book', $blog->id) }}" method="POST" style="display:inline"
+                data-userid="{{auth()->user()->designation_id }}">
+                @csrf
+                @if($blog->approvedstatus && $blog->id && $blog->approvedstatus->designation_id == $item->id )
+                <button type="submit" class="btn btn-success btn-sm px-3" data-deginationid="{{ $item->id }}"
+                    data-test="{{$blog->id}}"
+                    <?php if(auth()->user()->designation_id > $item->id){ echo ''; }else{echo 'disabled'; } ?>>Approve</button>
+                @else
+                <button type="submit" class="btn btn-success btn-sm px-3">Approve</button>
+                @endif
+
+            </form>
+
+
+            <form action="{{ route('rejected_book', $blog->id) }}" method="POST" style="display:inline">
+                @csrf
+                @if($blog->approvedstatus && $blog->id && $blog->approvedstatus->designation_id == $item->id )
+                <button type="submit" class="btn btn-danger btn-sm px-3" data-deginationid="{{ $item->id }}"
+                    data-test="{{$blog->id}}"
+                    <?php if(auth()->user()->designation_id < $item->id){ echo 'disabled'; }else{ echo ''; }  ?>>Reject</button>
+                @else
+                <button type="submit" class="btn btn-danger btn-sm px-3">Reject</button>
+                @endif
+                <!-- <input type="hidden" name="status" value="rejected">
+    <button type="submit" class="btn btn-primary btn-sm">Reject</button> -->
+            </form>
+
+        </th>
+
+        <td>
+            <!-- <a class="btn btn-info btn-sm" href="{{ route('blog.show', $blog->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
+            <a class="btn btn-primary btn-sm" href="{{ route('blog.edit', $blog->id) }}"><i
+                    class="fa-solid fa-pen-to-square"></i> Edit</a>
+            <form method="POST" action="{{ route('blog.destroy', $blog->id) }}" style="display:inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
+            </form>
+        </td>
+
+    </tr>
     @endforeach
 </table>
 
 {!! $blogs->links('pagination::bootstrap-5') !!}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.status-dropdown').change(function() {
-            var status_id = $(this).val(); 
-            var blog_id = $(this).data('id'); 
 
-            $.ajax({
-                url: '{{ route('blogs.status.update') }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    blog_id: blog_id,
-                    status_id: status_id
-                },
-                success: function(response) {
-                    toastr.success(response.success, 'Success', {
-                        closeButton: true,
-                        progressBar: true,
-                        timeOut: 5000
-                    });
-                },
-                error: function(response) {
-                    toastr.error('There was an error updating the status.', 'Error', {
-                        closeButton: true,
-                        progressBar: true,
-                        timeOut: 5000
-                    });
-                }
-            });
-        });
-    });
-</script>
 
 @endsection

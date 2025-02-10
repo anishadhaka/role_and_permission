@@ -16,7 +16,7 @@
                     style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
                 </i>
             </div>
-            <h1>{{ $newsItem->name }}</h1>
+            <h1>{{ substr($newsItem->name, 0, 20) }}...</h1>
             <a href="{{ url('/News/' . $newsItem->slug) }}" class="read-more">Read More</a>
             <i class="fa-{{ $newsItem->isLiked ? 'solid' : 'regular' }} fa-thumbs-up like-btn action"
                 data-id="{{ $newsItem->id }}" data-type="news" data-action="like"
