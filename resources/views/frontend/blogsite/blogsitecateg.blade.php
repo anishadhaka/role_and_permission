@@ -10,7 +10,7 @@
 
         @foreach($blogs as $blog)
         <div class="review-card">
-            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top">
+            <img src="{{ asset($blog->image) }}" class="card-img-top">
             <div class="date">{{ $blog->create_at }}</div>
             <h1>{{ substr($blog->name, 0, 20) }}...</h1>
             <a href="{{ url('/Blogs/' . $blog->slug) }}" class="read-more">Read More</a>

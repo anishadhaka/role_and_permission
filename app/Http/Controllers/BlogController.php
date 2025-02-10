@@ -102,10 +102,8 @@ public function store(Request $request): RedirectResponse
         'update_date' => now(),
     ];
 
-    if ($request->has('image') && $request->image) {
-        $imageName = basename($request->image); 
-        $data['image'] = $imageName;
-    }
+        $data['image'] = $request->image;
+   
 
    
     $slug = Str::slug($request->name);
@@ -161,13 +159,7 @@ public function update(Request $request, $id): RedirectResponse
     $data = $request->all();
 
 
-    if ($request->has('image') && $request->image) {
-        $imageName = basename($request->image); // Extract only the file name from the path
-        $data['image'] = $imageName;
-    } elseif (!$request->has('image') && !$blog->image) {
-        // Handle case where no image is provided and there's no existing image
-        $data['image'] = null;
-    }
+    // dd($data);
 
 
     $slug = Str::slug($request->name);

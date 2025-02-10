@@ -9,7 +9,7 @@
         @foreach($blogs as $blog)
         <div class="review-card">
             <div style="display:flex;">
-                <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top">
+                <img src="{{ asset($blog->image) }}" class="card-img-top">
                 <i class="fa-{{ $blog->isFavorited ? 'solid' : 'regular' }} fa-heart favorite-btn action"
                     data-id="{{ $blog->id }}" data-type="blog" data-action="favorite"
                     style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
@@ -40,7 +40,7 @@
 
         <div class="review-card2">
             <div style="display:flex;">
-                <img src="{{ asset('images/' . $newsItem->image) }}" class="card-img-top">
+                <img src="{{ asset($newsItem->image) }}" class="card-img-top">
                 <i class="fa-{{ $newsItem->isFavorited ? 'solid' : 'regular' }} fa-heart favorite-btn action"
                     data-id="{{ $newsItem->id }}" data-type="news" data-action="favorite"
                     style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">

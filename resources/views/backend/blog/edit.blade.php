@@ -114,7 +114,7 @@
         <strong>Upload Image:</strong>
         <div class="d-flex flex-column align-items-center">
             @if ($blog->image)
-                <img src="{{ asset('images/' . $blog->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
+                <img src="{{ asset($blog->image) }}" alt="Uploaded Image" class="img-thumbnail mb-2" height="100" width="100">
             @endif
             <div class="input-group">
                 <input type="text" id="image_label" class="form-control" name="image" value="{{ old('image', $blog->image) }}" placeholder="Select an image..." aria-label="Image">

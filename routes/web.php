@@ -114,5 +114,6 @@ Route::get('filemanager', [FileManagerControllerController::class, 'index'])->na
 
 
  
- Route::resource('tests', \App\Http\Controllers\TestController::class);
+
  
+Route::resource('test', \App\Http\Controllers\TestController::class);

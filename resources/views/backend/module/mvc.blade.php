@@ -13,13 +13,16 @@
         <div class="form-group">
             <h4>Select Columns</h4>
             @foreach($columns as $column)
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{{ $column }}" id="column_{{ $column }}" name="columns[]">
-                    <label class="form-check-label" for="column_{{ $column }}">
-                        {{ $column }}
-                    </label>
-                </div>
-            @endforeach
+    @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' )  
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="{{ $column }}" id="column_{{ $column }}" name="columns[]">
+            <label class="form-check-label" for="column_{{ $column }}">
+                {{ $column }}
+            </label>
+        </div>
+    @endif
+@endforeach
+
         </div>
 
         <div class="form-group mt-4">
@@ -33,6 +36,7 @@
                 </thead>
                 <tbody>
                     @foreach($columns as $column)
+                    @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' )  
                         <tr>
                             <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
                             <td>
@@ -48,6 +52,7 @@
                                 </select>
                             </td>
                         </tr>
+                        @endif  
                     @endforeach
                 </tbody>
             </table>
@@ -93,6 +98,8 @@
                         </select>
                         
                     </div>
+
+                  
 
                     <div id="customOptionsDiv" class="mt-3" style="display: none;">
                         <label>Enter Options:</label>
@@ -158,7 +165,7 @@ $(document).ready(function() {
         });
     }
 
-    // On selecting a table, fetch columns
+    // On selecting a table, fetch columns including "id"
     $('#tableSelect').on('change', function() {
         let tableName = $(this).val();
         if (tableName) {
@@ -169,12 +176,12 @@ $(document).ready(function() {
                 success: function(response) {
                     let columnSelect = $('#columnSelect');
                     columnSelect.empty().append('<option value="">Select Column</option>');
-                    
+
                     if (response.columns) {
                         response.columns.forEach(column => {
                             columnSelect.append('<option value="' + column + '">' + column + '</option>');
                         });
-                        $('#columnSelectionDiv').show(); // Show column selection box
+                        $('#columnSelectionDiv').show();
                     } else {
                         $('#columnSelectionDiv').hide();
                     }
@@ -186,6 +193,28 @@ $(document).ready(function() {
             });
         } else {
             $('#columnSelectionDiv').hide();
+        }
+    });
+
+    // On selecting a column, show key-value dropdowns with "id" and the selected column
+    $('#columnSelect').on('change', function() {
+        let selectedColumn = $(this).val();
+        if (selectedColumn) {
+            $('#keyValueSelectionDiv').remove(); // Remove any existing dropdowns to avoid duplicates
+
+            $('#columnSelectionDiv').append(`
+                <div id="keyValueSelectionDiv" class="mt-3">
+                    <label>Select Key and Value for Column:</label>
+                    <select id="keySelect" class="form-control">
+                        <option value="id">ID</option>
+                        <option value="${selectedColumn}" selected>${selectedColumn}</option>
+                    </select>
+                    <select id="valueSelect" class="form-control mt-2">
+                        <option value="id">ID</option>
+                        <option value="${selectedColumn}" selected>${selectedColumn}</option>
+                    </select>
+                </div>
+            `);
         }
     });
 
@@ -205,12 +234,19 @@ $(document).ready(function() {
         let optionType = $('input[name="selectOptionType"]:checked').val();
 
         if (optionType === 'table') {
-            // Get the selected table and column
+            // Get the selected table, column, key, and value
             let selectedTable = $('#tableSelect').val();
             let selectedColumn = $('#columnSelect').val();
+            let selectedKey = $('#keySelect').val();
+            let selectedValue = $('#valueSelect').val();
 
-            if (selectedTable && selectedColumn) {
-                selectedOptions.push({ table: selectedTable, column: selectedColumn });
+            if (selectedTable && selectedColumn && selectedKey && selectedValue) {
+                selectedOptions.push({ 
+                    table: selectedTable, 
+                    column: selectedColumn,
+                    key: selectedKey,
+                    value: selectedValue 
+                });
             }
         } else if (optionType === 'custom') {
             // Get the custom options entered by the user
@@ -230,6 +266,7 @@ $(document).ready(function() {
         $('#selectOptionPopup').modal('hide');
     });
 });
+
 
 </script>
 @endsection

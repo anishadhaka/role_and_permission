@@ -142,11 +142,11 @@
         });
     });
 
-    function fmSetLink(url) {
-    // Extract only the image name from the URL
-    const imageName = url.split('/').pop(); // Get the last part of the URL
-    document.getElementById('image_label').value = imageName;
-}
+    // Set file link
+    function fmSetLink($url) {
+        const modifiedUrl = $url.replace(/^https?:\/\/[^\/]+\//, ''); // Removes protocol and domain
+        document.getElementById('image_label').value = modifiedUrl;
+     }
 
     CKEDITOR.replace('content', {
         filebrowserImageBrowseUrl: '/file-manager/ckeditor'

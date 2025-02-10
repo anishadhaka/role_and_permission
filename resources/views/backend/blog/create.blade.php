@@ -133,6 +133,8 @@
 
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="input-group">
+        <strong>image:</strong>
+
                 <input type="text" id="image_label" class="form-control" name="image" value="" placeholder="Select an image..." aria-label="Image">
                 <button class="btn btn-outline-secondary" type="button" id="button-image">Select</button>
             </div>

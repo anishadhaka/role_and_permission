@@ -98,11 +98,8 @@ public function store(Request $request): RedirectResponse
         'update_date' => $request->updated_at ?? now(),
     ];
 
-    
-    if ($request->has('image') && $request->image) {
-        $imageName = basename($request->image); 
-        $data['image'] = $imageName;
-    }
+        $data['image'] = $request->image;
+  
  
     $slug = Str::slug($request->name);
     $existingSlugCount = News::where('slug', $slug)->count();
@@ -162,12 +159,7 @@ public function update(Request $request, $id): RedirectResponse
 
     $data = $request->all();
 
-    if ($request->has('image') && $request->image) {
-        $imageName = basename($request->image); 
-        $data['image'] = $imageName;
-    } elseif (!$request->has('image') && !$blog->image) {
-        $data['image'] = null;
-    }
+
 
     $slug = Str::slug($request->name);
     $existingSlugCount = News::where('slug', $slug)->count();

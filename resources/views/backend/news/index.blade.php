@@ -41,7 +41,7 @@
         <th>Id</th>
         <th>Name</th>
         <th>Language</th>
-        <th>Domain</th>
+        <!-- <th>Domain</th> -->
         <th>Image</th>
         <th>Status</th>
         <th> Status Update</th>
@@ -52,10 +52,10 @@
         <td>{{ ++$i }}</td>
         <td>{{ substr($news->name, 0, 10) }}...</td>
         <td>{{$news->languages?->language_name ?? 'no language'}}</td>
-        <td>{{$news->domains?->domain_name ?? 'no domain'}} </td>
+        <!-- <td>{{$news->domains?->domain_name ?? 'no domain'}} </td> -->
         <td>
             @if ($news->image)
-            <img src="{{ asset('images/' . $news->image) }}" class="card-img-top" height="40px">
+            <img src="{{ asset($news->image) }}" class="card-img-top" height="40px">
             @else
             No image
             @endif
@@ -110,12 +110,12 @@
         <td>
             <!-- <a class="btn btn-info btn-sm" href="{{ route('news.show',$news->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
             <a class="btn btn-primary btn-sm" href="{{ route('news.edit',$news->id) }}"><i
-                    class="fa-solid fa-pen-to-square"></i> Edit</a>
+                    class="fa-solid fa-pen-to-square"></i> </a>
             <form method="POST" action="{{ route('news.destroy', $news->id) }}" style="display:inline">
                 @csrf
                 @method('DELETE')
 
-                <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> </button>
             </form>
         </td>
     </tr>

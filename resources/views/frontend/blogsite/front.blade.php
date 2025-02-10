@@ -336,8 +336,9 @@
                     <div class="col-md-4 col-sm-6">
                         <div class="single-how-works">
                             <div class="review-card">
+                            <a href="{{ url('/Blogs/' . $blog->slug) }}" class="text-decoration-none text-dark">
                                 <div style="display:flex;">
-                                    <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top">
+                                    <img src="{{ asset($blog->image) }}" class="card-img-top">
                                     <i class="fa-{{ $blog->isFavorited ? 'solid' : 'regular' }} fa-heart favorite-btn action"
                                         data-id="{{ $blog->id }}" data-type="blog" data-action="favorite"
                                         style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
@@ -345,7 +346,7 @@
                                 </div>
                                 <div class="date">{{ $blog->created_at }}</div>
                                 <h1>{{ substr($blog->name, 0, 20) }}...</h1>
-                                <a href="{{ url('/Blogs/' . $blog->slug) }}" class="read-more">Read More</a>
+                                <!-- <a href="{{ url('/Blogs/' . $blog->slug) }}" class="read-more">Read More</a> -->
                                 <i class="fa-{{ $blog->isLiked ? 'solid' : 'regular' }} fa-thumbs-up like-btn action"
                                     data-id="{{ $blog->id }}" data-type="blog" data-action="like"
                                     style="margin:10px; font-size:24px; cursor: pointer;">
@@ -354,6 +355,8 @@
                                     data-id="{{ $blog->id }}" data-type="blog" data-action="dislike"
                                     style="margin:10px; font-size:24px; cursor: pointer;">
                                 </i>
+                            </a>
+
                             </div>
                         </div>
 
@@ -665,17 +668,20 @@
                     <div class="col-md-4 col-sm-6">
                         <div class="single-how-works">
                             <div class="review-card2">
+                            <a href="{{ url('/News/' . $newsIteam->slug) }}" class="text-decoration-none text-dark">
                                 <div style="display:flex;">
-                                    <img src="{{ asset('images/' . $newsIteam->image) }}" class="card-img-top">
+                                
+                                    <img src="{{ asset($newsIteam->image) }}" class="card-img-top">
                                     <i class="fa-{{ $newsIteam->isFavorited ? 'solid' : 'regular' }} fa-heart favorite-btn action"
                                         data-id="{{ $newsIteam->id }}" data-type="newsIteam" data-action="favorite"
                                         style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
                                     </i>
+                            
                                 </div>
                                 <div class="date">{{ $newsIteam->created_at }}</div>
                                 <h1>{{ substr($newsIteam->name, 0, 20) }}...</h1>
 
-                                <a href="{{ url('/News/' . $newsIteam->slug) }}" class="read-more">Read More</a>
+                                <!-- <a href="{{ url('/News/' . $newsIteam->slug) }}" class="read-more">Read More</a> -->
                                 <i class="fa-{{ $newsIteam->isLiked ? 'solid' : 'regular' }} fa-thumbs-up like-btn action"
                                     data-id="{{ $newsIteam->id }}" data-type="newsIteam" data-action="like"
                                     style="margin:10px; font-size:24px; cursor: pointer;">
@@ -684,6 +690,7 @@
                                     data-id="{{ $newsIteam->id }}" data-type="newsIteam" data-action="dislike"
                                     style="margin:10px; font-size:24px; cursor: pointer;">
                                 </i>
+                                </a>
                             </div>
                         </div>
                     </div>

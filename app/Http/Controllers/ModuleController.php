@@ -317,54 +317,59 @@ public function generateMVC(Request $request)
 {
     $moduleId = $request->input('moduleId');
     $tableName = $request->input('tableName');
+
     if (empty($tableName)) {
         logger()->error('Table Name is null or empty.');
         return back()->withErrors(['tableName' => 'Table name is required.']);
     }
+
     $columns = $request->input('columns', []);
     $inputTypes = $request->input('input_types', []);
-    
     $columnss = Schema::getColumnListing($tableName);
+ 
     $dropdownOptions = json_decode($request->input('dropdown_options'), true);
-    // dd($columnss);
-
+    // dd($dropdownOptions);
     if (empty($columns)) {
         return redirect()->route('module.index')->withErrors(['columns' => 'Please select at least one column.']);
     }
 
     $modelName = Str::studly(Str::singular($tableName));
     $controllerName = $modelName . 'Controller';
-     $controllerPath = app_path('Http/Controllers/' . $controllerName . '.php');
-     $modelPath = app_path('Models/' . $modelName . '.php');
-     $viewsPath = resource_path('views/backend/' . $tableName);
+    $controllerPath = app_path('Http/Controllers/' . $controllerName . '.php');
+    $modelPath = app_path('Models/' . $modelName . '.php');
+    $viewsPath = resource_path('views/backend/' . $tableName);
 
-      // Check if model already exists
-     if (!file_exists($modelPath)) {
+    // Model Creation
+    if (!file_exists($modelPath)) {
         $this->createModel($modelName, $columns);
     } else {
-        return redirect()->route('module.index')->with(['model' => 'Model already exists.']);
+        logger()->warning("Model $modelName already exists.");
     }
 
-       // Check if controller already exists
-       if (!file_exists($controllerPath)) {
-        $this->createController($controllerName, $modelName, $tableName,$dropdownOptions,$columns,$datacolumnss);
-        } else {
-            return redirect()->route('module.index')->with(['controller' => 'Controller already exists.']);
-        }
-
-    // Check if views already exist
-    if (!is_dir($viewsPath)) {
-        $this->createViews($tableName, $columns,$inputTypes, $dropdownOptions);
+    // Controller Creation
+    if (!file_exists($controllerPath)) {
+        $this->createController($controllerName, $modelName, $tableName, $dropdownOptions, $columns, $columnss);
     } else {
-        return back()->withErrors(['views' => 'Views already exist.']);
+        logger()->warning("Controller $controllerName already exists.");
     }
 
-   // Add routes
-   $routePath = base_path('routes/web.php');
-   $routeDefinition = "
- Route::resource('{$tableName}', \\App\\Http\\Controllers\\{$controllerName}::class);
- ";
-   File::append($routePath, $routeDefinition);
+    // View Creation
+    if (!is_dir($viewsPath)) {
+        File::ensureDirectoryExists($viewsPath); // Ensure directory exists
+        $this->createViews($tableName, $columns, $inputTypes, $dropdownOptions);
+    } else {
+        logger()->warning("Views for $tableName already exist.");
+    }
+
+    // Route Addition
+    $routePath = base_path('routes/web.php');
+    $routeDefinition = "\nRoute::resource('$tableName', \\App\\Http\\Controllers\\$controllerName::class);";
+
+    if (!str_contains(file_get_contents($routePath), $routeDefinition)) {
+        File::append($routePath, $routeDefinition);
+    } else {
+        logger()->warning("Route for $tableName already exists.");
+    }
 
     return redirect()->route('module.index')->with('success', 'MVC files generated successfully!');
 }

@@ -62,7 +62,7 @@ public function index()
         $newsItem->isFavorited = Auth::check() ? ActionUser::where('user_id', Auth::id())->where('action', 'favorite')->where('action_id', $newsItem->id)->where('type', 'news')->whereNull('deleted_at')->exists() : false;
         return $newsItem;
     });
-    return view('frontend.front',compact('blog', 'news','blogs','news','pages'));
+    return view('frontend.blogsite.front',compact('blog', 'news','blogs','news','pages'));
 
 }
 
@@ -82,11 +82,11 @@ public function blogsitecateg($categoryTitle)
     ]);
 }
 
-public function showBlog($title, $slug)
-{
-    $blog = Blog::where('title', $title)->where('slug', $slug)->firstOrFail();
-    return view('frontend.blogs.show', compact('blog'));
-}
+// public function showBlog($title, $slug)
+// {
+//     $blog = Blog::where('title', $title)->where('slug', $slug)->firstOrFail();
+//     return view('frontend.blogs.show', compact('blog'));
+// }
 
 
 public function about()
@@ -121,7 +121,7 @@ public function blogsbyslug($slug)
     $blog= Blog::with('blogcategories')->whereLike('slug', $slug)->first();
     // dd($blog);
     $related_blogs = Blog::where('category_id', $blog->blogcategories->id)->get();
-    return view('frontend.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
+    return view('frontend.blogsite.readmore',['blog' => $blog,'related_blogs'=>$related_blogs]);
 
 }
 public function newsbyslug($slug)
@@ -130,7 +130,7 @@ public function newsbyslug($slug)
     // dd($news);
 
     $related_news = News::where('category_id', $news->categories->id)->get();
-    return view('frontend.readmorenews',['news' => $news,'related_news'=>$related_news]);
+    return view('frontend.blogsite.readmorenews',['news' => $news,'related_news'=>$related_news]);
 
 }
 

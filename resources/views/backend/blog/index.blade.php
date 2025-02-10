@@ -70,7 +70,7 @@
         <th>Name</th>
         <th>Title</th>
         <th>Language</th>
-        <th>Domain</th>
+        <!-- <th>Domain</th> -->
         <th>Image</th>
         <th>Status</th>
         <th> Status Update</th>
@@ -82,10 +82,10 @@
         <td>{{ substr($blog->name, 0, 10) }}...</td>
         <td>{{ $blog->blogcategories->title }}</td>
         <td>{{ $blog->languages?->language_name ?? 'No language' }}</td>
-        <td>{{ $blog->domains?->domain_name ?? 'No domain' }}</td>
+        <!-- <td>{{ $blog->domains?->domain_name ?? 'No domain' }}</td> -->
         <td>
             @if ($blog->image)
-            <img src="{{ asset('images/' . $blog->image) }}" class="card-img-top" height="50px" style="width:100px;">
+            <img src="{{ asset($blog->image) }}" class="card-img-top" height="50px" style="width:100px;">
             @else
             No image
             @endif
@@ -141,11 +141,11 @@
         <td>
             <!-- <a class="btn btn-info btn-sm" href="{{ route('blog.show', $blog->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
             <a class="btn btn-primary btn-sm" href="{{ route('blog.edit', $blog->id) }}"><i
-                    class="fa-solid fa-pen-to-square"></i> Edit</a>
+                    class="fa-solid fa-pen-to-square"></i> </a>
             <form method="POST" action="{{ route('blog.destroy', $blog->id) }}" style="display:inline">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> </button>
             </form>
         </td>
 
