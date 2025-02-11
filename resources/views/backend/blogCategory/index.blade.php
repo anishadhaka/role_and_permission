@@ -37,7 +37,9 @@
             <h2>BlogCategory Management</h2>
         </div>
         <div class="pull-right">
+        @can('blogcategory-create')
             <a class="btn btn-success mb-2" href="{{ route('blogCategory.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
+            @endcan
             <div class="searchbar">
           <div class="search-container">
             <form action="">
@@ -63,7 +65,9 @@
        <th>Meta Description</th>
        <th>Meta Keyword</th>
        <th>SEO Robat</th>
-       <th width="280px">Action</th>
+       @canany(['blogcategory-edit', 'blogcategory-delete'])
+        <th width="280px">Action</th>
+        @endcanany
    </tr>
    @foreach ($data as $key => $user)
     <tr>
@@ -77,14 +81,19 @@
 
        
         <td>
+          @can('blogcategory-show')
              <a class="btn btn-info btn-sm" href="{{ route('blogCategory.show',$user->id) }}"><i class="fa-solid fa-list"></i> Show</a>
+          @endcan
+          @can('blogcategory-edit')
              <a class="btn btn-primary btn-sm" href="{{ route('blogCategory.edit',$user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-              <form method="POST" action="{{ route('blogCategory.destroy', $user->id) }}" style="display:inline">
+          @endcan
+          @can('blogcategory-delete')
+             <form method="POST" action="{{ route('blogCategory.destroy', $user->id) }}" style="display:inline">
                   @csrf
                   @method('DELETE')
-
                   <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
               </form>
+          @endcan
         </td>
     </tr>
  @endforeach

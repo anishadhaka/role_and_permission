@@ -2,32 +2,34 @@
 
 @section('content')
 <div class="container">
-    <h2>Generate MVC</h2>
-    <p>Module ID: {{ $moduleId }}</p>
-    <p>Table Name: {{ $tableName }}</p>
+    <h2 style="text-align: -webkit-center; color: #782929;  text-decoration-line: underline; padding-bottom: 20px;">Generate MVC</h2>
+    <!-- <p>Module ID: {{ $moduleId }}</p>
+    <p>Table Name: {{ $tableName }}</p> -->
 
     <form action="{{ route('mvc.generate.mvc') }}" method="POST">
         @csrf
         <input type="hidden" name="module_id" value="{{ $moduleId }}">
         <input type="hidden" name="dropdown_options" id="dropdown_options">
         <div class="form-group">
-            <h4>Select Columns</h4>
+            <h4> <i class="fa-solid fa-arrow-right"></i> Select Columns</h4>
+            <div style="margin-left: 38px;"> 
             @foreach($columns as $column)
-    @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' )  
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="{{ $column }}" id="column_{{ $column }}" name="columns[]">
-            <label class="form-check-label" for="column_{{ $column }}">
-                {{ $column }}
-            </label>
+             @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' )  
+                 <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="{{ $column }}" id="column_{{ $column }}" name="columns[]">
+                     <label class="form-check-label" for="column_{{ $column }}">
+                         {{ $column }}
+                     </label>
+                 </div>
+             @endif
+           @endforeach
         </div>
-    @endif
-@endforeach
 
         </div>
 
         <div class="form-group mt-4">
-            <h4>Edit Columns with Input Types</h4>
-            <table class="table table-bordered">
+            <h4> <i class="fa-solid fa-arrow-right"></i> Edit Columns with Input Types</h4>
+            <table class="table table-bordered" style=" margin-left: 32px;">
                 <thead>
                     <tr>
                         <th>Column Name</th>
@@ -47,6 +49,7 @@
                                     <option value="password">Password</option>
                                     <option value="date">Date</option>
                                     <option value="textarea">Textarea</option>
+                                    <option value="textarea">Radio</option>
                                     <option value="file">File</option>
                                     <option value="select">Select</option>
                                 </select>
@@ -59,7 +62,7 @@
         </div>
 
         <input type="hidden" name="tableName" value="{{ $tableName }}">
-        <button type="submit" class="btn btn-primary mt-3">Submit and Generate MVC</button>
+        <button type="submit" class="btn btn-primary mt-3" style="margin-left: 32px;">Submit and Generate MVC</button>
     </form>
 </div>
 

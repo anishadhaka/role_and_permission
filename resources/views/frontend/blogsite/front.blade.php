@@ -334,11 +334,11 @@
                     @foreach($blogs as $blog)
 
                     <div class="col-md-4 col-sm-6">
-                        <div class="single-how-works">
-                            <div class="review-card">
+                        <div class="single-how-works review-card">
+                            <!-- <div class="review-card"> -->
                             <a href="{{ url('/Blogs/' . $blog->slug) }}" class="text-decoration-none text-dark">
                                 <div style="display:flex;">
-                                    <img src="{{ asset($blog->image) }}" class="card-img-top">
+                                    <img src="{{ asset($blog->image) }}" class="card-img-top" style=" object-fit: cover;">
                                     <i class="fa-{{ $blog->isFavorited ? 'solid' : 'regular' }} fa-heart favorite-btn action"
                                         data-id="{{ $blog->id }}" data-type="blog" data-action="favorite"
                                         style="margin-left:-30px; margin-top:10px; font-size:24px; cursor: pointer;">
@@ -357,7 +357,7 @@
                                 </i>
                             </a>
 
-                            </div>
+                            <!-- </div> -->
                         </div>
 
                     </div>

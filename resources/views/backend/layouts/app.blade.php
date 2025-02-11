@@ -51,7 +51,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
 
+    </style>
 </head>
 <body>
     <div id="app">
@@ -113,10 +115,10 @@
         @include('backend.layouts.sidebar')
   @endauth
     
-    <main class="content">
+    <main class="content" id="main">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-md-12" style=" margin-left: 200px;">
+                        <div class="col-md-12" >
                             <div class="card p-3 m-4">
                                 <div class="card-body">
                                     @yield('content')
@@ -151,5 +153,23 @@
     CKEDITOR.replace('content', {
         filebrowserImageBrowseUrl: '/file-manager/ckeditor'
     });
+
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('mySidebar');
+        const mainContent = document.getElementById('main');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        sidebar.classList.toggle('closed');
+        mainContent.classList.toggle('expanded');
+
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle('open');
+        }
+
+        // toggleIcon.classList.toggle('fa-bars');
+        // toggleIcon.classList.toggle('fa-times');
+    }
+
 </script>
 </html>

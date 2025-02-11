@@ -1,1 +1,0 @@
-<h1>NewsList Index</h1>

@@ -32,8 +32,10 @@
             <h2>Blog Management</h2>
         </div>
         <div class="pull-right">
+        @can('blog-create')
             <a class="btn btn-success mb-2" href="{{ route('blog.create') }}"><i class="fa fa-plus"></i> Create New
                 Blog</a>
+                @endcan
             <!-- <div class="language-picker mb-1">
                 <form action="{{ route('blog.index') }}" method="GET" class="language-picker__form" style="display:flex;margin-left:700px;margin-top:-50px;">
                     <label for="language-picker-select" style="font-weight:bold;margin-top:7px; padding:2px;">Language</label>
@@ -74,7 +76,9 @@
         <th>Image</th>
         <th>Status</th>
         <th> Status Update</th>
+        @canany(['blog-edit', 'blog-delete'])
         <th width="280px">Action</th>
+        @endcanany
     </tr>
     @foreach ($blogs as $key => $blog)
     <tr>
@@ -140,13 +144,17 @@
 
         <td>
             <!-- <a class="btn btn-info btn-sm" href="{{ route('blog.show', $blog->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
+             @can('blog-edit')
             <a class="btn btn-primary btn-sm" href="{{ route('blog.edit', $blog->id) }}"><i
                     class="fa-solid fa-pen-to-square"></i> </a>
+                    @endcan
+                    @can('blog-delete')
             <form method="POST" action="{{ route('blog.destroy', $blog->id) }}" style="display:inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> </button>
             </form>
+            @endcan
         </td>
 
     </tr>

@@ -5,9 +5,11 @@
         <div class="pull-left">
             <h2>NewsCategory Management</h2>
         </div>
+        @can('newscategory-create')
         <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('newsCategory.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
         </div>
+        @endcan
     </div>
 </div>
 
@@ -24,7 +26,9 @@
        <th>Meta Description</th>
        <th>Meta Keyword</th>
        <th>SEO Robat</th>
-       <th width="280px">Action</th>
+       @canany(['news-edit', 'news-delete'])
+        <th width="280px">Action</th>
+        @endcanany
    </tr>
    @foreach ($data as $key => $user)
     <tr>
@@ -39,13 +43,17 @@
        
         <td>
              <a class="btn btn-info btn-sm" href="{{ route('newsCategory.show',$user->id) }}"><i class="fa-solid fa-list"></i> Show</a>
+            @can('newscategory-edit')
              <a class="btn btn-primary btn-sm" href="{{ route('newsCategory.edit',$user->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-              <form method="POST" action="{{ route('newsCategory.destroy', $user->id) }}" style="display:inline">
+             @endcan
+             @can('newscategory-delete') 
+             <form method="POST" action="{{ route('newsCategory.destroy', $user->id) }}" style="display:inline">
                   @csrf
                   @method('DELETE')
 
                   <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
               </form>
+              @endcan
         </td>
     </tr>
  @endforeach

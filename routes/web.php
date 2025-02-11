@@ -82,8 +82,8 @@ Route::get('/newscategoriasite', [BlogSite::class, 'newsCategorySite'])->name('n
     Route::get('/module/permissions/{id}', [ModuleController::class, 'getPermissions'])->name('module.permissions')->middleware(['role:module|Admin']); 
     Route::delete('/module/permissions/{id}', [ModuleController::class, 'destroyPermission'])->name('permission.destroy')->middleware(['role:module|Admin']); 
    
-    Route::resource('roles', RoleController::class)->middleware(['role:roles|Admin']);
-    Route::resource('users', UserController::class)->middleware('role:Admin');
+    Route::resource('roles', RoleController::class)->middleware(['role:roles|Admin|intern']);
+    Route::resource('users', UserController::class)->middleware('role:Admin|intern');
     Route::resource('products', ProductController::class)->middleware('role:product|Admin');
     Route::resource('blog', BlogController::class)->middleware(['role:blog|Admin','permission:blog-list| blog-create| blog-edit| blog-delete']); 
     Route::resource('blogCategory', BlogCategoryController::class)->middleware(['role:blogcategory|Admin','permission:blogcategory-list| blogcategory-create| blogcategory-edit| blogcategory-delete']);
@@ -112,8 +112,4 @@ Route::resource('State', \App\Http\Controllers\StateController::class);
 Route::get('filemanager', [FileManagerControllerController::class, 'index'])->name('filemanager.index');
 
 
-
- 
-
- 
 Route::resource('test', \App\Http\Controllers\TestController::class);

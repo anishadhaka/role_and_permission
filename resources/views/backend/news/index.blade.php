@@ -6,11 +6,12 @@
             <h2>News Management</h2>
         </div>
 
-
+@can('news-create')
         <div class="pull-right">
             <a class="btn btn-success mb-2" href="{{ route('news.create') }}"><i class="fa fa-plus"></i> Create New
                 News</a>
         </div>
+        @endcan
     </div>
 
 </div>
@@ -45,7 +46,9 @@
         <th>Image</th>
         <th>Status</th>
         <th> Status Update</th>
+        @canany(['news-edit', 'news-delete'])
         <th width="280px">Action</th>
+        @endcanany
     </tr>
     @foreach ($newss as $key => $news)
     <tr>
@@ -109,16 +112,21 @@
 
         <td>
             <!-- <a class="btn btn-info btn-sm" href="{{ route('news.show',$news->id) }}"><i class="fa-solid fa-list"></i> Show</a> -->
+           @can('news-edit')
             <a class="btn btn-primary btn-sm" href="{{ route('news.edit',$news->id) }}"><i
                     class="fa-solid fa-pen-to-square"></i> </a>
+                    @endcan
+                    @can('news-delete')
             <form method="POST" action="{{ route('news.destroy', $news->id) }}" style="display:inline">
                 @csrf
                 @method('DELETE')
 
                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> </button>
             </form>
+            @endcan
         </td>
     </tr>
+    
     @endforeach
 </table>
 

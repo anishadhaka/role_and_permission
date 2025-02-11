@@ -62,6 +62,29 @@
 
 {!! $data->links('pagination::bootstrap-5') !!}
 
+<!-- Add Permission Modal -->
+<div class="modal fade" id="permissionModal" tabindex="-1" aria-labelledby="permissionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="permissionModalLabel">Add Permissions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="permissionForm">
+                    @csrf
+                    <input type="hidden" id="module_id" name="module_id">
+                    <div id="permissions-container"></div>
+                    <button type="button" class="btn btn-primary mt-3" onclick="add()">+ Add Permission</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="save()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -95,20 +118,25 @@
 <script>
 let selectedModuleId = null;
 
-function openPermissionModal(moduleId) 
-{
+function openPermissionModal(moduleId) {
     $('#module_id').val(moduleId);
-    $('#permissionForm').find('.permission-wrapper').remove();
+    $('#permissions-container').empty(); // Clear existing fields
+
     $.ajax({
         url: '/module/permissions/' + moduleId,
         method: 'GET',
         success: function(response) {
             if (response.permissions && response.permissions.length > 0) {
                 response.permissions.forEach(function (permission) {
-                    const uniqueId = 'permission-' + permission.id;
-                    $('#permissionForm').append(createPermissionField(uniqueId, moduleId, permission.name, permission.id));
+                    if (permission.name.trim() !== '') { // Ensure the permission is not empty
+                        const uniqueId = 'permission-' + permission.id;
+                        $('#permissions-container').append(createPermissionField(uniqueId, moduleId, permission.name, permission.id));
+                    }
                 });
-            } else {
+            } 
+
+            // Add at least one default permission field if nothing is loaded
+            if ($('#permissions-container').children().length === 0) {
                 addDefaultPermissionField(moduleId);
             }
         },
@@ -117,9 +145,11 @@ function openPermissionModal(moduleId)
             addDefaultPermissionField(moduleId);
         }
     });
+
+    $('#permissionModal').modal('show'); // Ensure modal opens
 }
-function createPermissionField(uniqueId, moduleId, permissionName = '', permissionId = null) 
-{
+
+function createPermissionField(uniqueId, moduleId, permissionName = '', permissionId = null) {
     return `
         <div class="permission-wrapper mt-3" id="${uniqueId}">
             <input type="hidden" name="module_id[]" value="${moduleId}">
@@ -133,6 +163,7 @@ function createPermissionField(uniqueId, moduleId, permissionName = '', permissi
         </div>
     `;
 }
+
 function addDefaultPermissionField(moduleId) 
 {
     const uniqueId = 'permission-' + Date.now();

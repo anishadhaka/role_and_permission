@@ -24,7 +24,9 @@
   <tr>
      <th width="100px">No</th>
      <th>Name</th>
-     <th width="280px">Action</th>
+     @canany(['role-edit', 'role-delete'])
+        <th width="280px">Action</th>
+        @endcanany
   </tr>
     @foreach ($roles as $key => $role)
     <tr>
