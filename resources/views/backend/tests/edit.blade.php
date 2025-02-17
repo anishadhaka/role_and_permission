@@ -10,12 +10,12 @@
         <div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('name') }}:</strong>
-                                <input type="text" name="name" class="form-control" value="{{ $item->name }}">
+                                <input type="textarea" name="name" class="form-control" value="{{ $item->name }}">
                             </div>
                         </div><div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('city') }}:</strong>
-                                <input type="select" name="city" class="form-control" value="{{ $item->city }}">
+                                <input type="file" name="city" class="form-control" value="{{ $item->city }}">
                             </div>
                         </div><div class="col-md-12">
                             <div class="form-group">
@@ -25,7 +25,7 @@
                         </div><div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('state') }}:</strong>
-                                <input type="select" name="state" class="form-control" value="{{ $item->state }}">
+                                <input type="email" name="state" class="form-control" value="{{ $item->state }}">
                             </div>
                         </div>
 

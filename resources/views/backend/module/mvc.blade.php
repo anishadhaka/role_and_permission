@@ -11,10 +11,10 @@
         <input type="hidden" name="module_id" value="{{ $moduleId }}">
         <input type="hidden" name="dropdown_options" id="dropdown_options">
         <div class="form-group">
-            <h4> <i class="fa-solid fa-arrow-right"></i> Select Columns</h4>
+            <h4> <i class="fa-solid fa-arrow-right"></i> Select Columns</h4>    
             <div style="margin-left: 38px;"> 
             @foreach($columns as $column)
-             @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' )  
+             @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' && $column !== 'deleted_at' )  
                  <div class="form-check">
                      <input class="form-check-input" type="checkbox" value="{{ $column }}" id="column_{{ $column }}" name="columns[]">
                      <label class="form-check-label" for="column_{{ $column }}">
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                     @foreach($columns as $column)
-                    @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' )  
+                    @if($column !== 'id' && $column !== 'updated_at' && $column !== 'created_at' && $column !== 'deleted_at' )  
                         <tr>
                             <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
                             <td>

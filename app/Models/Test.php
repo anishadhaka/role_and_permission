@@ -10,6 +10,6 @@
      use HasFactory;
  
      protected $fillable = [
-         'name', 'city', 'country', 'state'
+         'country'
      ];
  }

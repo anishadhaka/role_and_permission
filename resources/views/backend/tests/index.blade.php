@@ -19,14 +19,14 @@
  <table class="table table-bordered">
      <thead>
          <tr>
-             <th>{{ ucfirst('name') }}</th><th>{{ ucfirst('city') }}</th><th>{{ ucfirst('country') }}</th><th>{{ ucfirst('state') }}</th>
+             <th>{{ ucfirst('country') }}</th>
              <th>Actions</th>
          </tr>
      </thead>
      <tbody>
          @foreach($data as $row)
          <tr>
-             <td>{{ $row->name }}</td><td>{{ $row->city }}</td><td>{{ $row->country }}</td><td>{{ $row->state }}</td>
+             <td>{{ $row->country }}</td>
              <td>
                  <a href="{{ route('tests.edit', $row->id) }}" class="btn btn-primary btn-sm">Edit</a>
                  <form action="{{ route('tests.destroy', $row->id) }}" method="POST" style="display:inline;">
