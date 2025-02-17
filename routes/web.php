@@ -54,6 +54,11 @@ Route::PUT('module/recover/{id}', [ModuleController::class, 'recover'])->name('m
 Route::get('/module/get-tables', [ModuleController::class, 'getTables'])->name('module.getTables');
 Route::get('/mvc/generate', [ModuleController::class, 'generatepopup'])->name('mvc.generate');
 Route::post('/mvc/generate', [ModuleController::class, 'generateMVC'])->name('mvc.generate.mvc');
+Route::get('/fetch-dependent-options', [ModuleController::class, 'fetchDependentOptions'])->name('fetch.dependentOptions');
+//
+
+
+
 
 // Route::post('/update_status/{id}', [BlogController::class, 'updateStatus'])->name('update_status');
 Route::get('/module/get-tables1', [ModuleController::class, 'getTables1'])->name('module.getTables1');
@@ -112,4 +117,4 @@ Route::resource('State', \App\Http\Controllers\StateController::class);
 Route::get('filemanager', [FileManagerControllerController::class, 'index'])->name('filemanager.index');
 
 
-Route::resource('test', \App\Http\Controllers\TestController::class);
+Route::resource('tests', \App\Http\Controllers\TestController::class);

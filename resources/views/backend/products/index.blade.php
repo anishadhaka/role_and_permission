@@ -25,9 +25,7 @@
         <th>No</th>
         <th>Name</th>
         <th>Details</th>
-        @canany(['product-edit', 'product-delete'])
         <th width="280px">Action</th>
-        @endcanany
     </tr>
     @foreach ($products as $product)
     <tr>

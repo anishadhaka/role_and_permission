@@ -1,59 +1,54 @@
 @extends('backend.layouts.app')
+
 @section('content')
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Pages Management</h2>
+            <h2>Edit Pages</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-success mb-2" href="{{ route('pages.create') }}"><i class="fa fa-plus"></i> Create New Blog</a>
+            <a class="btn btn-primary btn-sm mb-2" href="{{ route('pages.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
 </div>
 
-@session('success')
-    <div class="alert alert-success" role="alert"> 
-        {{ $value }}
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+      <strong>Whoops!</strong> There were some problems with your input.<br><br>
+      <ul>
+         @foreach ($errors->all() as $error)
+           <li>{{ $error }}</li>
+         @endforeach
+      </ul>
     </div>
-@endsession
+@endif
 
-<table class="table table-bordered">
-   <tr>
-       <th>Id</th>
-       <th>Title</th>
-       <th>Description</th>
-       @canany(['pages-edit', 'pages-delete'])
-        <th width="280px">Action</th>
-        @endcanany
-   </tr>
-   @foreach ($data as $key => $pages)
-    <tr>
-        <td>{{ ++$i }}</td>
-        <td>{{ $pages->title }}</td>
-        <td>{{ $pages->description }}</td>
+<form method="POST" action="{{ route('pages.update', $pages->id) }}">
+    @csrf
+    @method('PUT')
 
+    <div class="row">
        
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Title:</strong>
+                <input type="text" name="title" placeholder="title" class="form-control"  value="{{ $pages->title }}">
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong> Description:</strong>
+                <input type="text" name="description" placeholder="description" class="form-control"  value="{{ $pages->description }}">
+            </div>
+        </div>
 
-       
-        <td>
-             <a class="btn btn-info btn-sm" href="{{ route('pages.show',$pages->id) }}"><i class="fa-solid fa-list"></i> Show</a>
-             @can('pages-edit')
-             <a class="btn btn-primary btn-sm" href="{{ route('pages.edit',$pages->id) }}"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-             @endcan
-             @can('pages-delete') 
-             <form method="POST" action="{{ route('pages.destroy', $pages->id) }}" style="display:inline">
-                  @csrf
-                  @method('DELETE')
 
-                  <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
-              </form>
-              @endcan
-        </td>
-    </tr>
- @endforeach
-</table>
-
-{!! $data->links('pagination::bootstrap-5') !!}
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+            <button type="submit" class="btn btn-primary btn-sm mt-2 mb-3"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
+        </div>
+    </div>
+</form>
 
 
 @endsection

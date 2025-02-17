@@ -429,8 +429,9 @@ class $controllerName extends Controller
     public function create()    
     {
         $dropdownFetchCode
+ 
+  return view('backend.$tableName.create', compact('" . implode("', '", array_column($dropdownOptions, 'column')) . "'));
 
-        return view('backend.$tableName.create', compact(" . implode(', ', array_column($dropdownOptions, 'column')) . "));
     }
 
     public function store(Request \$request)
@@ -444,7 +445,8 @@ class $controllerName extends Controller
    \$item = $modelName::findOrFail(\$id);
     $dropdownFetchCode;
 
-    return view('backend.$tableName.edit', compact('item', " . implode(', ', array_column($dropdownOptions, 'column')) . "));
+   return view('backend.$tableName.edit', compact('item', '" . implode("', '", array_column($dropdownOptions, 'column')) . "'));
+
 }
 
 
