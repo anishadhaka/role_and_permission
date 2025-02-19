@@ -19,6 +19,7 @@
  <table class="table table-bordered">
      <thead>
          <tr>
+             <th>{{ ucfirst('city') }}</th>
              <th>{{ ucfirst('country') }}</th>
              <th>Actions</th>
          </tr>
@@ -26,6 +27,7 @@
      <tbody>
          @foreach($data as $row)
          <tr>
+             <td>{{ $row->city }}</td>
              <td>{{ $row->country }}</td>
              <td>
                  <a href="{{ route('tests.edit', $row->id) }}" class="btn btn-primary btn-sm">Edit</a>

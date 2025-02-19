@@ -11,22 +11,22 @@
         <div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('name') }}:</strong>
-                                <input type="textarea" name="name" class="form-control" required>
+                                <input type="file" name="name" class="form-control" required>
                             </div>
                         </div><div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('city') }}:</strong>
-                                <input type="file" name="city" class="form-control" required>
+                                <input type="select" name="city" class="form-control" required>
                             </div>
                         </div><div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('country') }}:</strong>
-                                <input type="select" name="country" class="form-control" required>
+                                <input type="textarea" name="country" class="form-control" required>
                             </div>
                         </div><div class="col-md-12">
                             <div class="form-group">
                                 <strong>{{ ucfirst('state') }}:</strong>
-                                <input type="email" name="state" class="form-control" required>
+                                <input type="text" name="state" class="form-control" required>
                             </div>
                         </div>
 

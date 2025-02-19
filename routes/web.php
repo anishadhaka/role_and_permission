@@ -117,6 +117,6 @@ Route::resource('State', \App\Http\Controllers\StateController::class);
 Route::get('filemanager', [FileManagerControllerController::class, 'index'])->name('filemanager.index');
 
 
-Route::resource('tests', \App\Http\Controllers\TestController::class);
+
 
 Route::resource('tours', \App\Http\Controllers\TourController::class);

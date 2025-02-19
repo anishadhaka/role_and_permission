@@ -17,7 +17,7 @@ class TestController extends Controller
     public function create()    
     {
         
-$name = DB::table('tbl_countries')->pluck('name', 'id');
+$name = DB::table('blogs')->pluck('name', 'id');
  
   return view('backend.tests.create', compact('name'));
 
@@ -33,7 +33,7 @@ $name = DB::table('tbl_countries')->pluck('name', 'id');
 {
    $item = Test::findOrFail($id);
     
-$name = DB::table('tbl_countries')->pluck('name', 'id');;
+$name = DB::table('blogs')->pluck('name', 'id');;
 
    return view('backend.tests.edit', compact('item', 'name'));
 
